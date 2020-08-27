@@ -13,7 +13,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
 
-import { Icon, ImageSidebar, SidebarPortal } from '@plone/volto/components';
+import ImageSidebar from './ImageSidebar';
+import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
   flattenToAppURL,
@@ -29,8 +30,8 @@ import uploadSVG from '@plone/volto/icons/upload.svg';
 
 const messages = defineMessages({
   ImageBlockInputPlaceholder: {
-    id: 'Browse the site, drop an image, or type an URL',
-    defaultMessage: 'Browse the site, drop an image, or type an URL',
+    id: 'Data Visualization URL or SVG/PNG image',
+    defaultMessage: 'Data Visualization URL or SVG/PNG image',
   },
 });
 

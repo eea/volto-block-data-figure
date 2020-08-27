@@ -1,8 +1,10 @@
 import { EditDataFigureBlock } from './components';
 import { ViewDataFigureBlock } from './components';
 import iconSVG from '@plone/volto/icons/image.svg';
+import { datafigure } from './reducers';
 
 const applyConfig = (config) => {
+  // blocks
   config.blocks.blocksConfig.dataFigure = {
     id: 'dataFigure',
     title: 'Data Figure',
@@ -18,6 +20,12 @@ const applyConfig = (config) => {
       addPermission: [],
       view: [],
     },
+  };
+
+  // reducers
+  config.addonReducers = {
+    ...config.addonReducers,
+    datafigure,
   };
 
   return config;

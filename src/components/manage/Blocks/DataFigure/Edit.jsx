@@ -15,7 +15,7 @@ import Dropzone from 'react-dropzone';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
-import { getSVG } from '@eeacms/volto-block-data-figure/actions';
+import { getParsedSVG } from '@eeacms/volto-block-data-figure/actions';
 import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
@@ -158,15 +158,16 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onSubmitUrl = () => {
+    if (!isInternalURL(this.state.url)) {
+      this.props.getParsedSVG(this.state.url)
+        .then((resp) => {
 
-    this.props.getSVG(this.state.url)
-      .then((resp) => {
-
-        console.log(resp)
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+          console.log(resp)
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+    }
     this.props.onChangeBlock(this.props.block, {
       ...this.props.data,
       url: this.state.url,
@@ -373,6 +374,6 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
     }),
-    { createContent, getSVG },
+    { createContent, getParsedSVG },
   ),
 )(Edit);

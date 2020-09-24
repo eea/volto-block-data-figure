@@ -60,6 +60,34 @@ export default function datafigure(state = initialState, action = {}) {
           error: action.error,
         },
       };
+    case `${GET_PARSED_SVG}_PENDING`:
+      return {
+        ...state,
+        [getRequestKey(action.type)]: {
+          loading: true,
+          loaded: false,
+          error: null,
+        },
+      };
+    case `${GET_PARSED_SVG}_SUCCESS`:
+      return {
+        ...state,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+        result: action.result,
+      };
+    case `${GET_PARSED_SVG}_FAIL`:
+      return {
+        ...state,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: false,
+          error: action.error,
+        }
+      }
     default:
       return state;
   }

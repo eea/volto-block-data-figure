@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
@@ -15,6 +16,7 @@ import Dropzone from 'react-dropzone';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
+import { extractSvg } from '@eeacms/volto-block-data-figure/helpers';
 import { getParsedSVG } from '@eeacms/volto-block-data-figure/actions';
 import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
@@ -159,19 +161,30 @@ class Edit extends Component {
    */
   onSubmitUrl = () => {
     if (!isInternalURL(this.state.url)) {
-      this.props.getParsedSVG(this.state.url)
+      let url;
+      axios.get(`http://localhost:3000/cors-proxy/${this.state.url}`, {
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+      )
         .then((resp) => {
-
-          console.log(resp)
+          url = extractSvg(resp.data)
+          this.setState({ url }, () => this.props.onChangeBlock(this.props.block, {
+            ...this.props.data,
+            url: this.state.url,
+          }))
         })
         .catch((err) => {
-          console.log(err)
+          return err
         });
     }
-    this.props.onChangeBlock(this.props.block, {
-      ...this.props.data,
-      url: this.state.url,
-    });
+    else {
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        url: this.state.url,
+      });
+    }
   };
 
   resetSubmitUrl = () => {

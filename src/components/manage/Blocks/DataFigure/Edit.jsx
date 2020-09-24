@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
 import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
@@ -158,8 +158,8 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onSubmitUrl = () => {
-    const dispatch = useDispatch();
-    dispatch(getSVG(this.state.url))
+
+    this.props.getSVG(this.state.url)
       .then((resp) => {
 
         console.log(resp)
@@ -373,6 +373,6 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
     }),
-    { createContent },
+    { createContent, getSVG },
   ),
 )(Edit);

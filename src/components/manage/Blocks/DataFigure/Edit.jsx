@@ -17,7 +17,6 @@ import Dropzone from 'react-dropzone';
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
 import { extractSvg } from '@eeacms/volto-block-data-figure/helpers';
-import { getParsedSVG } from '@eeacms/volto-block-data-figure/actions';
 import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
@@ -387,6 +386,6 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
     }),
-    { createContent, getParsedSVG },
+    { createContent },
   ),
 )(Edit);

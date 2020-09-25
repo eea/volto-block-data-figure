@@ -23,18 +23,3 @@ export function getSVG(url) {
     },
   };
 }
-
-export function getParsedSVG(url) {
-  return {
-    type: GET_PARSED_SVG,
-    request: {
-      op: 'get',
-      path: url,
-      headers: {
-        Accept: 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    },
-  };
-}
-

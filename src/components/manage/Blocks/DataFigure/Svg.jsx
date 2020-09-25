@@ -6,7 +6,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import cx from 'classnames';
 import './less/public.less';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';

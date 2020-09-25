@@ -57,6 +57,7 @@ const ImageSidebar = ({
   openObjectBrowser,
   resetSubmitUrl,
   intl,
+  svgs,
 }) => {
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
@@ -89,7 +90,7 @@ const ImageSidebar = ({
       {data.url && (
         <>
           <Segment className="sidebar-metadata-container" secondary>
-            {data.url.split('/').slice(-1)[0]}
+            {isInternalURL(data.url) && data.url.split('/').slice(-1)[0]}
             {isInternalURL(data.url) && (
               <img
                 width="100%"
@@ -97,9 +98,16 @@ const ImageSidebar = ({
                 alt={data.alt}
               />
             )}
-            {!isInternalURL(data.url) && (
-              <img src={data.url} alt={data.alt} style={{ width: '50%' }} />
-            )}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!isInternalURL(data.url) && svgs.map(it => (<div>
+                <p>{it.src.split('/').slice(-1)[0]}</p>
+                <img src={it.src} alt={it.alt} style={{ width: '100%' }} />
+              </div>)
+              )}
+            </div>
+          </Segment>
+          <Segment className="sidebar-metadata-container" secondary>
+
           </Segment>
           <Segment className="form sidebar-image-data">
             {isInternalURL(data.url) && (
@@ -112,15 +120,15 @@ const ImageSidebar = ({
                 iconAction={
                   data.url
                     ? () => {
-                        resetSubmitUrl();
-                        onChangeBlock(block, {
-                          ...data,
-                          url: '',
-                        });
-                      }
+                      resetSubmitUrl();
+                      onChangeBlock(block, {
+                        ...data,
+                        url: '',
+                      });
+                    }
                     : () => openObjectBrowser()
                 }
-                onChange={() => {}}
+                onChange={() => { }}
               />
             )}
             {!isInternalURL(data.url) && (
@@ -138,7 +146,7 @@ const ImageSidebar = ({
                     url: '',
                   });
                 }}
-                onChange={() => {}}
+                onChange={() => { }}
               />
             )}
             <TextWidget
@@ -171,8 +179,8 @@ const ImageSidebar = ({
               {activeAccIndex === 0 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
-                <Icon name={downSVG} size="20px" />
-              )}
+                  <Icon name={downSVG} size="20px" />
+                )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 0}>
               <TextWidget
@@ -184,11 +192,11 @@ const ImageSidebar = ({
                 iconAction={
                   data.href
                     ? () => {
-                        onChangeBlock(block, {
-                          ...data,
-                          href: '',
-                        });
-                      }
+                      onChangeBlock(block, {
+                        ...data,
+                        href: '',
+                      });
+                    }
                     : () => openObjectBrowser({ mode: 'link' })
                 }
                 onChange={(name, value) => {

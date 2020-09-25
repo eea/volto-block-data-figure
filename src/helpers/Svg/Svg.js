@@ -30,5 +30,6 @@ export const extractSvg = (data) => {
   const html = parser.parseFromString(data, 'text/html');
   const img = Array.from(html.getElementsByTagName('img'));
   const src = img.filter(it => it.src.includes('embed-chart.svg?'))
-  return src[0].src
+  console.log(src)
+  return src;
 }

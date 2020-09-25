@@ -74,6 +74,7 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
+    svg: [],
   };
 
   /**
@@ -165,7 +166,7 @@ class Edit extends Component {
       this.props.getParsedSVG(`http://${settings.host}:${settings.port}/cors-proxy/${this.state.url}`)
         .then((resp) => {
           url = extractSvg(resp)
-          this.setState({ url }, () => this.props.onChangeBlock(this.props.block, {
+          this.setState({ url: url[0].src, svg: url }, () => this.props.onChangeBlock(this.props.block, {
             ...this.props.data,
             url: this.state.url,
           }))
@@ -368,7 +369,7 @@ class Edit extends Component {
             )
         }
         <SidebarPortal selected={this.props.selected}>
-          <ImageSidebar {...this.props} resetSubmitUrl={this.resetSubmitUrl} />
+          <ImageSidebar {...this.props} svgs={this.state.svg} resetSubmitUrl={this.resetSubmitUrl} />
         </SidebarPortal>
       </div>
     );

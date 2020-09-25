@@ -24,3 +24,11 @@ export const cleanSVG = (data) => {
   // base64 encode
   return svg.outerHTML;
 };
+
+export const extractSvg = (data) => {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const img = Array.from(html.getElementsByTagName('img'));
+  const src = img.filter(it => it.src.includes('embed-chart.svg?'))
+  return src[0].src
+}

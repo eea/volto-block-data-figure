@@ -98,16 +98,20 @@ const ImageSidebar = ({
                 alt={data.alt}
               />
             )}
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {!isInternalURL(data.url) && svgs.map(it => (<div>
-                <p>{it.src.split('/').slice(-1)[0]}</p>
-                <img src={it.src} alt={it.alt} style={{ width: '100%' }} />
-              </div>)
-              )}
-            </div>
-          </Segment>
-          <Segment className="sidebar-metadata-container" secondary>
-
+            {!isInternalURL(data.url) && (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {svgs.map((it, ind) => (<div>
+                  <p>Image {ind + 1}</p>
+                  <img src={it.src} alt={it.alt} style={{ width: '50%', cursor: 'pointer' }} onClick={() => {
+                    onChangeBlock(block, {
+                      ...data,
+                      url: it.src,
+                    });
+                  }} />
+                </div>)
+                )}
+              </div>
+            )}
           </Segment>
           <Segment className="form sidebar-image-data">
             {isInternalURL(data.url) && (

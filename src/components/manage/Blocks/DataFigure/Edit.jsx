@@ -160,10 +160,10 @@ class Edit extends Component {
    * @param {object} e Event
    * @returns {undefined}
    */
-  onSubmitUrl = () => {
+  onSubmitUrl = async () => {
     if (!isInternalURL(this.state.url)) {
       let url;
-      this.props.getParsedSVG(`http://${settings.host}:${settings.port}/cors-proxy/${this.state.url}`)
+      await this.props.getParsedSVG(`http://${settings.host}:${settings.port}/cors-proxy/${this.state.url}`)
         .then((resp) => {
           url = extractSvg(resp)
           this.setState({ url: url[0].src, svg: url }, () => this.props.onChangeBlock(this.props.block, {

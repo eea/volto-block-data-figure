@@ -1,1 +1,1 @@
-export { cleanSVG, extractSvg } from '@eeacms/volto-block-data-figure/helpers/Svg/Svg';
+export { cleanSVG, extractSvg, extractTable } from '@eeacms/volto-block-data-figure/helpers/Svg/Svg';

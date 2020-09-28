@@ -31,4 +31,14 @@ export const extractSvg = (data) => {
   const img = Array.from(html.getElementsByTagName('img'));
   const src = img.filter(it => it.src.includes('embed-chart.svg?'))
   return src;
-}
+};
+
+export const extractTable = (data) => {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const table = html.getElementsByClassName('.download-visualization');
+  console.log(table)
+  const href = table.filter(it => it.href.includes('download.table'))
+  console.log(href)
+  return href;
+};

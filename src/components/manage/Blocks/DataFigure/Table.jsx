@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './less/public.less';
 import { settings } from '@plone/volto/config';
-import { getSVG } from '@eeacms/volto-block-data-figure/actions';
+import { getTable } from '@eeacms/volto-block-data-figure/actions';
 import {
     isInternalURL,
 } from '@plone/volto/helpers';
@@ -21,44 +21,22 @@ import {
 const Table = ({ data, detached }) => {
     const [table, setTable] = React.useState();
     const dispatch = useDispatch();
-
     React.useEffect(() => {
-        if (data.url.includes('.svg')) {
-            if (!isInternalURL(data.url)) {
-                dispatch(getSVG(`http://${settings.host}:${settings.port}/cors-proxy/${data.url}`))
-                    .then((resp) => {
-                        setSVG(cleanSVG(resp));
-                    })
-                    .catch((err) => {
-                        setSVG(err);
-                    });
-            }
-            else {
-                dispatch(getSVG(data.url))
-                    .then((resp) => {
-                        setTable();
-                    })
-                    .catch((err) => {
-                        setTable(err);
-                    });
-            }
+        if (data.href) {
+            dispatch(getTable(`http://${settings.host}:${settings.port}/cors-proxy/${data.href}`))
+                .then((resp) => {
+                    setTable(resp);
+                })
+                .catch((err) => {
+                    setTable(err);
+                });
         }
-    }, [dispatch, data]);
+    }, [dispatch, data])
 
     return table ? (
-        <p
-            className={cx(
-                'block data-figure align',
-                {
-                    center: !Boolean(data.align),
-                    detached,
-                },
-                data.align,
-            )}
-            dangerouslySetInnerHTML={{
-                __html: table,
-            }}
-        ></p>
+        <div dangerouslySetInnerHTML={{
+            __html: table,
+        }} />
     ) : (
             ''
         );

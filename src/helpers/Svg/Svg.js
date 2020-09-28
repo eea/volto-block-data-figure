@@ -36,9 +36,6 @@ export const extractSvg = (data) => {
 export const extractTable = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
-  const table = html.getElementsByClassName('.download-visualization');
-  console.log(table)
-  const href = table.filter(it => it.href.includes('download.table'))
-  console.log(href)
-  return href;
+  const table = html.querySelector('.download-visualization a');
+  return table.getAttribute('href');
 };

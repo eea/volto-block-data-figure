@@ -5,3 +5,4 @@
 
 export const GET_SVG = 'GET_SVG';
 export const GET_PARSED_SVG = 'GET_PARSED_SVG';
+export const GET_TABLE = 'GET_TABLE';

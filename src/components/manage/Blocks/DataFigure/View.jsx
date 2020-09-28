@@ -7,17 +7,21 @@ import Png from './Png';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Svg from './Svg';
+import Table from './Table';
+
 /**
  * View block class.
  * @class View
  * @extends Component
  */
 const View = ({ data, detached }) => {
-  return data.url?.includes('.svg') ? (
+  return data.url?.includes('.svg') ? (<div>
     <Svg data={data} detached={detached} />
+    <Table data={data} detached={detached} />
+  </div>
   ) : (
-    <Png data={data} detached={detached} />
-  );
+      <Png data={data} detached={detached} />
+    );
 };
 /**
  * Property types.

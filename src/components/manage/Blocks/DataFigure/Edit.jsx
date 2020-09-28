@@ -75,6 +75,7 @@ class Edit extends Component {
     uploading: false,
     url: '',
     svg: [],
+    href: '',
   };
 
   /**
@@ -167,9 +168,10 @@ class Edit extends Component {
         .then((resp) => {
           url = extractSvg(resp);
           href = extractTable(resp);
-          this.setState({ url: url[0].src, svg: url }, () => this.props.onChangeBlock(this.props.block, {
+          this.setState({ url: url[0].src, svg: url, href }, () => this.props.onChangeBlock(this.props.block, {
             ...this.props.data,
             url: this.state.url,
+            href: this.state.href,
           }))
         })
         .catch((err) => {

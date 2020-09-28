@@ -13,7 +13,7 @@ import Svg from './Svg';
  * @extends Component
  */
 const View = ({ data, detached }) => {
-  return data.url.includes('.svg') ? (
+  return data.url?.includes('.svg') ? (
     <Svg data={data} detached={detached} />
   ) : (
     <Png data={data} detached={detached} />

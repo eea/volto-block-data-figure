@@ -6,13 +6,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
+
 import './less/public.less';
-import { settings } from '@plone/volto/config';
-import { getTable } from '@eeacms/volto-block-data-figure/actions';
-import {
-    isInternalURL,
-} from '@plone/volto/helpers';
+
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
+
 /**
  * Svg block class.
  * @class Svg
@@ -23,7 +21,7 @@ const Table = ({ data, detached }) => {
     const dispatch = useDispatch();
     React.useEffect(() => {
         if (data.href) {
-            dispatch(getTable(`http://${settings.host}:${settings.port}/cors-proxy/${data.href}`))
+            dispatch(getProxiedExternalContent(data.href))
                 .then((resp) => {
                     setTable(resp);
                 })

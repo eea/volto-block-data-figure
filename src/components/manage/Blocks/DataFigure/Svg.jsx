@@ -8,8 +8,9 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './less/public.less';
-import { settings } from '@plone/volto/config';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
+import { settings } from '@plone/volto/config';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
 import {
   isInternalURL,
@@ -22,17 +23,24 @@ import {
 const Svg = ({ data, detached }) => {
   const [svg, setSVG] = React.useState();
   const dispatch = useDispatch();
+  const { corsProxyPath = '/cors-proxy', host, port } = settings;
+
+  const base = __SERVER__
+    ? `http://${host}:${port}`
+    : `${window.location.protocol}//${window.location.host}`;
+
+  const path = `${base}${corsProxyPath}/${data.url}`;
 
   React.useEffect(() => {
     if (data.url.includes('.svg')) {
       if (!isInternalURL(data.url)) {
-        dispatch(getSVG(`http://${settings.host}:${settings.port}/cors-proxy/${data.url}`))
+        dispatch(getSVG(path))
           .then((resp) => {
             setSVG(cleanSVG(resp));
           })
           .catch((err) => {
             setSVG(err);
-          });
+          })
       }
       else {
         dispatch(getSVG(data.url))

@@ -3,7 +3,7 @@
  * @module actions/datafigure/datafigure
  */
 
-import { GET_SVG, GET_PARSED_SVG, GET_TABLE } from '@eeacms/volto-block-data-figure/constants/ActionTypes';
+import { GET_SVG } from '@eeacms/volto-block-data-figure/constants/ActionTypes';
 /**
  * Get SVG function.
  * @function getSVG
@@ -23,30 +23,3 @@ export function getSVG(url) {
     },
   };
 }
-
-export function getParsedSVG(url) {
-  return {
-    type: GET_PARSED_SVG,
-    request: {
-      op: 'get',
-      path: url,
-      headers: {
-
-        Accept: 'text/html',
-      },
-    },
-  };
-}
-
-export function getTable(url) {
-  return {
-    type: GET_TABLE,
-    request: {
-      op: 'get',
-      path: url,
-      headers: {
-        Accept: 'text/html',
-      },
-    },
-  };
-};

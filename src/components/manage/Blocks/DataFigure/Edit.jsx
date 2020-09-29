@@ -15,9 +15,9 @@ import Dropzone from 'react-dropzone';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
-import { settings } from '@plone/volto/config';
 import { extractSvg, extractTable } from '@eeacms/volto-block-data-figure/helpers';
-import { getParsedSVG } from '@eeacms/volto-block-data-figure/actions';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
+
 import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
@@ -164,7 +164,7 @@ class Edit extends Component {
   onSubmitUrl = async () => {
     if (!isInternalURL(this.state.url)) {
       let url, href;
-      await this.props.getParsedSVG(`http://${settings.host}:${settings.port}/cors-proxy/${this.state.url}`)
+      await this.props.getProxiedExternalContent(this.state.url)
         .then((resp) => {
           url = extractSvg(resp);
           href = extractTable(resp);
@@ -386,6 +386,6 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
     }),
-    { createContent, getParsedSVG },
+    { createContent, getProxiedExternalContent },
   ),
 )(Edit);

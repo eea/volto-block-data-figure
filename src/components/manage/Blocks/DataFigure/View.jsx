@@ -32,13 +32,14 @@ class View extends React.Component {
     const { data, detached } = this.props;
     return this.props.data.url?.includes('.svg') ? (
       <div>
-        <Transition.Group visible={visible} animation='horizontal flip' duration={500}>
-          {visible && (<div style={{ width: '100%', height: '500px', overflowY: 'scroll' }}>
-            <Table data={data} detached={detached} />
-          </div>)}
-          {!visible && (<div>
+        <Transition.Group visible={visible} animation='horizontal flip' duration={500} unmountOnHide={false}>
+          {visible && (<div>
             <Svg data={data} detached={detached} />
           </div>)}
+          {!visible && (<div style={{ width: '100%', height: '500px', overflowY: 'scroll' }}>
+            <Table data={data} detached={detached} />
+          </div>)}
+
         </Transition.Group>
         <Divider hidden />
         <Button icon={<Icon name={replaceSVG} />} size='small' onClick={this.toggleVisibility} style={{ marginLeft: '50%' }} />

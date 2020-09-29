@@ -164,7 +164,7 @@ class Edit extends Component {
   onSubmitUrl = async () => {
     if (!isInternalURL(this.state.url)) {
       let url, href;
-      await this.props.getProxiedExternalContent(this.state.url)
+      await this.props.getProxiedExternalContent(this.state.url, { headers: { Accept: 'text/html' } })
         .then((resp) => {
           url = extractSvg(resp);
           href = extractTable(resp);

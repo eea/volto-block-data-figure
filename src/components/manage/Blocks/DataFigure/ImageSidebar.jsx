@@ -100,16 +100,22 @@ const ImageSidebar = ({
             )}
             {!isInternalURL(data.url) && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {svgs.map((it, ind) => (<div>
-                  <p>Image {ind + 1}</p>
-                  <img src={it.src} alt={it.alt} style={{ width: '50%', cursor: 'pointer' }} onClick={() => {
-                    onChangeBlock(block, {
-                      ...data,
-                      url: it.src,
-                    });
-                  }} />
-                </div>)
-                )}
+                {svgs.map((it, ind) => (
+                  <div>
+                    <p>Image {ind + 1}</p>
+                    <img
+                      src={it.src}
+                      alt={it.alt}
+                      style={{ width: '50%', cursor: 'pointer' }}
+                      onClick={() => {
+                        onChangeBlock(block, {
+                          ...data,
+                          url: it.src,
+                        });
+                      }}
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </Segment>
@@ -124,15 +130,15 @@ const ImageSidebar = ({
                 iconAction={
                   data.url
                     ? () => {
-                      resetSubmitUrl();
-                      onChangeBlock(block, {
-                        ...data,
-                        url: '',
-                      });
-                    }
+                        resetSubmitUrl();
+                        onChangeBlock(block, {
+                          ...data,
+                          url: '',
+                        });
+                      }
                     : () => openObjectBrowser()
                 }
-                onChange={() => { }}
+                onChange={() => {}}
               />
             )}
             {!isInternalURL(data.url) && (
@@ -150,7 +156,7 @@ const ImageSidebar = ({
                     url: '',
                   });
                 }}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             )}
             <TextWidget
@@ -183,8 +189,8 @@ const ImageSidebar = ({
               {activeAccIndex === 0 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
-                  <Icon name={downSVG} size="20px" />
-                )}
+                <Icon name={downSVG} size="20px" />
+              )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 0}>
               <TextWidget
@@ -196,11 +202,11 @@ const ImageSidebar = ({
                 iconAction={
                   data.href
                     ? () => {
-                      onChangeBlock(block, {
-                        ...data,
-                        href: '',
-                      });
-                    }
+                        onChangeBlock(block, {
+                          ...data,
+                          href: '',
+                        });
+                      }
                     : () => openObjectBrowser({ mode: 'link' })
                 }
                 onChange={(name, value) => {

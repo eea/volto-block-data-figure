@@ -8,12 +8,10 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './less/public.less';
-import { settings } from '@plone/volto/config';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import {
-  isInternalURL,
-} from '@plone/volto/helpers';
+import { isInternalURL } from '@plone/volto/helpers';
 /**
  * Svg block class.
  * @class Svg
@@ -26,15 +24,18 @@ const Svg = ({ data, detached }) => {
   React.useEffect(() => {
     if (data.url.includes('.svg')) {
       if (!isInternalURL(data.url)) {
-        dispatch(getSVG(`http://${settings.host}:${settings.port}/cors-proxy/${data.url}`))
+        dispatch(
+          getProxiedExternalContent(data.url, {
+            headers: { Accept: 'image/svg+xml' },
+          }),
+        )
           .then((resp) => {
             setSVG(cleanSVG(resp));
           })
           .catch((err) => {
             setSVG(err);
           });
-      }
-      else {
+      } else {
         dispatch(getSVG(data.url))
           .then((resp) => {
             setSVG(cleanSVG(resp));
@@ -61,8 +62,8 @@ const Svg = ({ data, detached }) => {
       }}
     ></p>
   ) : (
-      ''
-    );
+    ''
+  );
 };
 /**
  * Property types.

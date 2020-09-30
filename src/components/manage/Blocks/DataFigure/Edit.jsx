@@ -15,9 +15,12 @@ import Dropzone from 'react-dropzone';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
-import { settings } from '@plone/volto/config';
-import { extractSvg } from '@eeacms/volto-block-data-figure/helpers';
-import { getParsedSVG } from '@eeacms/volto-block-data-figure/actions';
+import {
+  extractSvg,
+  extractTable,
+} from '@eeacms/volto-block-data-figure/helpers';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
+
 import { Icon, SidebarPortal } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
@@ -75,6 +78,7 @@ class Edit extends Component {
     uploading: false,
     url: '',
     svg: [],
+    href: '',
   };
 
   /**
@@ -162,20 +166,26 @@ class Edit extends Component {
    */
   onSubmitUrl = async () => {
     if (!isInternalURL(this.state.url)) {
-      let url;
-      await this.props.getParsedSVG(`http://${settings.host}:${settings.port}/cors-proxy/${this.state.url}`)
+      let url, href;
+      await this.props
+        .getProxiedExternalContent(this.state.url, {
+          headers: { Accept: 'text/html' },
+        })
         .then((resp) => {
-          url = extractSvg(resp)
-          this.setState({ url: url[0].src, svg: url }, () => this.props.onChangeBlock(this.props.block, {
-            ...this.props.data,
-            url: this.state.url,
-          }))
+          url = extractSvg(resp);
+          href = extractTable(resp);
+          this.setState({ url: url[0].src, svg: url, href }, () =>
+            this.props.onChangeBlock(this.props.block, {
+              ...this.props.data,
+              url: this.state.url,
+              href: this.state.href,
+            }),
+          );
         })
         .catch((err) => {
-          return err
+          return err;
         });
-    }
-    else {
+    } else {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
         url: this.state.url,
@@ -263,113 +273,114 @@ class Edit extends Component {
       >
         {data.url && data.url.includes('.svg') ? (
           <Svg data={data} detached={detached} />
-        ) : data.url ?
-            (
-              <img
-                className={cx({
-                  'full-width': data.align === 'full',
-                  large: data.size === 'l',
-                  medium: data.size === 'm',
-                  small: data.size === 's',
-                })}
-                src={
-                  isInternalURL(data.url)
-                    ? // Backwards compat in the case that the block is storing the full server URL
-                    (() => {
-                      if (data.size === 'l')
-                        return `${flattenToAppURL(data.url)}/@@images/image`;
-                      if (data.size === 'm')
-                        return `${flattenToAppURL(
-                          data.url,
-                        )}/@@images/image/preview`;
-                      if (data.size === 's')
-                        return `${flattenToAppURL(data.url)}/@@images/image/mini`;
+        ) : data.url ? (
+          <img
+            className={cx({
+              'full-width': data.align === 'full',
+              large: data.size === 'l',
+              medium: data.size === 'm',
+              small: data.size === 's',
+            })}
+            src={
+              isInternalURL(data.url)
+                ? // Backwards compat in the case that the block is storing the full server URL
+                  (() => {
+                    if (data.size === 'l')
                       return `${flattenToAppURL(data.url)}/@@images/image`;
-                    })()
-                    : data.url
-                }
-                alt={data.alt || ''}
-              />
-            ) :
-            (
-              <div>
-                <Dropzone disableClick onDrop={this.onDrop} className="dropzone">
-                  <Message>
-                    {this.state.uploading && (
-                      <Dimmer active>
-                        <Loader indeterminate>Uploading image</Loader>
-                      </Dimmer>
-                    )}
-                    <center>
-                      <img src={imageBlockSVG} alt="" />
-                      <div className="toolbar-inner">
-                        <Button.Group>
-                          <Button
-                            basic
-                            icon
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              this.props.openObjectBrowser();
-                            }}
-                          >
-                            <Icon name={navTreeSVG} size="24px" />
-                          </Button>
-                        </Button.Group>
-                        <Button.Group>
-                          <label className="ui button basic icon">
-                            <Icon name={uploadSVG} size="24px" />
-                            <input
-                              type="file"
-                              onChange={this.onUploadImage}
-                              style={{ display: 'none' }}
-                            />
-                          </label>
-                        </Button.Group>
-                        <Input
-                          onKeyDown={this.onKeyDownVariantMenuForm}
-                          onChange={this.onChangeUrl}
-                          placeholder={placeholder}
-                          value={this.state.url}
-                          // Prevents propagation to the Dropzone and the opening
-                          // of the upload browser dialog
-                          onClick={(e) => e.stopPropagation()}
+                    if (data.size === 'm')
+                      return `${flattenToAppURL(
+                        data.url,
+                      )}/@@images/image/preview`;
+                    if (data.size === 's')
+                      return `${flattenToAppURL(data.url)}/@@images/image/mini`;
+                    return `${flattenToAppURL(data.url)}/@@images/image`;
+                  })()
+                : data.url
+            }
+            alt={data.alt || ''}
+          />
+        ) : (
+          <div>
+            <Dropzone disableClick onDrop={this.onDrop} className="dropzone">
+              <Message>
+                {this.state.uploading && (
+                  <Dimmer active>
+                    <Loader indeterminate>Uploading image</Loader>
+                  </Dimmer>
+                )}
+                <center>
+                  <img src={imageBlockSVG} alt="" />
+                  <div className="toolbar-inner">
+                    <Button.Group>
+                      <Button
+                        basic
+                        icon
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          this.props.openObjectBrowser();
+                        }}
+                      >
+                        <Icon name={navTreeSVG} size="24px" />
+                      </Button>
+                    </Button.Group>
+                    <Button.Group>
+                      <label className="ui button basic icon">
+                        <Icon name={uploadSVG} size="24px" />
+                        <input
+                          type="file"
+                          onChange={this.onUploadImage}
+                          style={{ display: 'none' }}
                         />
-                        {this.state.url && (
-                          <Button.Group>
-                            <Button
-                              basic
-                              className="cancel"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                this.setState({ url: '' });
-                              }}
-                            >
-                              <Icon name={clearSVG} size="30px" />
-                            </Button>
-                          </Button.Group>
-                        )}
-                        <Button.Group>
-                          <Button
-                            basic
-                            primary
-                            disabled={!this.state.url}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              this.onSubmitUrl();
-                            }}
-                          >
-                            <Icon name={aheadSVG} size="30px" />
-                          </Button>
-                        </Button.Group>
-                      </div>
-                    </center>
-                  </Message>
-                </Dropzone>
-              </div>
-            )
-        }
+                      </label>
+                    </Button.Group>
+                    <Input
+                      onKeyDown={this.onKeyDownVariantMenuForm}
+                      onChange={this.onChangeUrl}
+                      placeholder={placeholder}
+                      value={this.state.url}
+                      // Prevents propagation to the Dropzone and the opening
+                      // of the upload browser dialog
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    {this.state.url && (
+                      <Button.Group>
+                        <Button
+                          basic
+                          className="cancel"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            this.setState({ url: '' });
+                          }}
+                        >
+                          <Icon name={clearSVG} size="30px" />
+                        </Button>
+                      </Button.Group>
+                    )}
+                    <Button.Group>
+                      <Button
+                        basic
+                        primary
+                        disabled={!this.state.url}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          this.onSubmitUrl();
+                        }}
+                      >
+                        <Icon name={aheadSVG} size="30px" />
+                      </Button>
+                    </Button.Group>
+                  </div>
+                </center>
+              </Message>
+            </Dropzone>
+          </div>
+        )}
         <SidebarPortal selected={this.props.selected}>
-          <ImageSidebar {...this.props} svgs={this.state.svg} resetSubmitUrl={this.resetSubmitUrl} />
+          <ImageSidebar
+            {...this.props}
+            svgs={this.state.svg}
+            resetSubmitUrl={this.resetSubmitUrl}
+          />
         </SidebarPortal>
       </div>
     );
@@ -383,6 +394,6 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
     }),
-    { createContent, getParsedSVG },
+    { createContent, getProxiedExternalContent },
   ),
 )(Edit);

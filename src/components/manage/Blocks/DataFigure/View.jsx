@@ -5,20 +5,63 @@
 import './less/public.less';
 import Png from './Png';
 import PropTypes from 'prop-types';
+import { Transition, Button, Divider } from 'semantic-ui-react';
+import replaceSVG from '@plone/volto/icons/replace.svg';
+import { Icon } from '@plone/volto/components';
 import React from 'react';
 import Svg from './Svg';
+import Table from './Table';
+
 /**
  * View block class.
  * @class View
  * @extends Component
  */
-const View = ({ data, detached }) => {
-  return data.url?.includes('.svg') ? (
-    <Svg data={data} detached={detached} />
-  ) : (
-    <Png data={data} detached={detached} />
-  );
-};
+class View extends React.Component {
+  state = {
+    visible: true,
+  };
+
+  toggleVisibility = () =>
+    this.setState((prevState) => ({ visible: !prevState.visible }));
+
+  render() {
+    const { visible } = this.state;
+    const { data, detached } = this.props;
+    return this.props.data.url?.includes('.svg') ? (
+      <div>
+        <Transition.Group
+          visible={visible}
+          animation="horizontal flip"
+          duration={900}
+          unmountOnHide={false}
+        >
+          {visible && (
+            <div style={{ display: !visible && 'none' }}>
+              <Svg data={data} detached={detached} />
+            </div>
+          )}
+          {!visible && (
+            <div
+              style={{ width: '100%', height: '500px', overflowY: 'scroll' }}
+            >
+              <Table data={data} detached={detached} />
+            </div>
+          )}
+        </Transition.Group>
+        <Divider hidden />
+        <Button
+          icon={<Icon name={replaceSVG} />}
+          size="small"
+          onClick={this.toggleVisibility}
+          style={{ marginLeft: '50%' }}
+        />
+      </div>
+    ) : (
+      <Png data={data} detached={detached} />
+    );
+  }
+}
 /**
  * Property types.
  * @property {Object} propTypes Property types.

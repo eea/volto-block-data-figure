@@ -29,6 +29,13 @@ export const extractSvg = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const img = Array.from(html.getElementsByTagName('img'));
-  const src = img.filter(it => it.src.includes('embed-chart.svg?'))
+  const src = img.filter((it) => it.src.includes('embed-chart.svg?'));
   return src;
-}
+};
+
+export const extractTable = (data) => {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const table = html.querySelector('.download-visualization a');
+  return table.getAttribute('href');
+};

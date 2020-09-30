@@ -165,6 +165,10 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onSubmitUrl = async () => {
+    this.setState({
+      uploading: true,
+    });
+
     if (!isInternalURL(this.state.url)) {
       let url, href;
       await this.props

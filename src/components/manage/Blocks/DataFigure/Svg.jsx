@@ -11,9 +11,7 @@ import './less/public.less';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import {
-  isInternalURL,
-} from '@plone/volto/helpers';
+import { isInternalURL } from '@plone/volto/helpers';
 /**
  * Svg block class.
  * @class Svg
@@ -23,19 +21,21 @@ const Svg = ({ data, detached }) => {
   const [svg, setSVG] = React.useState();
   const dispatch = useDispatch();
 
-
   React.useEffect(() => {
     if (data.url.includes('.svg')) {
       if (!isInternalURL(data.url)) {
-        dispatch(getProxiedExternalContent(data.url, { headers: { Accept: 'image/svg+xml', } }))
+        dispatch(
+          getProxiedExternalContent(data.url, {
+            headers: { Accept: 'image/svg+xml' },
+          }),
+        )
           .then((resp) => {
             setSVG(cleanSVG(resp));
           })
           .catch((err) => {
             setSVG(err);
-          })
-      }
-      else {
+          });
+      } else {
         dispatch(getSVG(data.url))
           .then((resp) => {
             setSVG(cleanSVG(resp));
@@ -62,8 +62,8 @@ const Svg = ({ data, detached }) => {
       }}
     ></p>
   ) : (
-      ''
-    );
+    ''
+  );
 };
 /**
  * Property types.

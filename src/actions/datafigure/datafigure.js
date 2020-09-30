@@ -17,7 +17,6 @@ export function getSVG(url) {
       op: 'get',
       path: url,
       headers: {
-
         Accept: 'image/svg+xml',
       },
     },

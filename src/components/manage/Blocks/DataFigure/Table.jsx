@@ -17,27 +17,29 @@ import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
  * @extends Component
  */
 const Table = ({ data, detached }) => {
-    const [table, setTable] = React.useState();
-    const dispatch = useDispatch();
-    React.useEffect(() => {
-        if (data.href) {
-            dispatch(getProxiedExternalContent(data.href))
-                .then((resp) => {
-                    setTable(resp);
-                })
-                .catch((err) => {
-                    setTable(err);
-                });
-        }
-    }, [dispatch, data])
+  const [table, setTable] = React.useState();
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    if (data.href) {
+      dispatch(getProxiedExternalContent(data.href))
+        .then((resp) => {
+          setTable(resp);
+        })
+        .catch((err) => {
+          setTable(err);
+        });
+    }
+  }, [dispatch, data]);
 
-    return table ? (
-        <div dangerouslySetInnerHTML={{
-            __html: table,
-        }} />
-    ) : (
-            ''
-        );
+  return table ? (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: table,
+      }}
+    />
+  ) : (
+    ''
+  );
 };
 /**
  * Property types.
@@ -45,7 +47,7 @@ const Table = ({ data, detached }) => {
  * @static
  */
 Table.propTypes = {
-    data: PropTypes.objectOf(PropTypes.any).isRequired,
+  data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default Table;

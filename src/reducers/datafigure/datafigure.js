@@ -3,7 +3,9 @@
  * @module reducers/datafigure/datafigure
  */
 
-import { GET_SVG, GET_PARSED_SVG, GET_TABLE } from '@eeacms/volto-block-data-figure/constants/ActionTypes';
+import {
+  GET_SVG,
+} from '@eeacms/volto-block-data-figure/constants/ActionTypes';
 
 const initialState = {
   get: {

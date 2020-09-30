@@ -2,25 +2,73 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
-
+import './less/public.less';
 import Png from './Png';
 import PropTypes from 'prop-types';
-import ViewBoX from '@eeacms/volto-image-zoom-and-flip/ImageBlock/View';
+import { Transition, Button, Divider } from 'semantic-ui-react';
+import replaceSVG from '@plone/volto/icons/replace.svg';
+import { Icon } from '@plone/volto/components';
 import React from 'react';
+import Table from './Table';
 
 /**
  * View block class.
  * @class View
  * @extends Component
  */
-const View = ({ data, detached }) => {
-  return data.url?.includes('.svg') ? (
-    <ViewBoX data={data} />
-  ) : (
-    <Png data={data} detached={detached} />
-  );
-};
 
+class View extends React.Component {
+  state = {
+    visible: true,
+  };
+
+  toggleVisibility = () =>
+    this.setState((prevState) => ({ visible: !prevState.visible }));
+
+  render() {
+    const { visible } = this.state;
+    const { data, detached } = this.props;
+    return this.props.data.url?.includes('.svg') ? (
+      <div>
+        <Transition.Group
+          visible={visible}
+          animation="horizontal flip"
+          duration={500}
+          unmountOnHide={false}
+        >
+          {visible && (
+            <img
+              src={data.url}
+              style={{ width: '100%', height: '100%' }}
+              detached={detached}
+              alt={data.alt}
+            />
+          )}
+          {!visible && (
+            <div
+              style={{
+                width: '100%',
+                height: '500px',
+                overflowY: 'scroll',
+              }}
+            >
+              <Table data={data} />
+            </div>
+          )}
+        </Transition.Group>
+        <Divider hidden />
+        <Button
+          icon={<Icon name={replaceSVG} />}
+          size="small"
+          onClick={this.toggleVisibility}
+          style={{ marginLeft: '50%' }}
+        />
+      </div>
+    ) : (
+      <Png data={data} detached={detached} />
+    );
+  }
+}
 /**
  * Property types.
  * @property {Object} propTypes Property types.

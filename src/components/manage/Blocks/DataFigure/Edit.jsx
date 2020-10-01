@@ -213,11 +213,32 @@ class Edit extends Component {
                       />,
                     ),
                   ),
+            )
+            .catch((err) =>
+              this.setState({ uploading: false }, () =>
+                toast.error(
+                  <Toast
+                    error
+                    title={this.props.intl.formatMessage(messages.Error)}
+                    content={this.props.intl.formatMessage(
+                      messages.ErrorMessage,
+                    )}
+                  />,
+                ),
+              ),
             );
         })
-        .catch((err) => {
-          return err;
-        });
+        .catch((err) =>
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          ),
+        );
     } else {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,

@@ -87,8 +87,6 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
-    svg: [],
-    metadata: '',
     temporal: '',
   };
 

@@ -44,6 +44,10 @@ const messages = defineMessages({
     id: 'External URL',
     defaultMessage: 'External URL',
   },
+  temporalCoverage: {
+    id: 'Temporal coverage',
+    defaultMessage: 'Temporal coverage',
+  },
   size: {
     id: 'Size',
     defaultMessage: 'Size',
@@ -56,6 +60,7 @@ const ImageSidebar = ({
   onChangeBlock,
   openObjectBrowser,
   resetSubmitUrl,
+  resetTemporalCoverage,
   intl,
   svgs,
 }) => {
@@ -160,6 +165,23 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
+            <TextWidget
+              id="temporal"
+              title={intl.formatMessage(messages.temporalCoverage)}
+              required={false}
+              value={data.temporal}
+              icon={clearSVG}
+              iconAction={() => {
+                resetTemporalCoverage();
+
+                onChangeBlock(block, {
+                  ...data,
+                  temporal: '',
+                });
+              }}
+              onChange={() => {}}
+            />
+
             <TextWidget
               id="alt"
               title={intl.formatMessage(messages.AltText)}

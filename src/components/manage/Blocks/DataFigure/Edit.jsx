@@ -19,6 +19,7 @@ import Svg from './Svg';
 import {
   extractSvg,
   extractTable,
+  extractTemporal,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -88,6 +89,7 @@ class Edit extends Component {
     url: '',
     svg: [],
     metadata: '',
+    temporal: '',
   };
 
   /**
@@ -179,12 +181,13 @@ class Edit extends Component {
     });
 
     if (!isInternalURL(this.state.url)) {
-      let url, href;
+      let url, href, temporal;
       await this.props
         .getProxiedExternalContent(this.state.url, {
           headers: { Accept: 'text/html' },
         })
         .then((resp) => {
+          temporal = extractTemporal(resp);
           url = extractSvg(resp);
           href = extractTable(resp);
           this.props
@@ -194,12 +197,18 @@ class Edit extends Component {
             .then((e) =>
               url.length > 0
                 ? this.setState(
-                    { url: url[0].src, svg: url, metadata: e },
+                    {
+                      url: url[0].src,
+                      temporal,
+                      uploading: false,
+                    },
                     () =>
                       this.props.onChangeBlock(this.props.block, {
                         ...this.props.data,
                         url: this.state.url,
-                        metadata: this.state.metadata,
+                        svgs: url,
+                        metadata: e,
+                        temporal: this.state.temporal,
                       }),
                   )
                 : this.setState({ uploading: false }, () =>
@@ -250,6 +259,12 @@ class Edit extends Component {
   resetSubmitUrl = () => {
     this.setState({
       url: '',
+    });
+  };
+
+  resetTemporalCoverage = () => {
+    this.setState({
+      temporal: '',
     });
   };
 
@@ -432,8 +447,9 @@ class Edit extends Component {
         <SidebarPortal selected={this.props.selected}>
           <ImageSidebar
             {...this.props}
-            svgs={this.state.svg}
+            svgs={this.props.data.svgs}
             resetSubmitUrl={this.resetSubmitUrl}
+            resetTemporalCoverage={this.resetTemporalCoverage}
           />
         </SidebarPortal>
       </div>

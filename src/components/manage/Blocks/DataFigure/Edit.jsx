@@ -10,6 +10,7 @@ import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
 import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { toast } from 'react-toastify';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
 
@@ -21,7 +22,7 @@ import {
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
-import { Icon, SidebarPortal } from '@plone/volto/components';
+import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
   flattenToAppURL,
@@ -39,6 +40,14 @@ const messages = defineMessages({
   ImageBlockInputPlaceholder: {
     id: 'Data Visualization URL or SVG/PNG image',
     defaultMessage: 'Data Visualization URL or SVG/PNG image',
+  },
+  Error: {
+    id: 'Image(s) not found',
+    defaultMessage: 'Image(s) not found.',
+  },
+  ErrorMessage: {
+    id: 'Please use valid daviz url.',
+    defaultMessage: 'Please use valid daviz url.',
   },
 });
 
@@ -183,18 +192,53 @@ class Edit extends Component {
               headers: { Accept: 'text/html' },
             })
             .then((e) =>
-              this.setState({ url: url[0].src, svg: url, metadata: e }, () =>
-                this.props.onChangeBlock(this.props.block, {
-                  ...this.props.data,
-                  url: this.state.url,
-                  metadata: this.state.metadata,
-                }),
+              url.length > 0
+                ? this.setState(
+                    { url: url[0].src, svg: url, metadata: e },
+                    () =>
+                      this.props.onChangeBlock(this.props.block, {
+                        ...this.props.data,
+                        url: this.state.url,
+                        metadata: this.state.metadata,
+                      }),
+                  )
+                : this.setState({ uploading: false }, () =>
+                    toast.error(
+                      <Toast
+                        error
+                        title={this.props.intl.formatMessage(messages.Error)}
+                        content={this.props.intl.formatMessage(
+                          messages.ErrorMessage,
+                        )}
+                      />,
+                    ),
+                  ),
+            )
+            .catch((err) =>
+              this.setState({ uploading: false }, () =>
+                toast.error(
+                  <Toast
+                    error
+                    title={this.props.intl.formatMessage(messages.Error)}
+                    content={this.props.intl.formatMessage(
+                      messages.ErrorMessage,
+                    )}
+                  />,
+                ),
               ),
             );
         })
-        .catch((err) => {
-          return err;
-        });
+        .catch((err) =>
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          ),
+        );
     } else {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,

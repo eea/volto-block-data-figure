@@ -179,7 +179,12 @@ const ImageSidebar = ({
                   temporal: '',
                 });
               }}
-              onChange={() => {}}
+              onChange={(name, value) => {
+                onChangeBlock(block, {
+                  ...data,
+                  temporal: value,
+                });
+              }}
             />
 
             <TextWidget

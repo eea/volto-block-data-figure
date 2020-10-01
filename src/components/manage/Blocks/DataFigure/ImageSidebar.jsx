@@ -100,22 +100,23 @@ const ImageSidebar = ({
             )}
             {!isInternalURL(data.url) && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {svgs.map((it, ind) => (
-                  <div>
-                    <p>Image {ind + 1}</p>
-                    <img
-                      src={it.src}
-                      alt={it.alt}
-                      style={{ width: '50%', cursor: 'pointer' }}
-                      onClick={() => {
-                        onChangeBlock(block, {
-                          ...data,
-                          url: it.src,
-                        });
-                      }}
-                    />
-                  </div>
-                ))}
+                {svgs.length > 0 &&
+                  svgs.map((it, ind) => (
+                    <div>
+                      <p>Image {ind + 1}</p>
+                      <img
+                        src={it.src}
+                        alt={it.alt}
+                        style={{ width: '50%', cursor: 'pointer' }}
+                        onClick={() => {
+                          onChangeBlock(block, {
+                            ...data,
+                            url: it.src,
+                          });
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
           </Segment>

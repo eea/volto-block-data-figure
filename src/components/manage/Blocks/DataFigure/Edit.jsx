@@ -78,7 +78,7 @@ class Edit extends Component {
     uploading: false,
     url: '',
     svg: [],
-    href: '',
+    metadata: '',
   };
 
   /**
@@ -178,13 +178,19 @@ class Edit extends Component {
         .then((resp) => {
           url = extractSvg(resp);
           href = extractTable(resp);
-          this.setState({ url: url[0].src, svg: url, href }, () =>
-            this.props.onChangeBlock(this.props.block, {
-              ...this.props.data,
-              url: this.state.url,
-              href: this.state.href,
-            }),
-          );
+          this.props
+            .getProxiedExternalContent(href, {
+              headers: { Accept: 'text/html' },
+            })
+            .then((e) =>
+              this.setState({ url: url[0].src, svg: url, metadata: e }, () =>
+                this.props.onChangeBlock(this.props.block, {
+                  ...this.props.data,
+                  url: this.state.url,
+                  metadata: this.state.metadata,
+                }),
+              ),
+            );
         })
         .catch((err) => {
           return err;

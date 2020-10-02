@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Segment } from 'semantic-ui-react';
+import { Accordion, Segment, Label } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
+import CreatableSelect from 'react-select/creatable';
+import {
+  Option,
+  DropdownIndicator,
+  selectTheme,
+  customSelectStyles,
+} from '@plone/volto/components/manage/Widgets/SelectStyling';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
+import './less/public.less';
 
 import imageSVG from '@plone/volto/icons/image.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
@@ -47,6 +55,10 @@ const messages = defineMessages({
   temporalCoverage: {
     id: 'Temporal coverage',
     defaultMessage: 'Temporal coverage',
+  },
+  NoSelection: {
+    id: 'No selection',
+    defaultMessage: 'No selection',
   },
   size: {
     id: 'Size',
@@ -165,27 +177,44 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
-            <TextWidget
-              id="temporal"
-              title={intl.formatMessage(messages.temporalCoverage)}
-              required={false}
-              value={data.temporal}
-              icon={clearSVG}
-              iconAction={() => {
-                resetTemporalCoverage();
-
-                onChangeBlock(block, {
-                  ...data,
-                  temporal: '',
-                });
-              }}
-              onChange={(name, value) => {
-                onChangeBlock(block, {
-                  ...data,
-                  temporal: value,
-                });
-              }}
-            />
+            <div style={{ display: 'flex' }}>
+              <Label
+                style={{ marginTop: '19px', border: 'none' }}
+                size="large"
+                basic
+                horizontal
+              >
+                {intl.formatMessage(messages.temporalCoverage)}
+              </Label>
+              <CreatableSelect
+                isMulti
+                allowCreateWhileLoading={true}
+                id="select-temporal-coverage"
+                name="select-temporal-coverage"
+                className="react-select-container"
+                classNamePrefix="react-select"
+                // placeholder="Select criteria"
+                options={[
+                  {
+                    label: intl.formatMessage(messages.NoSelection),
+                    value: '',
+                  },
+                ]}
+                value={{
+                  label: data.temporal,
+                  value: data.temporal,
+                }}
+                styles={customSelectStyles}
+                theme={selectTheme}
+                components={{ DropdownIndicator, Option }}
+                onChange={(field) => {
+                  onChangeBlock(block, {
+                    ...data,
+                    temporal: field.value,
+                  });
+                }}
+              />
+            </div>
 
             <TextWidget
               id="alt"

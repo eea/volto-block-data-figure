@@ -177,15 +177,12 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
-            <div style={{ display: 'flex' }}>
-              <Label
-                style={{ marginTop: '19px', border: 'none' }}
-                size="large"
-                basic
-                horizontal
-              >
-                {intl.formatMessage(messages.temporalCoverage)}
-              </Label>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="wrapper-coverage">
+                <label htmlFor="field-external" style={{ fontWeight: '500' }}>
+                  {intl.formatMessage(messages.temporalCoverage)}
+                </label>
+              </div>
               <CreatableSelect
                 isMulti
                 allowCreateWhileLoading={true}
@@ -215,7 +212,6 @@ const ImageSidebar = ({
                 }}
               />
             </div>
-
             <TextWidget
               id="alt"
               title={intl.formatMessage(messages.AltText)}

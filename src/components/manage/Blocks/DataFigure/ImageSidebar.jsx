@@ -77,6 +77,15 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const [activeAccIndex, setActiveAccIndex] = useState(0);
+  const [selectedOption, setOption] = useState(
+    data.temporal ? [{ value: data.temporal, label: data.temporal }] : [],
+  );
+  React.useEffect(() => {
+    onChangeBlock(block, {
+      ...data,
+      temporal: selectedOption.length !== 0 ? selectedOption[0].value : null,
+    });
+  }, [selectedOption]);
 
   function handleAccClick(e, titleProps) {
     const { index } = titleProps;
@@ -188,7 +197,7 @@ const ImageSidebar = ({
                 allowCreateWhileLoading={true}
                 id="select-temporal-coverage"
                 name="select-temporal-coverage"
-                className="react-select-container"
+                className="react-select-container-temporal"
                 classNamePrefix="react-select"
                 // placeholder="Select criteria"
                 options={[
@@ -197,18 +206,21 @@ const ImageSidebar = ({
                     value: '',
                   },
                 ]}
-                value={{
-                  label: data.temporal,
-                  value: data.temporal,
+                isValidNewOption={(inputValue, selectValue, selectOptions) => {
+                  return /^\d+$/.test(parseInt(inputValue.split('-')[0]));
                 }}
+                value={selectedOption || []}
                 styles={customSelectStyles}
                 theme={selectTheme}
                 components={{ DropdownIndicator, Option }}
-                onChange={(field) => {
-                  onChangeBlock(block, {
-                    ...data,
-                    temporal: field.value,
-                  });
+                onChange={(field, value) => {
+                  setOption((prevState) =>
+                    field
+                      ? field.map((item) => {
+                          return { value: item.value, label: item.label };
+                        })
+                      : null,
+                  );
                 }}
               />
             </div>

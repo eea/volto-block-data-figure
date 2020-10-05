@@ -207,7 +207,7 @@ class Edit extends Component {
                           url: this.state.url,
                           svgs: url,
                           metadata: e,
-                          temporal: this.state.temporal,
+                          temporal: { label: temporal, value: temporal },
                         }),
                     )
                   : this.setState({ uploading: false }, () =>

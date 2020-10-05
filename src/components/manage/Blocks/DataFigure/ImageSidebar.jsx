@@ -78,7 +78,7 @@ const ImageSidebar = ({
 }) => {
   const [activeAccIndex, setActiveAccIndex] = useState(0);
   const [selectedOption, setOption] = useState(
-    data.temporal ? [data.temporal] : [],
+    data.temporal ? [data.temporal] : null,
   );
   React.useEffect(() => {
     onChangeBlock(block, {
@@ -212,9 +212,7 @@ const ImageSidebar = ({
                 isValidNewOption={(inputValue, selectValue, selectOptions) => {
                   return /^\d+$/.test(parseInt(inputValue.split('-')[0]));
                 }}
-                value={
-                  (selectedOption.length > 0 && selectedOption) || data.temporal
-                }
+                value={selectedOption || data.temporal}
                 styles={customSelectStyles}
                 theme={selectTheme}
                 components={{ DropdownIndicator, Option }}

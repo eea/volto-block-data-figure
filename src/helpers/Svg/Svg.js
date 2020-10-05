@@ -39,3 +39,10 @@ export const extractTable = (data) => {
   const table = html.querySelector('.download-visualization a');
   return table.getAttribute('href');
 };
+
+export const extractTemporal = (data) => {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const coverage = html.querySelector('#tempCoverage');
+  return coverage.innerText.trim();
+};

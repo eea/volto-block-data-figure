@@ -19,6 +19,7 @@ import Svg from './Svg';
 import {
   extractSvg,
   extractTable,
+  extractTemporal,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -86,8 +87,6 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
-    svg: [],
-    metadata: '',
   };
 
   /**
@@ -179,66 +178,84 @@ class Edit extends Component {
     });
 
     if (!isInternalURL(this.state.url)) {
-      let url, href;
-      await this.props
-        .getProxiedExternalContent(this.state.url, {
-          headers: { Accept: 'text/html' },
-        })
-        .then((resp) => {
-          url = extractSvg(resp);
-          href = extractTable(resp);
-          this.props
-            .getProxiedExternalContent(href, {
-              headers: { Accept: 'text/html' },
-            })
-            .then((e) =>
-              url.length > 0
-                ? this.setState(
-                    { url: url[0].src, svg: url, metadata: e },
-                    () =>
-                      this.props.onChangeBlock(this.props.block, {
-                        ...this.props.data,
-                        url: this.state.url,
-                        metadata: this.state.metadata,
-                      }),
-                  )
-                : this.setState({ uploading: false }, () =>
-                    toast.error(
-                      <Toast
-                        error
-                        title={this.props.intl.formatMessage(messages.Error)}
-                        content={this.props.intl.formatMessage(
-                          messages.ErrorMessage,
-                        )}
-                      />,
+      if (this.state.url.includes('daviz')) {
+        let url, href, temporal;
+        await this.props
+          .getProxiedExternalContent(this.state.url, {
+            headers: { Accept: 'text/html' },
+          })
+          .then((resp) => {
+            temporal = extractTemporal(resp);
+            url = extractSvg(resp);
+            href = extractTable(resp);
+            this.props
+              .getProxiedExternalContent(href, {
+                headers: { Accept: 'text/html' },
+              })
+              .then((e) =>
+                url.length > 0
+                  ? this.setState(
+                      {
+                        url: url[0].src,
+                        uploading: false,
+                      },
+                      () =>
+                        this.props.onChangeBlock(this.props.block, {
+                          ...this.props.data,
+                          url: this.state.url,
+                          svgs: url,
+                          metadata: e,
+                          temporal: { label: temporal, value: temporal },
+                        }),
+                    )
+                  : this.setState({ uploading: false }, () =>
+                      toast.error(
+                        <Toast
+                          error
+                          title={this.props.intl.formatMessage(messages.Error)}
+                          content={this.props.intl.formatMessage(
+                            messages.ErrorMessage,
+                          )}
+                        />,
+                      ),
                     ),
+              )
+              .catch((err) =>
+                this.setState({ uploading: false }, () =>
+                  toast.error(
+                    <Toast
+                      error
+                      title={this.props.intl.formatMessage(messages.Error)}
+                      content={this.props.intl.formatMessage(
+                        messages.ErrorMessage,
+                      )}
+                    />,
                   ),
-            )
-            .catch((err) =>
-              this.setState({ uploading: false }, () =>
-                toast.error(
-                  <Toast
-                    error
-                    title={this.props.intl.formatMessage(messages.Error)}
-                    content={this.props.intl.formatMessage(
-                      messages.ErrorMessage,
-                    )}
-                  />,
                 ),
+              );
+          })
+          .catch((err) =>
+            this.setState({ uploading: false }, () =>
+              toast.error(
+                <Toast
+                  error
+                  title={this.props.intl.formatMessage(messages.Error)}
+                  content={this.props.intl.formatMessage(messages.ErrorMessage)}
+                />,
               ),
-            );
-        })
-        .catch((err) =>
-          this.setState({ uploading: false }, () =>
-            toast.error(
-              <Toast
-                error
-                title={this.props.intl.formatMessage(messages.Error)}
-                content={this.props.intl.formatMessage(messages.ErrorMessage)}
-              />,
             ),
+          );
+      } else {
+        this.setState({ uploading: false }, () =>
+          toast.error(
+            <Toast
+              error
+              title={this.props.intl.formatMessage(messages.Error)}
+              content={this.props.intl.formatMessage(messages.ErrorMessage)}
+            />,
           ),
         );
+      }
     } else {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
@@ -432,7 +449,7 @@ class Edit extends Component {
         <SidebarPortal selected={this.props.selected}>
           <ImageSidebar
             {...this.props}
-            svgs={this.state.svg}
+            svgs={this.props.data.svgs}
             resetSubmitUrl={this.resetSubmitUrl}
           />
         </SidebarPortal>

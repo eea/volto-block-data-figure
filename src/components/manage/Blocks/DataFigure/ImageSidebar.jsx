@@ -72,7 +72,6 @@ const ImageSidebar = ({
   onChangeBlock,
   openObjectBrowser,
   resetSubmitUrl,
-  resetTemporalCoverage,
   intl,
   svgs,
 }) => {

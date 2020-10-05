@@ -87,7 +87,6 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
-    temporal: '',
   };
 
   /**
@@ -198,7 +197,6 @@ class Edit extends Component {
                   ? this.setState(
                       {
                         url: url[0].src,
-                        temporal,
                         uploading: false,
                       },
                       () =>
@@ -269,12 +267,6 @@ class Edit extends Component {
   resetSubmitUrl = () => {
     this.setState({
       url: '',
-    });
-  };
-
-  resetTemporalCoverage = () => {
-    this.setState({
-      temporal: '',
     });
   };
 
@@ -459,7 +451,6 @@ class Edit extends Component {
             {...this.props}
             svgs={this.props.data.svgs}
             resetSubmitUrl={this.resetSubmitUrl}
-            resetTemporalCoverage={this.resetTemporalCoverage}
           />
         </SidebarPortal>
       </div>

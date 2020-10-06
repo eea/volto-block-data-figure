@@ -4,6 +4,7 @@ import { Accordion, Segment, Label } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import CreatableSelect from 'react-select/creatable';
+import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import {
   Option,
   DropdownIndicator,
@@ -224,6 +225,14 @@ const ImageSidebar = ({
                       : null,
                   );
                 }}
+              />
+            </div>
+            <div className="sidebar-geo-data">
+              <GeolocationWidget
+                data={data}
+                block={block}
+                onChangeBlock={onChangeBlock}
+                intl={intl}
               />
             </div>
             <TextWidget

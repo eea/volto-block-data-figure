@@ -20,6 +20,7 @@ import {
   extractSvg,
   extractTable,
   extractTemporal,
+  extractGeographic,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -179,6 +180,17 @@ class Edit extends Component {
     let url = extractSvg(arr.join(''));
     let href = extractTable(arr.join(''));
     return [temporal, url, href];
+  };
+
+  modifyCoverage = (coverage) => {
+    const labelCoverage = [];
+    const coverages = coverage
+      .split(/\r?\n/)
+      .map((it) => it.trim())
+      .filter(Boolean);
+    coverages.map((item) => labelCoverage.push({ value: item, label: item }));
+    console.log(labelCoverage);
+    return labelCoverage;
   };
 
   /**

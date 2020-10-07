@@ -4,7 +4,7 @@ import { Accordion, Segment, Label } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import CreatableSelect from 'react-select/creatable';
-import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
+import { GeolocationWidget } from '../../../../../../volto-widget-geolocation/src/components';
 import {
   Option,
   DropdownIndicator,
@@ -227,14 +227,6 @@ const ImageSidebar = ({
                 }}
               />
             </div>
-            <div className="sidebar-geo-data">
-              <GeolocationWidget
-                data={data}
-                block={block}
-                onChangeBlock={onChangeBlock}
-                intl={intl}
-              />
-            </div>
             <TextWidget
               id="alt"
               title={intl.formatMessage(messages.AltText)}
@@ -261,7 +253,7 @@ const ImageSidebar = ({
               index={0}
               onClick={handleAccClick}
             >
-              Link Settings
+              Geographical Settings
               {activeAccIndex === 0 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
@@ -269,6 +261,28 @@ const ImageSidebar = ({
               )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 0}>
+              <div className="sidebar-geo-data">
+                <GeolocationWidget
+                  data={data}
+                  block={block}
+                  onChangeBlock={onChangeBlock}
+                  intl={intl}
+                />
+              </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 1}
+              index={1}
+              onClick={handleAccClick}
+            >
+              Link Settings
+              {activeAccIndex === 1 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 1}>
               <TextWidget
                 id="link"
                 title={intl.formatMessage(messages.LinkTo)}

@@ -110,7 +110,6 @@ class Edit extends Component {
         alt: nextProps.content.title,
       });
     }
-    console.log(this.props.subrequests[this.state.url]?.loading);
     if (
       this.props.subrequests[this.state.url]?.loading &&
       nextProps.subrequests[this.state.url]?.error

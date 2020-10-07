@@ -110,6 +110,15 @@ class Edit extends Component {
         alt: nextProps.content.title,
       });
     }
+    console.log(this.props.subrequests[this.state.url]?.loading);
+    if (
+      this.props.subrequests[this.state.url]?.loading &&
+      nextProps.subrequests[this.state.url]?.error
+    ) {
+      this.setState({
+        error: nextProps.subrequests[this.state.url].error,
+      });
+    }
   }
 
   /**
@@ -163,6 +172,7 @@ class Edit extends Component {
   onChangeUrl = ({ target }) => {
     this.setState({
       url: target.value,
+      error: null,
     });
   };
 
@@ -180,35 +190,48 @@ class Edit extends Component {
     if (!isInternalURL(this.state.url)) {
       if (this.state.url.includes('daviz')) {
         let url, href, temporal;
+        let arr = [];
         await this.props.getProxiedExternalContent(this.state.url, {
           headers: { Accept: 'text/html' },
         });
-        const response = this.props.dabdam;
-        if (response[this.state.url]) {
-          console.log(this.props.dabdam);
-          temporal = extractTemporal(response[this.state.url].data);
-          url = extractSvg(response[this.state.url].data);
-          href = extractTable(response[this.state.url].data);
-          this.props.getProxiedExternalContent(href, {
-            headers: { Accept: 'text/html' },
-          });
-
-          if (url.length > 0) {
-            this.setState(
-              {
-                url: url[0].src,
-                uploading: false,
-              },
-              () =>
-                this.props.onChangeBlock(this.props.block, {
-                  ...this.props.data,
-                  url: this.state.url,
-                  svgs: url,
-                  metadata: this.props.dabdam[href]?.data,
-                  temporal: { label: temporal, value: temporal },
-                }),
-            );
-          }
+        for (const key in this.props.subrequests[this.state.url].data) {
+          arr.push(this.props.subrequests[this.state.url].data[key]);
+        }
+        temporal = extractTemporal(arr.join(''));
+        url = extractSvg(arr.join(''));
+        href = extractTable(arr.join(''));
+        await this.props.getProxiedExternalContent(href, {
+          headers: { Accept: 'text/html' },
+        });
+        arr = [];
+        for (const key in this.props.subrequests[href]?.data) {
+          arr.push(this.props.subrequests[href]?.data[key]);
+        }
+        if (url.length > 0) {
+          this.setState(
+            {
+              url: url[0].src,
+              uploading: false,
+            },
+            () =>
+              this.props.onChangeBlock(this.props.block, {
+                ...this.props.data,
+                url: this.state.url,
+                svgs: url,
+                metadata: arr.join(''),
+                temporal: { label: temporal, value: temporal },
+              }),
+          );
+        } else {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          );
         }
       }
     } else {
@@ -287,6 +310,17 @@ class Edit extends Component {
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
+    if (this.state.error) {
+      return this.setState({ uploading: false }, () =>
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.Error)}
+            content={this.props.intl.formatMessage(messages.ErrorMessage)}
+          />,
+        ),
+      );
+    }
     return (
       <div
         className={cx(
@@ -419,7 +453,7 @@ export default compose(
     (state, ownProps) => ({
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
-      dabdam: state.content.subrequests,
+      subrequests: state.content.subrequests,
     }),
     { createContent, getProxiedExternalContent },
   ),

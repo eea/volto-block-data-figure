@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Segment, Label } from 'semantic-ui-react';
+import { Accordion, Segment } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
-import CreatableSelect from 'react-select/creatable';
-import { GeolocationWidget } from '../../../../../../volto-widget-geolocation/src/components';
-import {
-  Option,
-  DropdownIndicator,
-  selectTheme,
-  customSelectStyles,
-} from '@plone/volto/components/manage/Widgets/SelectStyling';
+
+import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
+import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
+
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
 import './less/public.less';
 
@@ -53,14 +49,6 @@ const messages = defineMessages({
     id: 'External URL',
     defaultMessage: 'External URL',
   },
-  temporalCoverage: {
-    id: 'Temporal coverage',
-    defaultMessage: 'Temporal coverage',
-  },
-  NoSelection: {
-    id: 'No selection',
-    defaultMessage: 'No selection',
-  },
   size: {
     id: 'Size',
     defaultMessage: 'Size',
@@ -77,18 +65,6 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const [activeAccIndex, setActiveAccIndex] = useState(0);
-  const [selectedOption, setOption] = useState(
-    data.temporal ? [data.temporal] : null,
-  );
-  React.useEffect(() => {
-    onChangeBlock(block, {
-      ...data,
-      temporal:
-        selectedOption && selectedOption.length !== 0
-          ? selectedOption[0]
-          : null,
-    });
-  }, [selectedOption]);
 
   function handleAccClick(e, titleProps) {
     const { index } = titleProps;
@@ -189,44 +165,7 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div className="wrapper-coverage">
-                <label htmlFor="field-external" style={{ fontWeight: '500' }}>
-                  {intl.formatMessage(messages.temporalCoverage)}
-                </label>
-              </div>
-              <CreatableSelect
-                isMulti
-                allowCreateWhileLoading={true}
-                id="select-temporal-coverage"
-                name="select-temporal-coverage"
-                className="react-select-container-temporal"
-                classNamePrefix="react-select"
-                // placeholder="Select criteria"
-                options={[
-                  {
-                    label: intl.formatMessage(messages.NoSelection),
-                    value: '',
-                  },
-                ]}
-                isValidNewOption={(inputValue, selectValue, selectOptions) => {
-                  return /^\d+$/.test(parseInt(inputValue.split('-')[0]));
-                }}
-                value={selectedOption || data.temporal}
-                styles={customSelectStyles}
-                theme={selectTheme}
-                components={{ DropdownIndicator, Option }}
-                onChange={(field, value) => {
-                  setOption((prevState) =>
-                    field
-                      ? field.map((item) => {
-                          return { value: item.value, label: item.label };
-                        })
-                      : null,
-                  );
-                }}
-              />
-            </div>
+
             <TextWidget
               id="alt"
               title={intl.formatMessage(messages.AltText)}
@@ -253,7 +192,7 @@ const ImageSidebar = ({
               index={0}
               onClick={handleAccClick}
             >
-              Geographical Settings
+              Link Settings
               {activeAccIndex === 0 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
@@ -261,28 +200,6 @@ const ImageSidebar = ({
               )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 0}>
-              <div className="sidebar-geo-data">
-                <GeolocationWidget
-                  data={data}
-                  block={block}
-                  onChangeBlock={onChangeBlock}
-                  intl={intl}
-                />
-              </div>
-            </Accordion.Content>
-            <Accordion.Title
-              active={activeAccIndex === 1}
-              index={1}
-              onClick={handleAccClick}
-            >
-              Link Settings
-              {activeAccIndex === 1 ? (
-                <Icon name={upSVG} size="20px" />
-              ) : (
-                <Icon name={downSVG} size="20px" />
-              )}
-            </Accordion.Title>
-            <Accordion.Content active={activeAccIndex === 1}>
               <TextWidget
                 id="link"
                 title={intl.formatMessage(messages.LinkTo)}
@@ -317,6 +234,50 @@ const ImageSidebar = ({
                   });
                 }}
               />
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 1}
+              index={1}
+              onClick={handleAccClick}
+            >
+              Geographical Settings
+              {activeAccIndex === 0 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 1}>
+              <div className="sidebar-geo-data">
+                <GeolocationWidget
+                  data={data}
+                  block={block}
+                  onChangeBlock={onChangeBlock}
+                  intl={intl}
+                />
+              </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 2}
+              index={2}
+              onClick={handleAccClick}
+            >
+              Temporal Settings
+              {activeAccIndex === 2 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 2}>
+              <div className="sidebar-geo-data">
+                <TemporalWidget
+                  data={data}
+                  block={block}
+                  onChangeBlock={onChangeBlock}
+                  intl={intl}
+                />
+              </div>
             </Accordion.Content>
           </Accordion>
         </>

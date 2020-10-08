@@ -110,6 +110,14 @@ class Edit extends Component {
         alt: nextProps.content.title,
       });
     }
+    if (
+      this.props.subrequests[this.state.url]?.loading &&
+      nextProps.subrequests[this.state.url]?.error
+    ) {
+      this.setState({
+        error: nextProps.subrequests[this.state.url].error,
+      });
+    }
   }
 
   /**
@@ -163,7 +171,14 @@ class Edit extends Component {
   onChangeUrl = ({ target }) => {
     this.setState({
       url: target.value,
+      error: null,
     });
+  };
+  extractAssets = (arr) => {
+    let temporal = extractTemporal(arr.join(''));
+    let url = extractSvg(arr.join(''));
+    let href = extractTable(arr.join(''));
+    return [temporal, url, href];
   };
 
   /**
@@ -179,82 +194,47 @@ class Edit extends Component {
 
     if (!isInternalURL(this.state.url)) {
       if (this.state.url.includes('daviz')) {
-        let url, href, temporal;
-        await this.props
-          .getProxiedExternalContent(this.state.url, {
-            headers: { Accept: 'text/html' },
-          })
-          .then((resp) => {
-            temporal = extractTemporal(resp);
-            url = extractSvg(resp);
-            href = extractTable(resp);
-            this.props
-              .getProxiedExternalContent(href, {
-                headers: { Accept: 'text/html' },
-              })
-              .then((e) =>
-                url.length > 0
-                  ? this.setState(
-                      {
-                        url: url[0].src,
-                        uploading: false,
-                      },
-                      () =>
-                        this.props.onChangeBlock(this.props.block, {
-                          ...this.props.data,
-                          url: this.state.url,
-                          svgs: url,
-                          metadata: e,
-                          temporal: { label: temporal, value: temporal },
-                        }),
-                    )
-                  : this.setState({ uploading: false }, () =>
-                      toast.error(
-                        <Toast
-                          error
-                          title={this.props.intl.formatMessage(messages.Error)}
-                          content={this.props.intl.formatMessage(
-                            messages.ErrorMessage,
-                          )}
-                        />,
-                      ),
-                    ),
-              )
-              .catch((err) =>
-                this.setState({ uploading: false }, () =>
-                  toast.error(
-                    <Toast
-                      error
-                      title={this.props.intl.formatMessage(messages.Error)}
-                      content={this.props.intl.formatMessage(
-                        messages.ErrorMessage,
-                      )}
-                    />,
-                  ),
-                ),
-              );
-          })
-          .catch((err) =>
-            this.setState({ uploading: false }, () =>
-              toast.error(
-                <Toast
-                  error
-                  title={this.props.intl.formatMessage(messages.Error)}
-                  content={this.props.intl.formatMessage(messages.ErrorMessage)}
-                />,
-              ),
+        let arr = [];
+        await this.props.getProxiedExternalContent(this.state.url, {
+          headers: { Accept: 'text/html' },
+        });
+        for (const key in this.props.subrequests[this.state.url].data) {
+          arr.push(this.props.subrequests[this.state.url].data[key]);
+        }
+        const [temporal, url, href] = this.extractAssets(arr);
+        await this.props.getProxiedExternalContent(href, {
+          headers: { Accept: 'text/html' },
+        });
+        arr = [];
+        for (const key in this.props.subrequests[href]?.data) {
+          arr.push(this.props.subrequests[href]?.data[key]);
+        }
+        if (url.length > 0) {
+          this.setState(
+            {
+              url: url[0].src,
+              uploading: false,
+            },
+            () =>
+              this.props.onChangeBlock(this.props.block, {
+                ...this.props.data,
+                url: this.state.url,
+                svgs: url,
+                metadata: arr.join(''),
+                temporal: { label: temporal, value: temporal },
+              }),
+          );
+        } else {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
             ),
           );
-      } else {
-        this.setState({ uploading: false }, () =>
-          toast.error(
-            <Toast
-              error
-              title={this.props.intl.formatMessage(messages.Error)}
-              content={this.props.intl.formatMessage(messages.ErrorMessage)}
-            />,
-          ),
-        );
+        }
       }
     } else {
       this.props.onChangeBlock(this.props.block, {
@@ -332,6 +312,17 @@ class Edit extends Component {
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
+    if (this.state.error) {
+      return this.setState({ uploading: false }, () =>
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.Error)}
+            content={this.props.intl.formatMessage(messages.ErrorMessage)}
+          />,
+        ),
+      );
+    }
     return (
       <div
         className={cx(
@@ -464,6 +455,7 @@ export default compose(
     (state, ownProps) => ({
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
+      subrequests: state.content.subrequests,
     }),
     { createContent, getProxiedExternalContent },
   ),

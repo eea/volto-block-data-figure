@@ -174,6 +174,12 @@ class Edit extends Component {
       error: null,
     });
   };
+  extractAssets = (arr) => {
+    let temporal = extractTemporal(arr.join(''));
+    let url = extractSvg(arr.join(''));
+    let href = extractTable(arr.join(''));
+    return [temporal, url, href];
+  };
 
   /**
    * Submit url handler
@@ -188,7 +194,6 @@ class Edit extends Component {
 
     if (!isInternalURL(this.state.url)) {
       if (this.state.url.includes('daviz')) {
-        let url, href, temporal;
         let arr = [];
         await this.props.getProxiedExternalContent(this.state.url, {
           headers: { Accept: 'text/html' },
@@ -196,9 +201,7 @@ class Edit extends Component {
         for (const key in this.props.subrequests[this.state.url].data) {
           arr.push(this.props.subrequests[this.state.url].data[key]);
         }
-        temporal = extractTemporal(arr.join(''));
-        url = extractSvg(arr.join(''));
-        href = extractTable(arr.join(''));
+        const [temporal, url, href] = this.extractAssets(arr);
         await this.props.getProxiedExternalContent(href, {
           headers: { Accept: 'text/html' },
         });

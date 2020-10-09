@@ -175,22 +175,12 @@ class Edit extends Component {
       error: null,
     });
   };
+
   extractAssets = (arr) => {
     let temporal = extractTemporal(arr.join(''));
     let url = extractSvg(arr.join(''));
     let href = extractTable(arr.join(''));
     return [temporal, url, href];
-  };
-
-  modifyCoverage = (coverage) => {
-    const labelCoverage = [];
-    const coverages = coverage
-      .split(/\r?\n/)
-      .map((it) => it.trim())
-      .filter(Boolean);
-    coverages.map((item) => labelCoverage.push({ value: item, label: item }));
-    console.log(labelCoverage);
-    return labelCoverage;
   };
 
   /**

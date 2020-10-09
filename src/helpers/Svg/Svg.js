@@ -46,10 +46,3 @@ export const extractTemporal = (data) => {
   const coverage = html.querySelector('#tempCoverage');
   return coverage.innerText.trim();
 };
-
-export const extractGeographic = (data) => {
-  const parser = new DOMParser();
-  const html = parser.parseFromString(data, 'text/html');
-  const coverage = html.querySelector('.geotags');
-  return coverage.innerText.trim();
-};

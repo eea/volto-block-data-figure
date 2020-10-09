@@ -20,7 +20,6 @@ import {
   extractSvg,
   extractTable,
   extractTemporal,
-  extractGeographic,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 

@@ -283,7 +283,16 @@ const ImageSidebar = ({
                 <TemporalWidget
                   data={data}
                   block={block}
-                  onChangeBlock={onChangeBlock}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      temporal: name
+                        ? name.map((item) => {
+                            return { label: item.label, value: item.value };
+                          })
+                        : null,
+                    });
+                  }}
                   intl={intl}
                 />
               </div>

@@ -252,7 +252,16 @@ const ImageSidebar = ({
                 <GeolocationWidget
                   data={data}
                   block={block}
-                  onChangeBlock={onChangeBlock}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      geolocation: name
+                        ? name.map((item) => {
+                            return { label: item.label, value: item.value };
+                          })
+                        : null,
+                    });
+                  }}
                   intl={intl}
                 />
               </div>

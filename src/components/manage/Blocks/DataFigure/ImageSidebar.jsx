@@ -264,10 +264,11 @@ const ImageSidebar = ({
                 id="link"
                 title={intl.formatMessage(messages.LinkTo)}
                 required={false}
-                value={data.href}
+                ref={(node) => (this.link = node)}
+                value={data.href || data.url}
                 icon={data.href ? clearSVG : navTreeSVG}
                 iconAction={
-                  data.href
+                  this.link.current.value
                     ? () => {
                         onChangeBlock(block, {
                           ...data,

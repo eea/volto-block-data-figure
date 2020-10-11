@@ -36,24 +36,26 @@ class View extends React.Component {
         <div className="scene scene--card">
           <div className={`card ${visible ? ' is-flipped' : ''}`}>
             <div className="card__face card__face--front">
-              <img
-                className={cx({ 'full-width': data.align === 'full' })}
-                style={{
-                  width: data.width ? data.width + 'px' : '100%',
-                  height: data.height ? data.height + 'px' : '100%',
-                  marginLeft:
-                    data.inLeftColumn && data.width
-                      ? `-${parseInt(data.width) + 10}px`
-                      : '0',
-                  marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                }}
-                src={
-                  data.url.includes(settings.apiPath)
-                    ? `${flattenToAppURL(data.url)}/@@images/image`
-                    : data.url
-                }
-                alt={data.alt || ''}
-              ></img>
+              <a href={data.href} target={data.openLinkInNewTab && '_blank'}>
+                <img
+                  className={cx({ 'full-width': data.align === 'full' })}
+                  style={{
+                    width: data.width ? data.width + 'px' : '100%',
+                    height: data.height ? data.height + 'px' : '100%',
+                    marginLeft:
+                      data.inLeftColumn && data.width
+                        ? `-${parseInt(data.width) + 10}px`
+                        : '0',
+                    marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                  }}
+                  src={
+                    data.url.includes(settings.apiPath)
+                      ? `${flattenToAppURL(data.url)}/@@images/image`
+                      : data.url
+                  }
+                  alt={data.alt || ''}
+                ></img>
+              </a>
             </div>
             <div className="card__face card__face--back">
               <Table data={data} />

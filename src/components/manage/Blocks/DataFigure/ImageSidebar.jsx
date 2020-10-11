@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment, Label } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
@@ -79,6 +79,7 @@ const ImageSidebar = ({
   const [selectedOption, setOption] = useState(
     data.temporal ? [data.temporal] : null,
   );
+
   React.useEffect(() => {
     onChangeBlock(block, {
       ...data,
@@ -264,11 +265,10 @@ const ImageSidebar = ({
                 id="link"
                 title={intl.formatMessage(messages.LinkTo)}
                 required={false}
-                ref={(node) => (this.link = node)}
-                value={data.href || data.url}
+                value={data.href}
                 icon={data.href ? clearSVG : navTreeSVG}
                 iconAction={
-                  this.link.current.value
+                  data.href
                     ? () => {
                         onChangeBlock(block, {
                           ...data,

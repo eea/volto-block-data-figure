@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
+
+import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
+import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
+
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
+import './less/public.less';
 
 import imageSVG from '@plone/volto/icons/image.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
@@ -57,6 +62,7 @@ const ImageSidebar = ({
   openObjectBrowser,
   resetSubmitUrl,
   intl,
+  svgs,
 }) => {
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
@@ -89,7 +95,7 @@ const ImageSidebar = ({
       {data.url && (
         <>
           <Segment className="sidebar-metadata-container" secondary>
-            {data.url.split('/').slice(-1)[0]}
+            {isInternalURL(data.url) && data.url.split('/').slice(-1)[0]}
             {isInternalURL(data.url) && (
               <img
                 width="100%"
@@ -98,7 +104,25 @@ const ImageSidebar = ({
               />
             )}
             {!isInternalURL(data.url) && (
-              <img src={data.url} alt={data.alt} style={{ width: '50%' }} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {svgs.length > 0 &&
+                  svgs.map((it, ind) => (
+                    <div>
+                      <p>Image {ind + 1}</p>
+                      <img
+                        src={it.src}
+                        alt={it.alt}
+                        style={{ width: '50%', cursor: 'pointer' }}
+                        onClick={() => {
+                          onChangeBlock(block, {
+                            ...data,
+                            url: it.src,
+                          });
+                        }}
+                      />
+                    </div>
+                  ))}
+              </div>
             )}
           </Segment>
           <Segment className="form sidebar-image-data">
@@ -141,6 +165,7 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
+
             <TextWidget
               id="alt"
               title={intl.formatMessage(messages.AltText)}
@@ -209,6 +234,68 @@ const ImageSidebar = ({
                   });
                 }}
               />
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 1}
+              index={1}
+              onClick={handleAccClick}
+            >
+              Geographical Settings
+              {activeAccIndex === 0 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 1}>
+              <div className="sidebar-geo-data">
+                <GeolocationWidget
+                  data={data}
+                  block={block}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      geolocation: name
+                        ? name.map((item) => {
+                            return { label: item.label, value: item.value };
+                          })
+                        : null,
+                    });
+                  }}
+                  intl={intl}
+                />
+              </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 2}
+              index={2}
+              onClick={handleAccClick}
+            >
+              Temporal Settings
+              {activeAccIndex === 2 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 2}>
+              <div className="sidebar-geo-data">
+                <TemporalWidget
+                  data={data}
+                  block={block}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      temporal: name
+                        ? name.map((item) => {
+                            return { label: item.label, value: item.value };
+                          })
+                        : null,
+                    });
+                  }}
+                  intl={intl}
+                />
+              </div>
             </Accordion.Content>
           </Accordion>
         </>

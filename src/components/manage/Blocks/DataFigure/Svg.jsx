@@ -9,7 +9,9 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './less/public.less';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
+import { isInternalURL } from '@plone/volto/helpers';
 /**
  * Svg block class.
  * @class Svg
@@ -21,13 +23,27 @@ const Svg = ({ data, detached }) => {
 
   React.useEffect(() => {
     if (data.url.includes('.svg')) {
-      dispatch(getSVG(data.url))
-        .then((resp) => {
-          setSVG(cleanSVG(resp));
-        })
-        .catch((err) => {
-          setSVG(err);
-        });
+      if (!isInternalURL(data.url)) {
+        dispatch(
+          getProxiedExternalContent(data.url, {
+            headers: { Accept: 'image/svg+xml' },
+          }),
+        )
+          .then((resp) => {
+            setSVG(cleanSVG(resp));
+          })
+          .catch((err) => {
+            setSVG(err);
+          });
+      } else {
+        dispatch(getSVG(data.url))
+          .then((resp) => {
+            setSVG(cleanSVG(resp));
+          })
+          .catch((err) => {
+            setSVG(err);
+          });
+      }
     }
   }, [dispatch, data]);
 

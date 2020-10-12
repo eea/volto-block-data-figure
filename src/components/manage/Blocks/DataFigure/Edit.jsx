@@ -10,11 +10,20 @@ import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
 import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { toast } from 'react-toastify';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
 
 import ImageSidebar from './ImageSidebar';
-import { Icon, SidebarPortal } from '@plone/volto/components';
+import Svg from './Svg';
+import {
+  extractSvg,
+  extractTable,
+  extractTemporal,
+} from '@eeacms/volto-block-data-figure/helpers';
+import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
+
+import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
 import {
   flattenToAppURL,
@@ -32,6 +41,14 @@ const messages = defineMessages({
   ImageBlockInputPlaceholder: {
     id: 'Data Visualization URL or SVG/PNG image',
     defaultMessage: 'Data Visualization URL or SVG/PNG image',
+  },
+  Error: {
+    id: 'Image(s) not found',
+    defaultMessage: 'Image(s) not found.',
+  },
+  ErrorMessage: {
+    id: 'Please use valid daviz url.',
+    defaultMessage: 'Please use valid daviz url.',
   },
 });
 
@@ -93,6 +110,14 @@ class Edit extends Component {
         alt: nextProps.content.title,
       });
     }
+    if (
+      this.props.subrequests[this.state.url]?.loading &&
+      nextProps.subrequests[this.state.url]?.error
+    ) {
+      this.setState({
+        error: nextProps.subrequests[this.state.url].error,
+      });
+    }
   }
 
   /**
@@ -146,7 +171,15 @@ class Edit extends Component {
   onChangeUrl = ({ target }) => {
     this.setState({
       url: target.value,
+      error: null,
     });
+  };
+
+  extractAssets = (arr) => {
+    let temporal = extractTemporal(arr.join(''));
+    let url = extractSvg(arr.join(''));
+    let href = extractTable(arr.join(''));
+    return [temporal, url, href];
   };
 
   /**
@@ -155,11 +188,61 @@ class Edit extends Component {
    * @param {object} e Event
    * @returns {undefined}
    */
-  onSubmitUrl = () => {
-    this.props.onChangeBlock(this.props.block, {
-      ...this.props.data,
-      url: this.state.url,
+  onSubmitUrl = async () => {
+    this.setState({
+      uploading: true,
     });
+
+    if (!isInternalURL(this.state.url)) {
+      if (this.state.url.includes('daviz')) {
+        let arr = [];
+        await this.props.getProxiedExternalContent(this.state.url, {
+          headers: { Accept: 'text/html' },
+        });
+        for (const key in this.props.subrequests[this.state.url].data) {
+          arr.push(this.props.subrequests[this.state.url].data[key]);
+        }
+        const [temporal, url, href] = this.extractAssets(arr);
+        await this.props.getProxiedExternalContent(href, {
+          headers: { Accept: 'text/html' },
+        });
+        arr = [];
+        for (const key in this.props.subrequests[href]?.data) {
+          arr.push(this.props.subrequests[href]?.data[key]);
+        }
+        if (url.length > 0) {
+          this.setState(
+            {
+              url: url[0].src,
+              uploading: false,
+            },
+            () =>
+              this.props.onChangeBlock(this.props.block, {
+                ...this.props.data,
+                url: this.state.url,
+                svgs: url,
+                metadata: arr.join(''),
+                temporal: { label: temporal, value: temporal },
+              }),
+          );
+        } else {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          );
+        }
+      }
+    } else {
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        url: this.state.url,
+      });
+    }
   };
 
   resetSubmitUrl = () => {
@@ -226,10 +309,21 @@ class Edit extends Component {
    * @returns {string} Markup for the component.
    */
   render() {
-    const { data } = this.props;
+    const { data, detached } = this.props;
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
+    if (this.state.error) {
+      return this.setState({ uploading: false }, () =>
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.Error)}
+            content={this.props.intl.formatMessage(messages.ErrorMessage)}
+          />,
+        ),
+      );
+    }
     return (
       <div
         className={cx(
@@ -240,7 +334,9 @@ class Edit extends Component {
           data.align,
         )}
       >
-        {data.url ? (
+        {data.url && data.url.includes('.svg') ? (
+          <Svg data={data} detached={detached} />
+        ) : data.url ? (
           <img
             className={cx({
               'full-width': data.align === 'full',
@@ -343,7 +439,11 @@ class Edit extends Component {
           </div>
         )}
         <SidebarPortal selected={this.props.selected}>
-          <ImageSidebar {...this.props} resetSubmitUrl={this.resetSubmitUrl} />
+          <ImageSidebar
+            {...this.props}
+            svgs={this.props.data.svgs}
+            resetSubmitUrl={this.resetSubmitUrl}
+          />
         </SidebarPortal>
       </div>
     );
@@ -356,7 +456,8 @@ export default compose(
     (state, ownProps) => ({
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
+      subrequests: state.content.subrequests,
     }),
-    { createContent },
+    { createContent, getProxiedExternalContent },
   ),
 )(Edit);

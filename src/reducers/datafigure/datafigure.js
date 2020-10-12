@@ -11,6 +11,7 @@ const initialState = {
     loading: false,
     error: null,
   },
+  subrequests: {},
 };
 
 /**
@@ -31,6 +32,7 @@ function getRequestKey(actionType) {
  * @returns {Object} New state.
  */
 export default function datafigure(state = initialState, action = {}) {
+  let { result } = action;
   switch (action.type) {
     case `${GET_SVG}_PENDING`:
       return {
@@ -49,7 +51,7 @@ export default function datafigure(state = initialState, action = {}) {
           loaded: true,
           error: null,
         },
-        result: action.result,
+        result,
       };
     case `${GET_SVG}_FAIL`:
       return {

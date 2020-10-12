@@ -174,6 +174,7 @@ class Edit extends Component {
       error: null,
     });
   };
+
   extractAssets = (arr) => {
     let temporal = extractTemporal(arr.join(''));
     let url = extractSvg(arr.join(''));

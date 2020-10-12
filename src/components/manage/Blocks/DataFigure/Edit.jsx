@@ -393,9 +393,11 @@ class Edit extends Component {
                           <label className="ui button basic icon">
                             <Icon name={uploadSVG} size="24px" />
                             <input
-                              type="file"
-                              onChange={this.onUploadImage}
-                              style={{ display: 'none' }}
+                              {...getInputProps({
+                                type: 'file',
+                                onChange: this.onUploadImage,
+                                style: { display: 'none' },
+                              })}
                             />
                           </label>
                         </Button.Group>

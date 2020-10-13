@@ -31,7 +31,7 @@ const applyConfig = (config) => {
   // Default CORS: www.eea.europa.eu
   config.settings.allowed_cors_destinations = [
     ...(config.settings.allowed_cors_destinations || []),
-    'eea.europa.eu',
+    'www.eea.europa.eu',
   ];
 
   return config;

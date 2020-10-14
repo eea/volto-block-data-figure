@@ -30,19 +30,21 @@ export const extractSvg = (data) => {
   const html = parser.parseFromString(data, 'text/html');
   const img = Array.from(html.getElementsByTagName('img'));
   const src = img.filter((it) => it.src.includes('embed-chart.svg?'));
-  return src;
+  if (src.length > 0) return src;
+  const nonDavizPNG = html.querySelector('.figures-download-links');
+  return nonDavizPNG ? nonDavizPNG.children[2].firstElementChild.href : [];
 };
 
 export const extractTable = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const table = html.querySelector('.download-visualization a');
-  return table.getAttribute('href');
+  return table ? table.getAttribute('href') : '';
 };
 
 export const extractTemporal = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const coverage = html.querySelector('#tempCoverage');
-  return coverage.innerText.trim();
+  return coverage ? coverage.innerText.trim() : '';
 };

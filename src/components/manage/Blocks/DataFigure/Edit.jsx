@@ -176,10 +176,24 @@ class Edit extends Component {
   };
 
   extractAssets = (arr) => {
-    let temporal = extractTemporal(arr.join(''));
     let url = extractSvg(arr.join(''));
-    let href = extractTable(arr.join(''));
-    return [temporal, url, href];
+    let temporal = extractTemporal(arr.join(''));
+    if (this.state.url.includes('daviz')) {
+      let href = extractTable(arr.join(''));
+      return [temporal, url, href];
+    }
+    return [temporal, url];
+  };
+
+  externalURLContents = async (url) => {
+    let arr = [];
+    await this.props.getProxiedExternalContent(url, {
+      headers: { Accept: 'text/html' },
+    });
+    for (const key in this.props.subrequests[url].data) {
+      arr.push(this.props.subrequests[url].data[key]);
+    }
+    return arr;
   };
 
   /**
@@ -194,49 +208,38 @@ class Edit extends Component {
     });
 
     if (!isInternalURL(this.state.url)) {
-      if (this.state.url.includes('daviz')) {
-        let arr = [];
-        await this.props.getProxiedExternalContent(this.state.url, {
-          headers: { Accept: 'text/html' },
-        });
-        for (const key in this.props.subrequests[this.state.url].data) {
-          arr.push(this.props.subrequests[this.state.url].data[key]);
-        }
-        const [temporal, url, href] = this.extractAssets(arr);
-        await this.props.getProxiedExternalContent(href, {
-          headers: { Accept: 'text/html' },
-        });
-        arr = [];
-        for (const key in this.props.subrequests[href]?.data) {
-          arr.push(this.props.subrequests[href]?.data[key]);
-        }
-        if (url.length > 0) {
-          this.setState(
-            {
-              url: url[0].src,
-              uploading: false,
-            },
-            () =>
-              this.props.onChangeBlock(this.props.block, {
-                ...this.props.data,
-                url: this.state.url,
-                svgs: url,
-                metadata: arr.join(''),
-                href: this.state.url,
-                temporal: { label: temporal, value: temporal },
-              }),
-          );
-        } else {
-          this.setState({ uploading: false }, () =>
-            toast.error(
-              <Toast
-                error
-                title={this.props.intl.formatMessage(messages.Error)}
-                content={this.props.intl.formatMessage(messages.ErrorMessage)}
-              />,
-            ),
-          );
-        }
+      let table;
+      const arr = await this.externalURLContents(this.state.url);
+      const [temporal, url, href = null] = this.extractAssets(arr);
+      if (href) {
+        table = await this.externalURLContents(href);
+      }
+      if (url.length > 0) {
+        this.setState(
+          {
+            url: url[0].src || url,
+            uploading: false,
+          },
+          () =>
+            this.props.onChangeBlock(this.props.block, {
+              ...this.props.data,
+              url: this.state.url,
+              svgs: url,
+              metadata: table?.join('') || '',
+              href: this.state.url,
+              temporal: { label: temporal, value: temporal },
+            }),
+        );
+      } else {
+        this.setState({ uploading: false }, () =>
+          toast.error(
+            <Toast
+              error
+              title={this.props.intl.formatMessage(messages.Error)}
+              content={this.props.intl.formatMessage(messages.ErrorMessage)}
+            />,
+          ),
+        );
       }
     } else {
       this.props.onChangeBlock(this.props.block, {

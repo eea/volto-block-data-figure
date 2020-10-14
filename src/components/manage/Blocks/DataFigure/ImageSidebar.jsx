@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
+import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
@@ -105,7 +106,7 @@ const ImageSidebar = ({
             )}
             {!isInternalURL(data.url) && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {svgs.length > 0 &&
+                {svgs.length > 0 && isArray(svgs) ? (
                   svgs.map((it, ind) => (
                     <div>
                       <p>Image {ind + 1}</p>
@@ -121,7 +122,17 @@ const ImageSidebar = ({
                         }}
                       />
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <div>
+                    <p>Image</p>
+                    <img
+                      src={svgs}
+                      alt={data.alt}
+                      style={{ width: '50%', cursor: 'pointer' }}
+                    />
+                  </div>
+                )}
               </div>
             )}
           </Segment>

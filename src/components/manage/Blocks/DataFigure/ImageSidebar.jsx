@@ -262,6 +262,12 @@ const ImageSidebar = ({
                         : null,
                     });
                   }}
+                  onToggle={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      openGeoSearch: name,
+                    });
+                  }}
                   intl={intl}
                 />
               </div>

@@ -266,10 +266,15 @@ const ImageSidebar = ({
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      geolocation: name
+                      geolocation: isArray(name)
                         ? name.map((item) => {
                             return { label: item.label, value: item.value };
                           })
+                        : name
+                        ? [
+                            ...(data.geolocation || []),
+                            { label: name, value: name },
+                          ]
                         : null,
                     });
                   }}

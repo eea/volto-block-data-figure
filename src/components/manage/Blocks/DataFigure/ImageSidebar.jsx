@@ -273,7 +273,7 @@ const ImageSidebar = ({
                         : name
                         ? [
                             ...(data.geolocation || []),
-                            { label: name, value: name },
+                            { label: name.toponymName, value: name.geonameId },
                           ]
                         : null,
                     });

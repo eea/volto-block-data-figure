@@ -270,12 +270,13 @@ const ImageSidebar = ({
                         ? name.map((item) => {
                             return { label: item.label, value: item.value };
                           })
-                        : name
-                        ? [
-                            ...(data.geolocation || []),
-                            { label: name, value: name },
-                          ]
                         : null,
+                    });
+                  }}
+                  onChangeSchema={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      [value]: name,
                     });
                   }}
                   intl={intl}

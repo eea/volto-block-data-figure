@@ -12,6 +12,7 @@ import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
 import { Icon } from '@plone/volto/components';
+import Metadata from './Metadata';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import React from 'react';
 import Table from './Table';
@@ -26,13 +27,17 @@ import './less/public.less';
 class View extends React.Component {
   state = {
     visible: false,
+    showMetadata: false,
   };
 
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
+  toggleMetadata = () =>
+    this.setState((prevState) => ({ showMetadata: !prevState.showMetadata }));
+
   render() {
-    const { visible } = this.state;
+    const { visible, showMetadata } = this.state;
     const { data, detached } = this.props;
     return this.props.data.url?.includes('.svg') ? (
       <div>
@@ -59,6 +64,7 @@ class View extends React.Component {
                   alt={data.alt || ''}
                 ></img>
               </a>
+              <Metadata visible={showMetadata} />
             </div>
             <div className="card__face card__face--back">
               <Table data={data} />
@@ -66,7 +72,7 @@ class View extends React.Component {
           </div>
         </div>
         <Divider hidden />
-        <Button.Group style={{ margin: '0 50%' }} labeled widths={16} basic>
+        <Button.Group style={{ margin: '0 50%' }} widths={16}>
           <Popup
             trigger={
               <Button icon onClick={this.toggleVisibility}>
@@ -79,13 +85,13 @@ class View extends React.Component {
           </Popup>
           <Popup
             trigger={
-              <Button icon>
+              <Button icon onClick={this.toggleMetadata}>
                 <Icon name={infoSVG} size="24px" />
               </Button>
             }
             position="top center"
           >
-            info
+            metadata
           </Popup>
           <Popup
             trigger={

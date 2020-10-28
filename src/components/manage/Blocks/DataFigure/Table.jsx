@@ -11,12 +11,17 @@ import PropTypes from 'prop-types';
  * @extends Component
  */
 const Table = ({ data }) => {
-  return (
+  return data.metadata ? (
     <div
       dangerouslySetInnerHTML={{
         __html: data.metadata,
       }}
     />
+  ) : (
+    <div>
+      Data table is not directly available for this figure, please consult Data
+      sources.
+    </div>
   );
 };
 /**

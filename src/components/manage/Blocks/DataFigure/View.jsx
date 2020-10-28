@@ -2,17 +2,20 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
-import './less/public.less';
 import Png from './Png';
 import cx from 'classnames';
 import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
-import { Button, Divider } from 'semantic-ui-react';
-import replaceSVG from '@plone/volto/icons/replace.svg';
+import { Button, Divider, Popup } from 'semantic-ui-react';
+import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
+import infoSVG from '@plone/volto/icons/info.svg';
+import applicationSVG from '@plone/volto/icons/application.svg';
+import downloadSVG from '@plone/volto/icons/download.svg';
 import { Icon } from '@plone/volto/components';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import React from 'react';
 import Table from './Table';
+import './less/public.less';
 
 /**
  * View block class.
@@ -63,12 +66,48 @@ class View extends React.Component {
           </div>
         </div>
         <Divider hidden />
-        <Button
-          icon={<Icon name={replaceSVG} />}
-          size="small"
-          onClick={this.toggleVisibility}
-          style={{ marginLeft: '50%' }}
-        />
+        <Button.Group style={{ margin: '0 50%' }} labeled widths={16} basic>
+          <Popup
+            trigger={
+              <Button icon onClick={this.toggleVisibility}>
+                <Icon name={spreadsheetSVG} size="24px" />
+              </Button>
+            }
+            position="top center"
+          >
+            data table
+          </Popup>
+          <Popup
+            trigger={
+              <Button icon>
+                <Icon name={infoSVG} size="24px" />
+              </Button>
+            }
+            position="top center"
+          >
+            info
+          </Popup>
+          <Popup
+            trigger={
+              <Button icon>
+                <Icon name={applicationSVG} size="24px" />
+              </Button>
+            }
+            position="top center"
+          >
+            application
+          </Popup>
+          <Popup
+            trigger={
+              <Button icon>
+                <Icon name={downloadSVG} size="24px" />
+              </Button>
+            }
+            position="top center"
+          >
+            download data
+          </Popup>
+        </Button.Group>
       </div>
     ) : (
       <Png data={data} detached={detached} />

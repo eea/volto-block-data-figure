@@ -20,6 +20,7 @@ import {
   extractSvg,
   extractTable,
   extractTemporal,
+  extractMetadata,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -179,8 +180,9 @@ class Edit extends Component {
     let url = extractSvg(arr.join(''));
     let temporal = extractTemporal(arr.join(''));
     if (this.state.url.includes('daviz')) {
+      let metadata = extractMetadata(arr.join(''));
       let href = extractTable(arr.join(''));
-      return [temporal, url, href];
+      return [temporal, url, href, metadata];
     }
     return [temporal, url];
   };
@@ -210,7 +212,9 @@ class Edit extends Component {
     if (!isInternalURL(this.state.url)) {
       let table;
       const arr = await this.externalURLContents(this.state.url);
-      const [temporal, url, href = null] = this.extractAssets(arr);
+      const [temporal, url, href = null, metadata = {}] = this.extractAssets(
+        arr,
+      );
       if (href) {
         table = await this.externalURLContents(href);
       }
@@ -225,7 +229,8 @@ class Edit extends Component {
               ...this.props.data,
               url: this.state.url,
               svgs: url,
-              metadata: table?.join('') || '',
+              table: table?.join('') || '',
+              metadata: metadata,
               href: this.state.url,
               temporal: { label: temporal, value: temporal },
             }),

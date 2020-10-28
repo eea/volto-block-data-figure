@@ -48,3 +48,14 @@ export const extractTemporal = (data) => {
   const coverage = html.querySelector('#tempCoverage');
   return coverage ? coverage.innerText.trim() : '';
 };
+
+export const extractMetadata = (data) => {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const dataSources = html.querySelector('div.visualization-info');
+  const geoCoverage = html.querySelector('div.geotags');
+  return {
+    dataSources: dataSources?.innerHTML,
+    geoCoverage: geoCoverage?.innerHTML,
+  };
+};

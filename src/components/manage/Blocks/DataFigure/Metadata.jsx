@@ -4,37 +4,52 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CSSTransition } from 'react-transition-group';
+import {
+  Header,
+  Icon,
+  Image,
+  Segment,
+  Menu,
+  Sidebar,
+  Container,
+} from 'semantic-ui-react';
 
-const DEFAULT_TIMEOUT = 500;
 /**
  * Metadata  class.
  * @class Metadata
  * @extends Component
  */
-const Metadata = ({ visible }) => {
+const Metadata = ({ visible, data }) => {
   return (
-    <CSSTransition
-      in={visible}
-      timeout={DEFAULT_TIMEOUT}
-      classNames=""
-      unmountOnExit
+    <Sidebar
+      as={Menu}
+      animation="overlay right"
+      onHide={() => {}}
+      vertical
+      visible={visible}
+      width="very wide"
     >
-      <div
-        role="presentation"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-        }}
-        key="sidebarpopup"
-        className="sidebar-container"
-        style={{ overflowY: 'auto' }}
-      >
-        Hello ths is sportal
-      </div>
-    </CSSTransition>
+      <Segment basic>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: data.metadata?.dataSources,
+          }}
+        />
+        <Header>Geographic coverage</Header>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: data.metadata?.geoCoverage,
+          }}
+        />
+
+        <Header>Temporal coverage</Header>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: data.temporal.label,
+          }}
+        />
+      </Segment>
+    </Sidebar>
   );
 };
 /**

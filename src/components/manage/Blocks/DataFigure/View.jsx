@@ -6,7 +6,7 @@ import Png from './Png';
 import cx from 'classnames';
 import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
-import { Button, Divider, Popup } from 'semantic-ui-react';
+import { Button, Divider, Popup, Sidebar, Container } from 'semantic-ui-react';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
@@ -41,36 +41,43 @@ class View extends React.Component {
     const { data, detached } = this.props;
     return this.props.data.url?.includes('.svg') ? (
       <div>
-        <div className="scene scene--card">
-          <div className={`card ${visible ? ' is-flipped' : ''}`}>
-            <div className="card__face card__face--front">
-              <a href={data.href} target={data.openLinkInNewTab && '_blank'}>
-                <img
-                  className={cx({ 'full-width': data.align === 'full' })}
-                  style={{
-                    width: data.width ? data.width + 'px' : '100%',
-                    height: data.height ? data.height + 'px' : '100%',
-                    marginLeft:
-                      data.inLeftColumn && data.width
-                        ? `-${parseInt(data.width) + 10}px`
-                        : '0',
-                    marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                  }}
-                  src={
-                    data.url.includes(settings.apiPath)
-                      ? `${flattenToAppURL(data.url)}/@@images/image`
-                      : data.url
-                  }
-                  alt={data.alt || ''}
-                ></img>
-              </a>
-              <Metadata visible={showMetadata} />
+        <Sidebar.Pushable as={Container}>
+          <Sidebar.Pusher style={{ height: '100%' }}>
+            <div className="scene scene--card">
+              <div className={`card ${visible ? ' is-flipped' : ''}`}>
+                <div className="card__face card__face--front">
+                  <a
+                    href={data.href}
+                    target={data.openLinkInNewTab && '_blank'}
+                  >
+                    <img
+                      className={cx({ 'full-width': data.align === 'full' })}
+                      style={{
+                        width: data.width ? data.width + 'px' : '100%',
+                        height: data.height ? data.height + 'px' : '100%',
+                        marginLeft:
+                          data.inLeftColumn && data.width
+                            ? `-${parseInt(data.width) + 10}px`
+                            : '0',
+                        marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                      }}
+                      src={
+                        data.url.includes(settings.apiPath)
+                          ? `${flattenToAppURL(data.url)}/@@images/image`
+                          : data.url
+                      }
+                      alt={data.alt || ''}
+                    ></img>
+                  </a>
+                </div>
+                <div className="card__face card__face--back">
+                  <Table data={data} />
+                </div>
+              </div>
             </div>
-            <div className="card__face card__face--back">
-              <Table data={data} />
-            </div>
-          </div>
-        </div>
+          </Sidebar.Pusher>
+          <Metadata visible={showMetadata} data={data} />
+        </Sidebar.Pushable>
         <Divider hidden />
         <Button.Group style={{ margin: '0 50%' }} widths={16}>
           <Popup

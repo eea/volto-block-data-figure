@@ -11,10 +11,10 @@ import PropTypes from 'prop-types';
  * @extends Component
  */
 const Table = ({ data }) => {
-  return data.metadata ? (
+  return data.table ? (
     <div
       dangerouslySetInnerHTML={{
-        __html: data.metadata,
+        __html: data.table,
       }}
     />
   ) : (

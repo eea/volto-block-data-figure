@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Segment, Menu, Sidebar } from 'semantic-ui-react';
 
-const DownloadData = ({ data, isLeftClicked }) => {
+const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
   return (
     <Sidebar
       as={Menu}
       className="metadata-sidebar"
       animation={'overlay left'}
+      onHide={() => hideSidebar()}
       vertical
       visible={isLeftClicked}
       width="very wide"

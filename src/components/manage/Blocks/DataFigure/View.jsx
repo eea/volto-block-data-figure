@@ -38,6 +38,20 @@ class View extends React.Component {
     opacity: 0.7,
   };
 
+  hideSidebar = () => {
+    const { showMetadata, isLeftClicked } = this.state;
+    if (showMetadata) {
+      this.setState((prevState) => ({
+        showMetadata: false,
+      }));
+    }
+    if (isLeftClicked) {
+      this.setState((prevState) => ({
+        isLeftClicked: false,
+      }));
+    }
+  };
+
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
@@ -86,8 +100,16 @@ class View extends React.Component {
               </div>
             </div>
           </Sidebar.Pusher>
-          <Metadata visible={showMetadata} data={data} />
-          <DownloadData data={data} isLeftClicked={isLeftClicked} />
+          <Metadata
+            visible={showMetadata}
+            data={data}
+            hideSidebar={this.hideSidebar}
+          />
+          <DownloadData
+            data={data}
+            isLeftClicked={isLeftClicked}
+            hideSidebar={this.hideSidebar}
+          />
         </Sidebar.Pushable>
         <Divider hidden />
         <Button.Group style={{ margin: '0 40%', width: '25%' }}>

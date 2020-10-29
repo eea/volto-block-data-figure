@@ -12,7 +12,7 @@ import './less/public.less';
  * @class Metadata
  * @extends Component
  */
-const Metadata = ({ visible, data }) => {
+const Metadata = ({ visible, data, hideSidebar }) => {
   const {
     metadata: { geoCoverage: geoCoverage },
   } = data;
@@ -22,6 +22,7 @@ const Metadata = ({ visible, data }) => {
       className="metadata-sidebar"
       animation={'overlay right'}
       vertical
+      onHide={() => hideSidebar()}
       visible={visible}
       width="very wide"
     >

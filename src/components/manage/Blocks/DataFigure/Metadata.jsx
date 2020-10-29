@@ -4,15 +4,8 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Header,
-  Icon,
-  Image,
-  Segment,
-  Menu,
-  Sidebar,
-  Container,
-} from 'semantic-ui-react';
+import { Header, Segment, Menu, Sidebar, Grid } from 'semantic-ui-react';
+import './less/public.less';
 
 /**
  * Metadata  class.
@@ -20,6 +13,9 @@ import {
  * @extends Component
  */
 const Metadata = ({ visible, data }) => {
+  const {
+    metadata: { geoCoverage: geoCoverage },
+  } = data;
   return (
     <Sidebar
       as={Menu}
@@ -29,26 +25,48 @@ const Metadata = ({ visible, data }) => {
       visible={visible}
       width="very wide"
     >
-      <Segment basic>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: data.metadata?.dataSources,
-          }}
-        />
-        <Header>Geographic coverage</Header>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: data.metadata?.geoCoverage,
-          }}
-        />
-
-        <Header>Temporal coverage</Header>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: data.temporal.label,
-          }}
-        />
-      </Segment>
+      <Segment.Group raised>
+        <Segment>
+          <Header style={{ color: '#517776' }} as="h2">
+            Metadata
+          </Header>
+        </Segment>
+        <Segment secondary>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: data.metadata?.dataSources,
+            }}
+          />
+        </Segment>
+        <Segment secondary>
+          <Header as="h3" style={{ color: '#517776' }}>
+            Geographic coverage
+          </Header>
+          <ul>
+            <Grid columns={2}>
+              <Grid.Row>
+                {geoCoverage?.map((item, index) =>
+                  index < geoCoverage.length / 2 ? (
+                    <Grid.Column>
+                      <li>{item}</li>
+                    </Grid.Column>
+                  ) : (
+                    <Grid.Column>
+                      <li>{item}</li>
+                    </Grid.Column>
+                  ),
+                )}
+              </Grid.Row>
+            </Grid>
+          </ul>
+        </Segment>
+        <Segment secondary>
+          <Header as="h3" style={{ color: '#517776' }}>
+            Temporal coverage
+          </Header>
+          <div style={{ textIndent: '15px' }}>{data.temporal.label}</div>
+        </Segment>
+      </Segment.Group>
     </Sidebar>
   );
 };
@@ -59,6 +77,7 @@ const Metadata = ({ visible, data }) => {
  */
 Metadata.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
+  visible: PropTypes.bool,
 };
 
 export default Metadata;

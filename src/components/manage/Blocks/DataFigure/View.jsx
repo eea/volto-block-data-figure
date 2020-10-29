@@ -30,6 +30,11 @@ class View extends React.Component {
     showMetadata: false,
   };
 
+  PopupStyle = {
+    borderRadius: 0,
+    opacity: 0.7,
+  };
+
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
@@ -46,29 +51,24 @@ class View extends React.Component {
             <div className="scene scene--card">
               <div className={`card ${visible ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
-                  <a
-                    href={data.href}
-                    target={data.openLinkInNewTab && '_blank'}
-                  >
-                    <img
-                      className={cx({ 'full-width': data.align === 'full' })}
-                      style={{
-                        width: data.width ? data.width + 'px' : '100%',
-                        height: data.height ? data.height + 'px' : '100%',
-                        marginLeft:
-                          data.inLeftColumn && data.width
-                            ? `-${parseInt(data.width) + 10}px`
-                            : '0',
-                        marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                      }}
-                      src={
-                        data.url.includes(settings.apiPath)
-                          ? `${flattenToAppURL(data.url)}/@@images/image`
-                          : data.url
-                      }
-                      alt={data.alt || ''}
-                    ></img>
-                  </a>
+                  <img
+                    className={cx({ 'full-width': data.align === 'full' })}
+                    style={{
+                      width: data.width ? data.width + 'px' : '100%',
+                      height: data.height ? data.height + 'px' : '100%',
+                      marginLeft:
+                        data.inLeftColumn && data.width
+                          ? `-${parseInt(data.width) + 10}px`
+                          : '0',
+                      marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                    }}
+                    src={
+                      data.url.includes(settings.apiPath)
+                        ? `${flattenToAppURL(data.url)}/@@images/image`
+                        : data.url
+                    }
+                    alt={data.alt || ''}
+                  ></img>
                 </div>
                 <div className="card__face card__face--back">
                   <Table data={data} />
@@ -79,8 +79,10 @@ class View extends React.Component {
           <Metadata visible={showMetadata} data={data} />
         </Sidebar.Pushable>
         <Divider hidden />
-        <Button.Group style={{ margin: '0 50%' }} widths={16}>
+        <Button.Group style={{ margin: '0 40%', width: '25%' }}>
           <Popup
+            style={this.PopupStyle}
+            inverted
             trigger={
               <Button icon onClick={this.toggleVisibility}>
                 <Icon name={spreadsheetSVG} size="24px" />
@@ -91,6 +93,8 @@ class View extends React.Component {
             data table
           </Popup>
           <Popup
+            style={this.PopupStyle}
+            inverted
             trigger={
               <Button icon onClick={this.toggleMetadata}>
                 <Icon name={infoSVG} size="24px" />
@@ -101,16 +105,22 @@ class View extends React.Component {
             metadata
           </Popup>
           <Popup
+            style={this.PopupStyle}
+            inverted
             trigger={
-              <Button icon>
-                <Icon name={applicationSVG} size="24px" />
-              </Button>
+              <a href={data.href} target={data.openLinkInNewTab && '_blank'}>
+                <Button icon>
+                  <Icon name={applicationSVG} size="24px" />
+                </Button>
+              </a>
             }
             position="top center"
           >
-            application
+            {data.label || <p>Interactive link</p>}
           </Popup>
           <Popup
+            style={this.PopupStyle}
+            inverted
             trigger={
               <Button icon>
                 <Icon name={downloadSVG} size="24px" />

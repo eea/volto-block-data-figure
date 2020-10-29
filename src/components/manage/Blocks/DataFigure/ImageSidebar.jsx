@@ -34,9 +34,13 @@ const messages = defineMessages({
     id: 'Alignment',
     defaultMessage: 'Alignment',
   },
-  LinkTo: {
-    id: 'Link to',
-    defaultMessage: 'Link to',
+  Link: {
+    id: 'Interactive link ',
+    defaultMessage: 'Interactive link',
+  },
+  LinkLabel: {
+    id: 'Label ',
+    defaultMessage: 'Label',
   },
   openLinkInNewTab: {
     id: 'Open in a new tab',
@@ -213,7 +217,7 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 0}>
               <TextWidget
                 id="link"
-                title={intl.formatMessage(messages.LinkTo)}
+                title={intl.formatMessage(messages.Link)}
                 required={false}
                 value={data.href}
                 icon={data.href ? clearSVG : navTreeSVG}
@@ -231,6 +235,25 @@ const ImageSidebar = ({
                   onChangeBlock(block, {
                     ...data,
                     href: value,
+                  });
+                }}
+              />
+              <TextWidget
+                id="link-label"
+                title={intl.formatMessage(messages.LinkLabel)}
+                required={false}
+                value={data.label}
+                icon={data.label && clearSVG}
+                iconAction={() => {
+                  onChangeBlock(block, {
+                    ...data,
+                    label: '',
+                  });
+                }}
+                onChange={(name, value) => {
+                  onChangeBlock(block, {
+                    ...data,
+                    label: value,
                   });
                 }}
               />

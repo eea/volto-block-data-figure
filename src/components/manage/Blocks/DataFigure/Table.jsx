@@ -12,11 +12,14 @@ import PropTypes from 'prop-types';
  */
 const Table = ({ data }) => {
   return data.table ? (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: data.table,
-      }}
-    />
+    <>
+      <h2>Data table</h2>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: data.table,
+        }}
+      />
+    </>
   ) : (
     <div>
       Data table is not directly available for this figure, please consult Data

@@ -50,12 +50,17 @@ export const extractTemporal = (data) => {
 };
 
 export const extractMetadata = (data) => {
+  let coverageList = [];
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const dataSources = html.querySelector('div.visualization-info');
   const geoCoverage = html.querySelector('div.geotags');
+
+  for (let items of geoCoverage.children) {
+    coverageList.push(items.innerText);
+  }
   return {
     dataSources: dataSources?.innerHTML,
-    geoCoverage: geoCoverage?.innerHTML,
+    geoCoverage: coverageList,
   };
 };

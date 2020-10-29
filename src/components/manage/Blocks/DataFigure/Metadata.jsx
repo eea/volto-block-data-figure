@@ -19,8 +19,8 @@ const Metadata = ({ visible, data }) => {
   return (
     <Sidebar
       as={Menu}
-      animation="overlay right"
-      onHide={() => {}}
+      className="metadata-sidebar"
+      animation={'overlay right'}
       vertical
       visible={visible}
       width="very wide"

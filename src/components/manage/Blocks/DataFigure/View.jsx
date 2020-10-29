@@ -13,6 +13,7 @@ import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
 import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
+import DownloadData from './DownloadData';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import React from 'react';
 import Table from './Table';
@@ -28,6 +29,8 @@ class View extends React.Component {
   state = {
     visible: false,
     showMetadata: false,
+
+    isLeftClicked: false,
   };
 
   PopupStyle = {
@@ -39,10 +42,17 @@ class View extends React.Component {
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
   toggleMetadata = () =>
-    this.setState((prevState) => ({ showMetadata: !prevState.showMetadata }));
+    this.setState((prevState) => ({
+      showMetadata: !prevState.showMetadata,
+    }));
+
+  toggleLeftPopup = () =>
+    this.setState((prevState) => ({
+      isLeftClicked: !prevState.isLeftClicked,
+    }));
 
   render() {
-    const { visible, showMetadata } = this.state;
+    const { visible, showMetadata, isLeftClicked } = this.state;
     const { data, detached } = this.props;
     return this.props.data.url?.includes('.svg') ? (
       <div>
@@ -77,6 +87,7 @@ class View extends React.Component {
             </div>
           </Sidebar.Pusher>
           <Metadata visible={showMetadata} data={data} />
+          <DownloadData data={data} isLeftClicked={isLeftClicked} />
         </Sidebar.Pushable>
         <Divider hidden />
         <Button.Group style={{ margin: '0 40%', width: '25%' }}>
@@ -122,7 +133,7 @@ class View extends React.Component {
             style={this.PopupStyle}
             inverted
             trigger={
-              <Button icon>
+              <Button icon onClick={this.toggleLeftPopup}>
                 <Icon name={downloadSVG} size="24px" />
               </Button>
             }

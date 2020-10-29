@@ -55,12 +55,14 @@ export const extractMetadata = (data) => {
   const html = parser.parseFromString(data, 'text/html');
   const dataSources = html.querySelector('div.visualization-info');
   const geoCoverage = html.querySelector('div.geotags');
+  const downloadData = html.querySelector('div.download-visualization');
 
   for (let items of geoCoverage.children) {
     coverageList.push(items.innerText);
   }
   return {
-    dataSources: dataSources?.innerHTML,
+    dataSources: dataSources?.innerHTML.trim(),
     geoCoverage: coverageList,
+    downloadData: downloadData.innerHTML.trim(),
   };
 };

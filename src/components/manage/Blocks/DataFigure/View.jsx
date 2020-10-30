@@ -33,11 +33,6 @@ class View extends React.Component {
     isLeftClicked: false,
   };
 
-  PopupStyle = {
-    borderRadius: 0,
-    opacity: 0.7,
-  };
-
   hideSidebar = () => {
     const { showMetadata, isLeftClicked } = this.state;
     if (showMetadata) {
@@ -112,9 +107,9 @@ class View extends React.Component {
           />
         </Sidebar.Pushable>
         <Divider hidden />
-        <Button.Group style={{ margin: '0 40%', width: '25%' }}>
+        <Button.Group className="metadata-btn-group">
           <Popup
-            style={this.PopupStyle}
+            className="popup-wrap"
             inverted
             trigger={
               <Button icon onClick={this.toggleVisibility}>
@@ -126,7 +121,7 @@ class View extends React.Component {
             data table
           </Popup>
           <Popup
-            style={this.PopupStyle}
+            className="popup-wrap"
             inverted
             trigger={
               <Button icon onClick={this.toggleMetadata}>
@@ -138,7 +133,7 @@ class View extends React.Component {
             metadata
           </Popup>
           <Popup
-            style={this.PopupStyle}
+            className="popup-wrap"
             inverted
             trigger={
               <a href={data.href} target={data.openLinkInNewTab && '_blank'}>
@@ -152,7 +147,7 @@ class View extends React.Component {
             {data.label || <p>Interactive link</p>}
           </Popup>
           <Popup
-            style={this.PopupStyle}
+            className="popup-wrap"
             inverted
             trigger={
               <Button icon onClick={this.toggleLeftPopup}>

@@ -48,3 +48,21 @@ export const extractTemporal = (data) => {
   const coverage = html.querySelector('#tempCoverage');
   return coverage ? coverage.innerText.trim() : '';
 };
+
+export const extractMetadata = (data) => {
+  let coverageList = [];
+  const parser = new DOMParser();
+  const html = parser.parseFromString(data, 'text/html');
+  const dataSources = html.querySelector('div.visualization-info');
+  const geoCoverage = html.querySelector('div.geotags');
+  const downloadData = html.querySelector('div.download-visualization');
+
+  for (let items of geoCoverage.children) {
+    coverageList.push(items.innerText);
+  }
+  return {
+    dataSources: dataSources?.innerHTML.trim(),
+    geoCoverage: coverageList,
+    downloadData: downloadData.innerHTML.trim(),
+  };
+};

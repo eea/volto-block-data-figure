@@ -64,6 +64,6 @@ export const extractMetadata = (data) => {
   return {
     dataSources: dataSources?.innerHTML.trim(),
     geoCoverage: coverageList,
-    downloadData: downloadData.innerHTML.trim(),
+    downloadData: downloadData?.innerHTML.trim(),
   };
 };

@@ -56,9 +56,10 @@ export const extractMetadata = (data) => {
   const dataSources = html.querySelector('div.visualization-info');
   const geoCoverage = html.querySelector('div.geotags');
   const downloadData = html.querySelector('div.download-visualization');
-
-  for (let items of geoCoverage.children) {
-    coverageList.push(items.innerText);
+  if (geoCoverage) {
+    for (let items of geoCoverage.children) {
+      coverageList.push(items.innerText);
+    }
   }
   return {
     dataSources: dataSources?.innerHTML.trim(),

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
+import './less/public.less';
 
 /**
  * PNG image block class.
@@ -31,7 +32,7 @@ const Png = ({ data, detached }) => (
         {(() => {
           const image = (
             <img
-              className={cx({
+              className={cx('scale-image', {
                 'full-width': data.align === 'full',
                 large: data.size === 'l',
                 medium: data.size === 'm',

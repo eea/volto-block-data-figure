@@ -219,14 +219,14 @@ const ImageSidebar = ({
                 id="link"
                 title={intl.formatMessage(messages.Link)}
                 required={false}
-                value={data.href}
-                icon={data.href ? clearSVG : navTreeSVG}
+                value={data.figureUrl}
+                icon={data.figureUrl ? clearSVG : navTreeSVG}
                 iconAction={
-                  data.href
+                  data.figureUrl
                     ? () => {
                         onChangeBlock(block, {
                           ...data,
-                          href: '',
+                          figureUrl: '',
                         });
                       }
                     : () => openObjectBrowser({ mode: 'link' })
@@ -234,7 +234,7 @@ const ImageSidebar = ({
                 onChange={(name, value) => {
                   onChangeBlock(block, {
                     ...data,
-                    href: value,
+                    figureUrl: value,
                   });
                 }}
               />

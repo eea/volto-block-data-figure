@@ -59,12 +59,12 @@ const Png = ({ data, detached }) => (
               alt={data.alt || ''}
             />
           );
-          if (data.href) {
-            if (!isInternalURL(data.href)) {
+          if (data.figureUrl) {
+            if (!isInternalURL(data.figureUrl)) {
               return (
                 <a
                   target={data.openLinkInNewTab ? '_blank' : null}
-                  href={data.href}
+                  href={data.figureUrl}
                 >
                   {image}
                 </a>
@@ -72,7 +72,7 @@ const Png = ({ data, detached }) => (
             } else {
               return (
                 <Link
-                  to={flattenToAppURL(data.href)}
+                  to={flattenToAppURL(data.figureUrl)}
                   target={data.openLinkInNewTab ? '_blank' : null}
                 >
                   {image}

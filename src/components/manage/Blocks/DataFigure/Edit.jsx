@@ -236,6 +236,14 @@ class Edit extends Component {
               temporal: { label: temporal, value: temporal },
             }),
         );
+      } else if (
+        this.state.url.includes('embed-chart.svg') ||
+        this.state.url.includes('.png')
+      ) {
+        this.props.onChangeBlock(this.props.block, {
+          ...this.props.data,
+          url: this.state.url,
+        });
       } else {
         this.setState({ uploading: false }, () =>
           toast.error(

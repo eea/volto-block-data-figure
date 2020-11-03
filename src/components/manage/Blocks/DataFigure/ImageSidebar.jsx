@@ -110,7 +110,7 @@ const ImageSidebar = ({
             )}
             {!isInternalURL(data.url) && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {svgs.length > 0 && isArray(svgs) ? (
+                {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, ind) => (
                     <div>
                       <p>Image {ind + 1}</p>
@@ -131,7 +131,7 @@ const ImageSidebar = ({
                   <div>
                     <p>Image</p>
                     <img
-                      src={svgs}
+                      src={data.url}
                       alt={data.alt}
                       style={{ width: '50%', cursor: 'pointer' }}
                     />

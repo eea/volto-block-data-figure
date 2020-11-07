@@ -8,6 +8,9 @@ import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
 import { Button, Divider, Popup, Sidebar, Container } from 'semantic-ui-react';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
+import saveSVG from '@plone/volto/icons/save.svg';
+import zoomSVG from '@plone/volto/icons/zoom-in.svg';
+import showSVG from '@plone/volto/icons/show.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
@@ -88,6 +91,51 @@ class View extends React.Component {
                     }
                     alt={data.alt || ''}
                   ></img>
+                  <div class="overlay">
+                    <Button.Group basic className="text">
+                      <Popup
+                        className="popup-wrap"
+                        trigger={
+                          <Button icon onClick={this.toggleLeftPopup}>
+                            <Icon name={saveSVG} size="24px" />
+                          </Button>
+                        }
+                        position="top center"
+                      >
+                        save
+                      </Popup>
+                      <Popup
+                        className="popup-wrap"
+                        trigger={
+                          <a
+                            href={data.figureUrl}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            <Button icon>
+                              <Icon name={showSVG} size="24px" />
+                            </Button>
+                          </a>
+                        }
+                        position="top center"
+                      >
+                        explore
+                      </Popup>
+                      <Popup
+                        className="popup-wrap"
+                        trigger={
+                          <a href={data.url} rel="noreferrer" target="_blank">
+                            <Button icon>
+                              <Icon name={zoomSVG} size="24px" />
+                            </Button>
+                          </a>
+                        }
+                        position="top center"
+                      >
+                        enlarge
+                      </Popup>
+                    </Button.Group>
+                  </div>
                 </div>
                 <div className="card__face card__face--back">
                   <Table data={data} />

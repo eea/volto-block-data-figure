@@ -63,7 +63,7 @@
   transform: scale(0.72);
 }
 
-.overlay {
+div.scene .overlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -74,7 +74,7 @@
   opacity: 0;
   transition: 0.5s ease;
 }
-.text {
+div.scene .text {
   color: white;
   font-size: 20px;
   position: absolute;
@@ -84,9 +84,6 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
-}
-div.scene > div.card__face--back:hover .overlay {
-  display: none;
 }
 
 div.card__face--front:hover .overlay {

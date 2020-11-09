@@ -210,7 +210,8 @@ class Edit extends Component {
     });
 
     if (!isInternalURL(this.state.url)) {
-      let table;
+      let table,
+        figureUrl = this.state.url;
       const arr = await this.externalURLContents(this.state.url);
       const [temporal, url, href = null, metadata = {}] = this.extractAssets(
         arr,
@@ -228,13 +229,21 @@ class Edit extends Component {
             this.props.onChangeBlock(this.props.block, {
               ...this.props.data,
               url: this.state.url,
+              figureUrl,
               svgs: url,
               table: table?.join('') || '',
               metadata: metadata,
-              href: this.state.url,
               temporal: { label: temporal, value: temporal },
             }),
         );
+      } else if (
+        this.state.url.includes('embed-chart.svg') ||
+        this.state.url.includes('.png')
+      ) {
+        this.props.onChangeBlock(this.props.block, {
+          ...this.props.data,
+          url: this.state.url,
+        });
       } else {
         this.setState({ uploading: false }, () =>
           toast.error(

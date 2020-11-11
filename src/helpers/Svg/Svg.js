@@ -1,3 +1,4 @@
+import { settings } from '@plone/volto/config';
 export const cleanSVG = (data) => {
   // base64 decode, if needed
   let text, svg;
@@ -66,4 +67,12 @@ export const extractMetadata = (data) => {
     geoCoverage: coverageList,
     downloadData: downloadData?.innerHTML.trim(),
   };
+};
+
+export const validateHostname = (url) => {
+  const domain = url
+    .replace('http://', '')
+    .replace('https://', '')
+    .split(/[/?#]/)[0];
+  return settings.allowed_cors_destinations.includes(domain);
 };

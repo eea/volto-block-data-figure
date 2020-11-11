@@ -21,6 +21,7 @@ import {
   extractTable,
   extractTemporal,
   extractMetadata,
+  validateHostname,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -177,14 +178,18 @@ class Edit extends Component {
   };
 
   extractAssets = (arr) => {
-    let url = extractSvg(arr.join(''));
-    let temporal = extractTemporal(arr.join(''));
-    if (this.state.url.includes('daviz')) {
-      let metadata = extractMetadata(arr.join(''));
-      let href = extractTable(arr.join(''));
-      return [temporal, url, href, metadata];
+    if (arr.length > 0) {
+      let url = extractSvg(arr.join(''));
+      let temporal = extractTemporal(arr.join(''));
+      if (this.state.url.includes('daviz')) {
+        let metadata = extractMetadata(arr.join(''));
+        let href = extractTable(arr.join(''));
+        return [temporal, url, href, metadata];
+      }
+      return [temporal, url];
+    } else {
+      return arr;
     }
-    return [temporal, url];
   };
 
   externalURLContents = async (url) => {
@@ -192,6 +197,9 @@ class Edit extends Component {
     await this.props.getProxiedExternalContent(url, {
       headers: { Accept: 'text/html' },
     });
+    if (this.state.error) {
+      return arr;
+    }
     for (const key in this.props.subrequests[url].data) {
       arr.push(this.props.subrequests[url].data[key]);
     }
@@ -210,40 +218,53 @@ class Edit extends Component {
     });
 
     if (!isInternalURL(this.state.url)) {
-      let table,
-        figureUrl = this.state.url;
-      const arr = await this.externalURLContents(this.state.url);
-      const [temporal, url, href = null, metadata = {}] = this.extractAssets(
-        arr,
-      );
-      if (href) {
-        table = await this.externalURLContents(href);
-      }
-      if (url.length > 0) {
-        this.setState(
-          {
-            url: url[0].src || url,
-            uploading: false,
-          },
-          () =>
-            this.props.onChangeBlock(this.props.block, {
-              ...this.props.data,
-              url: this.state.url,
-              figureUrl,
-              svgs: url,
-              table: table?.join('') || '',
-              metadata: metadata,
-              temporal: { label: temporal, value: temporal },
-            }),
+      const isValidUrl = validateHostname(this.state.url);
+      if (isValidUrl) {
+        let table,
+          figureUrl = this.state.url;
+        const arr = await this.externalURLContents(this.state.url);
+        const [temporal, url, href = null, metadata = {}] = this.extractAssets(
+          arr,
         );
-      } else if (
-        this.state.url.includes('embed-chart.svg') ||
-        this.state.url.includes('.png')
-      ) {
-        this.props.onChangeBlock(this.props.block, {
-          ...this.props.data,
-          url: this.state.url,
-        });
+        if (href) {
+          table = await this.externalURLContents(href);
+        }
+        if (url.length > 0) {
+          this.setState(
+            {
+              url: url[0].src || url,
+              uploading: false,
+            },
+            () =>
+              this.props.onChangeBlock(this.props.block, {
+                ...this.props.data,
+                url: this.state.url,
+                figureUrl,
+                svgs: url,
+                table: table?.join('') || '',
+                metadata: metadata,
+                temporal: { label: temporal, value: temporal },
+              }),
+          );
+        } else if (
+          this.state.url.includes('embed-chart.svg') ||
+          this.state.url.includes('.png')
+        ) {
+          this.props.onChangeBlock(this.props.block, {
+            ...this.props.data,
+            url: this.state.url,
+          });
+        } else {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          );
+        }
       } else {
         this.setState({ uploading: false }, () =>
           toast.error(
@@ -331,17 +352,6 @@ class Edit extends Component {
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
-    if (this.state.error) {
-      return this.setState({ uploading: false }, () =>
-        toast.error(
-          <Toast
-            error
-            title={this.props.intl.formatMessage(messages.Error)}
-            content={this.props.intl.formatMessage(messages.ErrorMessage)}
-          />,
-        ),
-      );
-    }
     return (
       <div
         className={cx(

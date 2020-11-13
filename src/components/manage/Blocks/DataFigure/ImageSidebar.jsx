@@ -118,6 +118,7 @@ const ImageSidebar = ({
                         src={it.src}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}
+                        aria-hidden="true"
                         onClick={() => {
                           onChangeBlock(block, {
                             ...data,

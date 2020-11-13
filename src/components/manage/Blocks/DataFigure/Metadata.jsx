@@ -13,6 +13,7 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
+  // eslint-disable-next-line no-useless-rename
   const { metadata: { geoCoverage: geoCoverage } = {} } = data;
   return (
     <Sidebar

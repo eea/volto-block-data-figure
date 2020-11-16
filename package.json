@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@eeacms/volto-corsproxy": "^1.0.0",
-    "@eeacms/volto-widget-geolocation": "github:eea/volto-widget-geolocation#0.1.5",
-    "@eeacms/volto-widget-temporal-coverage": "github:eea/volto-widget-temporal-coverage#0.1.0"
+    "@eeacms/volto-widget-geolocation": "^1.0.0",
+    "@eeacms/volto-widget-temporal-coverage": "^1.0.0"
   },
   "scripts": {
     "release": "release-it",

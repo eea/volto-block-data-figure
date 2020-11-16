@@ -7,7 +7,8 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
     <Sidebar
       as={Menu}
       className="metadata-sidebar"
-      animation={'overlay left'}
+      animation={'overlay'}
+      direction={'left'}
       onHide={() => hideSidebar()}
       vertical
       visible={isLeftClicked}

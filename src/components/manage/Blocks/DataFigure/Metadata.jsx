@@ -18,7 +18,8 @@ const Metadata = ({ visible, data, hideSidebar }) => {
     <Sidebar
       as={Menu}
       className="metadata-sidebar"
-      animation={'overlay right'}
+      animation={'overlay'}
+      direction={'right'}
       vertical
       onHide={() => hideSidebar()}
       visible={visible}
@@ -48,11 +49,11 @@ const Metadata = ({ visible, data, hideSidebar }) => {
                   {geolocation?.map((item, index) =>
                     index < geolocation.length / 2 ? (
                       <Grid.Column>
-                        <li>{item.label}</li>
+                        <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ) : (
                       <Grid.Column>
-                        <li>{item.label}</li>
+                        <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ),
                   )}

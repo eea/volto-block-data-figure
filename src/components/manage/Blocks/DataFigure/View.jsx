@@ -91,7 +91,7 @@ class View extends React.Component {
                     }
                     alt={data.alt || ''}
                   ></img>
-                  <div class="overlay">
+                  <div className="overlay">
                     <Button.Group basic className="text">
                       <Popup
                         className="popup-wrap"

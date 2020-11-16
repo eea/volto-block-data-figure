@@ -116,6 +116,7 @@ const ImageSidebar = ({
                       <p>Image {ind + 1}</p>
                       <img
                         src={it.src}
+                        key={ind}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}
                         aria-hidden="true"

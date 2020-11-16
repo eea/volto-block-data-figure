@@ -32,6 +32,7 @@ import {
   getBaseUrl,
   isInternalURL,
 } from '@plone/volto/helpers';
+import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
@@ -70,7 +71,7 @@ class Edit extends Component {
     block: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
     data: PropTypes.objectOf(PropTypes.any).isRequired,
-    content: PropTypes.objectOf(PropTypes.any).isRequired,
+    content: PropTypes.objectOf(PropTypes.any),
     request: PropTypes.shape({
       loading: PropTypes.bool,
       loaded: PropTypes.bool,
@@ -192,6 +193,14 @@ class Edit extends Component {
     }
   };
 
+  getGeoNameWithIds(metadata) {
+    const { geoCoverage } = metadata;
+    const GeoNameWithIds = geoCoverage.map((item) => {
+      return eeaCountries.find((name) => name.label === item);
+    });
+    return GeoNameWithIds.filter((item) => item !== null);
+  }
+
   externalURLContents = async (url) => {
     let arr = [];
     await this.props.getProxiedExternalContent(url, {
@@ -242,8 +251,9 @@ class Edit extends Component {
                 figureUrl,
                 svgs: url,
                 table: table?.join('') || '',
-                metadata: metadata,
-                temporal: { label: temporal, value: temporal },
+                metadata,
+                geolocation: this.getGeoNameWithIds(metadata),
+                temporal: [{ label: temporal, value: temporal }],
               }),
           );
         } else if (

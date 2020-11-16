@@ -13,8 +13,7 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
-  // eslint-disable-next-line no-useless-rename
-  const { metadata: { geoCoverage: geoCoverage } = {} } = data;
+  const { geolocation } = data;
   return (
     <Sidebar
       as={Menu}
@@ -38,7 +37,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             }}
           />
         </Segment>
-        {geoCoverage && (
+        {geolocation && (
           <Segment secondary>
             <Header as="h3" style={{ color: '#517776' }}>
               Geographic coverage
@@ -46,14 +45,14 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <ul>
               <Grid columns={2}>
                 <Grid.Row>
-                  {geoCoverage?.map((item, index) =>
-                    index < geoCoverage.length / 2 ? (
+                  {geolocation?.map((item, index) =>
+                    index < geolocation.length / 2 ? (
                       <Grid.Column>
-                        <li>{item}</li>
+                        <li>{item.label}</li>
                       </Grid.Column>
                     ) : (
                       <Grid.Column>
-                        <li>{item}</li>
+                        <li>{item.label}</li>
                       </Grid.Column>
                     ),
                   )}
@@ -67,7 +66,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <Header as="h3" style={{ color: '#517776' }}>
               Temporal coverage
             </Header>
-            <div style={{ textIndent: '15px' }}>{data.temporal.label}</div>
+            <div style={{ textIndent: '15px' }}>{data.temporal[0].label}</div>
           </Segment>
         )}
       </Segment.Group>

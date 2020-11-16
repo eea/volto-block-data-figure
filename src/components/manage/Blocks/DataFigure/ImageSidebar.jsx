@@ -112,7 +112,7 @@ const ImageSidebar = ({
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, ind) => (
-                    <div>
+                    <div key={ind}>
                       <p>Image {ind + 1}</p>
                       <img
                         src={it.src}

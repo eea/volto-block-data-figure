@@ -184,7 +184,10 @@ class View extends React.Component {
             className="popup-wrap"
             inverted
             trigger={
-              <a href={data.href} target={data.openLinkInNewTab && '_blank'}>
+              <a
+                href={data.href}
+                target={data.openLinkInNewTab ? '_blank' : '_self'}
+              >
                 <Button icon>
                   <Icon name={applicationSVG} size="24px" />
                 </Button>

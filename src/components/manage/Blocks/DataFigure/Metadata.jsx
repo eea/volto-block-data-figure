@@ -68,7 +68,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
               Temporal coverage
             </Header>
             {data.temporal.map((item) => (
-              <div style={{ textIndent: '15px' }}>{item.label}</div>
+              <div style={{ textIndent: '15px' }}>{item?.label}</div>
             ))}
           </Segment>
         )}

@@ -198,7 +198,10 @@ class Edit extends Component {
     const GeoNameWithIds = geoCoverage.map((item) => {
       return eeaCountries.find((name) => name.label === item);
     });
-    return GeoNameWithIds.filter((item) => item !== null);
+    const filteredGeonames = GeoNameWithIds.filter(
+      (item) => item !== undefined,
+    );
+    return filteredGeonames;
   }
 
   externalURLContents = async (url) => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Segment, Label, Grid } from 'semantic-ui-react';
+import { Accordion, Segment } from 'semantic-ui-react';
+import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
   CheckboxWidget,
@@ -361,20 +362,42 @@ const ImageSidebar = ({
               )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 3}>
-              <TextareaWidget
-                title={intl.formatMessage(messages.dataSources)}
-                placeholder={'Enter Data sources'}
-                value={data.metadata?.dataSources || ''}
+              {/* <BlocksForm
+                metadata={data.metadata}
+                value={data.metadata.dataSources || ''}
+                properties={emptyBlocksForm()}
+                selectedBlock={null}
+                onSelectBlock={(id) => {}}
+                onChangeFormData={(name, value) => {
+                  onChangeBlock(block, {
+                    ...data,
+                    metadata: {
+                      ...data.metadata,
+                      dataSources: name,
+                    },
+                  });
+                }}
+                onChangeField={(id, value) => {}}
+                pathname={data.pathname}
+              /> */}
+              <SlateRichTextWidget
                 id="data_sources"
+                placeholder={'Enter Data sources'}
+                title={intl.formatMessage(messages.dataSources)}
                 onChange={(name, value) => {
                   onChangeBlock(block, {
                     ...data,
                     metadata: {
                       ...data.metadata,
-                      dataSources: value,
+                      dataSources: value[0].children[0].text,
                     },
                   });
                 }}
+                value={[
+                  {
+                    children: [{ text: data.metadata.dataSources || '' }],
+                  },
+                ]}
               />
             </Accordion.Content>
           </Accordion>

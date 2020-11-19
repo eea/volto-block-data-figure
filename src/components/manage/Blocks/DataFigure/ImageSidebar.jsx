@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Segment } from 'semantic-ui-react';
+import { Accordion, Segment, Label, Grid } from 'semantic-ui-react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
+import {
+  CheckboxWidget,
+  Icon,
+  TextWidget,
+  TextareaWidget,
+} from '@plone/volto/components';
 import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
@@ -41,6 +46,10 @@ const messages = defineMessages({
   LinkLabel: {
     id: 'Label ',
     defaultMessage: 'Label',
+  },
+  dataSources: {
+    id: 'Data sources ',
+    defaultMessage: 'Data sources',
   },
   openLinkInNewTab: {
     id: 'Open in a new tab',
@@ -338,6 +347,35 @@ const ImageSidebar = ({
                   intl={intl}
                 />
               </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 3}
+              index={3}
+              onClick={handleAccClick}
+            >
+              Data sources
+              {activeAccIndex === 3 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 3}>
+              <TextareaWidget
+                title={intl.formatMessage(messages.dataSources)}
+                placeholder={'Enter Data sources'}
+                value={data.metadata?.dataSources || ''}
+                id="data_sources"
+                onChange={(name, value) => {
+                  onChangeBlock(block, {
+                    ...data,
+                    metadata: {
+                      ...data.metadata,
+                      dataSources: value,
+                    },
+                  });
+                }}
+              />
             </Accordion.Content>
           </Accordion>
         </>

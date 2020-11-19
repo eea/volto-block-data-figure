@@ -32,7 +32,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Header>
         </Segment>
         <Segment secondary>
-          <p
+          <div
             dangerouslySetInnerHTML={{
               __html: data.metadata?.dataSources,
             }}
@@ -48,11 +48,11 @@ const Metadata = ({ visible, data, hideSidebar }) => {
                 <Grid.Row>
                   {geolocation?.map((item, index) =>
                     index < geolocation.length / 2 ? (
-                      <Grid.Column>
+                      <Grid.Column key={index}>
                         <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ) : (
-                      <Grid.Column>
+                      <Grid.Column key={index}>
                         <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ),
@@ -67,8 +67,10 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <Header as="h3" style={{ color: '#517776' }}>
               Temporal coverage
             </Header>
-            {data.temporal.map((item) => (
-              <div style={{ textIndent: '15px' }}>{item?.label}</div>
+            {data.temporal.map((item, index) => (
+              <div key={index} style={{ textIndent: '15px' }}>
+                {item?.label}
+              </div>
             ))}
           </Segment>
         )}

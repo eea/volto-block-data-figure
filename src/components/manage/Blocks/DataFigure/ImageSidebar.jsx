@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
+import { serializeNodesToText } from 'volto-slate/editor/render';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
   CheckboxWidget,
@@ -389,15 +390,14 @@ const ImageSidebar = ({
                     ...data,
                     metadata: {
                       ...data.metadata,
-                      dataSources: value[0].children[0].text,
+                      dataSources: {
+                        plaintext: serializeNodesToText(value || []),
+                        value,
+                      },
                     },
                   });
                 }}
-                value={[
-                  {
-                    children: [{ text: data.metadata.dataSources || '' }],
-                  },
-                ]}
+                value={data.metadata?.dataSources?.value}
               />
             </Accordion.Content>
           </Accordion>

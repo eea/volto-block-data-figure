@@ -377,10 +377,10 @@ const ImageSidebar = ({
                       },
                     });
                   }}
-                  style={{ left: '700px' }}
+                  style={{ left: '740px' }}
                   value={
                     metadata?.dataSources?.value ||
-                    getDefaultValue(metadata?.dataSources.plaintext)
+                    getDefaultValue(metadata?.dataSources?.plaintext)
                   }
                 />
               </div>

@@ -77,7 +77,7 @@ export const validateHostname = (url) => {
   return settings.allowed_cors_destinations.includes(domain);
 };
 
-export const getDefaultValue = (data) => {
+export const getDefaultValue = (data = '') => {
   const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
 
   return [

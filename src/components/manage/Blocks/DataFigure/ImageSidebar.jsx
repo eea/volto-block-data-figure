@@ -4,12 +4,7 @@ import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
 import { serializeNodesToText } from 'volto-slate/editor/render';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import {
-  CheckboxWidget,
-  Icon,
-  TextWidget,
-  TextareaWidget,
-} from '@plone/volto/components';
+import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
@@ -80,6 +75,7 @@ const ImageSidebar = ({
   intl,
   svgs,
 }) => {
+  const { metadata } = data;
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
   function handleAccClick(e, titleProps) {
@@ -363,42 +359,25 @@ const ImageSidebar = ({
               )}
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 3}>
-              {/* <BlocksForm
-                metadata={data.metadata}
-                value={data.metadata.dataSources || ''}
-                properties={emptyBlocksForm()}
-                selectedBlock={null}
-                onSelectBlock={(id) => {}}
-                onChangeFormData={(name, value) => {
-                  onChangeBlock(block, {
-                    ...data,
-                    metadata: {
-                      ...data.metadata,
-                      dataSources: name,
-                    },
-                  });
-                }}
-                onChangeField={(id, value) => {}}
-                pathname={data.pathname}
-              /> */}
-              <SlateRichTextWidget
-                id="data_sources"
-                placeholder={'Enter Data sources'}
-                title={intl.formatMessage(messages.dataSources)}
-                onChange={(name, value) => {
-                  onChangeBlock(block, {
-                    ...data,
-                    metadata: {
-                      ...data.metadata,
-                      dataSources: {
-                        plaintext: serializeNodesToText(value || []),
-                        value,
+              <div>
+                <SlateRichTextWidget
+                  id="data_sources"
+                  title={intl.formatMessage(messages.dataSources)}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      metadata: {
+                        ...data.metadata,
+                        dataSources: {
+                          plaintext: serializeNodesToText(value || []),
+                          value,
+                        },
                       },
-                    },
-                  });
-                }}
-                value={data.metadata?.dataSources?.value}
-              />
+                    });
+                  }}
+                  value={metadata?.dataSources?.value}
+                />
+              </div>
             </Accordion.Content>
           </Accordion>
         </>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
 import { serializeNodesToText } from 'volto-slate/editor/render';
+
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import { isArray } from 'lodash';
@@ -375,7 +376,15 @@ const ImageSidebar = ({
                       },
                     });
                   }}
-                  value={metadata?.dataSources?.value}
+                  style={{ left: '700px' }}
+                  value={
+                    metadata?.dataSources?.value || [
+                      {
+                        type: 'p',
+                        children: [{ text: metadata?.dataSources.plaintext }],
+                      },
+                    ]
+                  }
                 />
               </div>
             </Accordion.Content>

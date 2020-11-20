@@ -10,7 +10,7 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-
+import { getDefaultValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
 import './less/public.less';
 
@@ -77,6 +77,7 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const { metadata } = data;
+
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
   function handleAccClick(e, titleProps) {
@@ -378,12 +379,8 @@ const ImageSidebar = ({
                   }}
                   style={{ left: '700px' }}
                   value={
-                    metadata?.dataSources?.value || [
-                      {
-                        type: 'p',
-                        children: [{ text: metadata?.dataSources.plaintext }],
-                      },
-                    ]
+                    metadata?.dataSources?.value ||
+                    getDefaultValue(metadata?.dataSources.plaintext)
                   }
                 />
               </div>

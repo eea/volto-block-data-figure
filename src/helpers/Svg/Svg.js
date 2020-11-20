@@ -76,3 +76,14 @@ export const validateHostname = (url) => {
     .split(/[/?#]/)[0];
   return settings.allowed_cors_destinations.includes(domain);
 };
+
+export const getDefaultValue = (data) => {
+  const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
+
+  return [
+    {
+      type: 'p',
+      children: [{ text: parsedDoc }],
+    },
+  ];
+};

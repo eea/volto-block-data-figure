@@ -377,11 +377,14 @@ const ImageSidebar = ({
                       },
                     });
                   }}
-                  style={{ left: '740px' }}
+                  className="data-source-toolbar"
+                  block={block}
+                  properties={data}
                   value={
                     metadata?.dataSources?.value ||
                     getDefaultValue(metadata?.dataSources?.plaintext)
                   }
+                  placeholder="Enter Data Sources"
                 />
               </div>
             </Accordion.Content>

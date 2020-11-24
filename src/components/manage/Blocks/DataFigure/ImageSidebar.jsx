@@ -81,7 +81,16 @@ const ImageSidebar = ({
   const { metadata } = data;
   const editor = {};
   const { slate } = settings;
+  const { isInline = () => {}, isVoid = () => {} } = editor;
   editor.htmlTagsToSlate = slate.htmlTagsToSlate;
+  editor.isInline = (element) => {
+    return slate.inlineElements.includes(element.type)
+      ? true
+      : isInline(element);
+  };
+  editor.isVoid = (element) => {
+    return element.type === 'img' ? true : isVoid(element);
+  };
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 

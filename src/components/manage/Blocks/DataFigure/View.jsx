@@ -6,7 +6,14 @@ import Png from './Png';
 import cx from 'classnames';
 import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
-import { Button, Divider, Popup, Sidebar, Container } from 'semantic-ui-react';
+import {
+  Button,
+  Divider,
+  Popup,
+  Sidebar,
+  Container,
+  Header,
+} from 'semantic-ui-react';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
@@ -67,7 +74,8 @@ class View extends React.Component {
     const { visible, showMetadata, isLeftClicked } = this.state;
     const { data, detached } = this.props;
     return this.props.data.url?.includes('.svg') ? (
-      <div>
+      <div style={{ paddingTop: '25px' }}>
+        {data?.alt && <Header>{data.alt.replace('.svg', '')}</Header>}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">

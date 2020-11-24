@@ -78,12 +78,6 @@ export const validateHostname = (url) => {
 };
 
 export const getDefaultValue = (data = '') => {
-  const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
-
-  return [
-    {
-      type: 'p',
-      children: [{ text: parsedDoc }],
-    },
-  ];
+  const document = new DOMParser().parseFromString(data, 'text/html');
+  return document.body;
 };

@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
 import { serializeNodesToText } from 'volto-slate/editor/render';
+import { deserialize } from 'volto-slate/editor/deserialize';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import { isArray } from 'lodash';
+import { settings } from '~/config';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
@@ -77,6 +79,9 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const { metadata } = data;
+  const editor = {};
+  const { slate } = settings;
+  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
@@ -382,7 +387,10 @@ const ImageSidebar = ({
                   properties={data}
                   value={
                     metadata?.dataSources?.value ||
-                    getDefaultValue(metadata?.dataSources?.plaintext)
+                    deserialize(
+                      editor,
+                      getDefaultValue(metadata?.dataSources?.plaintext),
+                    )
                   }
                   placeholder="Enter Data Sources"
                 />

@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
-import {
-  serializeNodesToText,
-  serializeNodes,
-} from 'volto-slate/editor/render';
-import { deserialize } from 'volto-slate/editor/deserialize';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
@@ -82,17 +77,17 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const { metadata } = data;
-  const editor = {};
-  const { slate } = settings;
-  const { isInline = () => {}, isVoid = () => {} } = editor;
-  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
-  editor.isInline = (element) => {
-    return slate.inlineElements.includes(element.type)
-      ? true
-      : isInline(element);
-  };
-  editor.isVoid = (element) => {
-    return element.type === 'img' ? true : isVoid(element);
+
+  const getDefaultValue = () => {
+    onChangeBlock(block, {
+      ...data,
+      metadata: {
+        ...data.metadata,
+        dataSources: {
+          value: getParsedValue(metadata?.dataSources?.plaintext),
+        },
+      },
+    });
   };
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -388,7 +383,6 @@ const ImageSidebar = ({
                       metadata: {
                         ...data.metadata,
                         dataSources: {
-                          plaintext: serializeNodesToText(value || []),
                           value,
                         },
                       },
@@ -397,10 +391,7 @@ const ImageSidebar = ({
                   className="data-source-toolbar"
                   block={block}
                   properties={data}
-                  value={
-                    metadata?.dataSources?.value ||
-                    getParsedValue(metadata?.dataSources?.plaintext)
-                  }
+                  value={metadata?.dataSources?.value || getDefaultValue()}
                   placeholder="Enter Data Sources"
                 />
               </div>

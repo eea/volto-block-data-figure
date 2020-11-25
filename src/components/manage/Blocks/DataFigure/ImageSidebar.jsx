@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
-import { serializeNodesToText } from 'volto-slate/editor/render';
+import {
+  serializeNodesToText,
+  serializeNodes,
+} from 'volto-slate/editor/render';
 import { deserialize } from 'volto-slate/editor/deserialize';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
@@ -12,7 +15,7 @@ import { settings } from '~/config';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import { getDefaultValue } from '@eeacms/volto-block-data-figure/helpers';
+import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
 import './less/public.less';
 
@@ -396,10 +399,7 @@ const ImageSidebar = ({
                   properties={data}
                   value={
                     metadata?.dataSources?.value ||
-                    deserialize(
-                      editor,
-                      getDefaultValue(metadata?.dataSources?.plaintext),
-                    )
+                    getParsedValue(metadata?.dataSources?.plaintext)
                   }
                   placeholder="Enter Data Sources"
                 />

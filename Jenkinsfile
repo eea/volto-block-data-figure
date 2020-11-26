@@ -5,7 +5,7 @@ pipeline {
         GIT_NAME = "volto-block-data-figure"
         NAMESPACE = "@eeacms"
         SONARQUBE_TAGS = "volto.eea.europa.eu"
-        DEPENDENCIES = "@eeacms/volto-corsproxy @eeacms/volto-widget-geolocation @eeacms/volto-widget-temporal-coverage volto-slate"
+        DEPENDENCIES = "@eeacms/volto-corsproxy @eeacms/volto-widget-geolocation @eeacms/volto-widget-temporal-coverage volto-slate @eeacms/volto-block-style"
     }
 
   stages {

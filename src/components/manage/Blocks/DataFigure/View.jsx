@@ -2,7 +2,6 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
-import Png from './Png';
 import cx from 'classnames';
 import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
@@ -79,8 +78,8 @@ class View extends React.Component {
       modalOpen,
       zoomed,
     } = this.state;
-    const { data, detached } = this.props;
-    return this.props.data.url?.includes('.svg') ? (
+    const { data } = this.props;
+    return (
       <div style={{ paddingTop: '25px' }}>
         {data?.alt && <Header>{data.alt.replace('.svg', '')}</Header>}
         <Sidebar.Pushable as={Container}>
@@ -239,8 +238,6 @@ class View extends React.Component {
           </Popup>
         </Button.Group>
       </div>
-    ) : (
-      <Png data={data} detached={detached} />
     );
   }
 }

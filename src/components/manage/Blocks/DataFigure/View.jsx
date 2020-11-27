@@ -2,15 +2,21 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
-import Png from './Png';
 import cx from 'classnames';
 import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
-import { Button, Divider, Popup, Sidebar, Container } from 'semantic-ui-react';
+import {
+  Button,
+  Divider,
+  Popup,
+  Sidebar,
+  Container,
+  Transition,
+  Modal,
+  Header,
+} from 'semantic-ui-react';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
-import saveSVG from '@plone/volto/icons/save.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
-import showSVG from '@plone/volto/icons/show.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
@@ -32,7 +38,8 @@ class View extends React.Component {
   state = {
     visible: false,
     showMetadata: false,
-
+    modalOpen: false,
+    zoomed: false,
     isLeftClicked: false,
   };
 
@@ -64,10 +71,17 @@ class View extends React.Component {
     }));
 
   render() {
-    const { visible, showMetadata, isLeftClicked } = this.state;
-    const { data, detached } = this.props;
-    return this.props.data.url?.includes('.svg') ? (
-      <div>
+    const {
+      visible,
+      showMetadata,
+      isLeftClicked,
+      modalOpen,
+      zoomed,
+    } = this.state;
+    const { data } = this.props;
+    return data.url ? (
+      <div style={{ paddingTop: '25px' }}>
+        {data?.alt && <Header>{data.alt.replace('.svg', '')}</Header>}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">
@@ -85,57 +99,12 @@ class View extends React.Component {
                       marginRight: data.inLeftColumn ? '0!important' : '1rem',
                     }}
                     src={
-                      data.url.includes(settings.apiPath)
+                      data.url?.includes(settings.apiPath)
                         ? `${flattenToAppURL(data.url)}/@@images/image`
                         : data.url
                     }
                     alt={data.alt || ''}
                   ></img>
-                  <div className="overlay">
-                    <Button.Group basic className="text">
-                      <Popup
-                        className="popup-wrap"
-                        trigger={
-                          <Button icon onClick={this.toggleLeftPopup}>
-                            <Icon name={saveSVG} size="24px" />
-                          </Button>
-                        }
-                        position="top center"
-                      >
-                        save
-                      </Popup>
-                      <Popup
-                        className="popup-wrap"
-                        trigger={
-                          <a
-                            href={data.figureUrl}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            <Button icon>
-                              <Icon name={showSVG} size="24px" />
-                            </Button>
-                          </a>
-                        }
-                        position="top center"
-                      >
-                        explore
-                      </Popup>
-                      <Popup
-                        className="popup-wrap"
-                        trigger={
-                          <a href={data.url} rel="noreferrer" target="_blank">
-                            <Button icon>
-                              <Icon name={zoomSVG} size="24px" />
-                            </Button>
-                          </a>
-                        }
-                        position="top center"
-                      >
-                        enlarge
-                      </Popup>
-                    </Button.Group>
-                  </div>
                 </div>
                 <div className="card__face card__face--back">
                   <Table data={data} />
@@ -153,14 +122,49 @@ class View extends React.Component {
             isLeftClicked={isLeftClicked}
             hideSidebar={this.hideSidebar}
           />
+          <Transition visible={modalOpen} animation="scale" duration={300}>
+            <Modal
+              style={{ width: 'unset' }}
+              open={modalOpen}
+              onClose={() => this.setState({ modalOpen: false, zoomed: false })}
+            >
+              <Modal.Content image>
+                {visible ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data.table,
+                    }}
+                  />
+                ) : (
+                  <img
+                    aria-hidden="true"
+                    className={cx({ 'full-width': data.align === 'full' })}
+                    zoomed={zoomed}
+                    style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                    src={
+                      data.url?.includes(settings.apiPath)
+                        ? `${flattenToAppURL(data.url)}/@@images/image`
+                        : data.url
+                    }
+                    onClick={() => this.setState({ zoomed: true })}
+                    alt={data.alt || ''}
+                  ></img>
+                )}
+              </Modal.Content>
+            </Modal>
+          </Transition>
         </Sidebar.Pushable>
         <Divider hidden />
-        <Button.Group className="metadata-btn-group">
+        <Button.Group className="metadata-btn-group" basic>
           <Popup
             className="popup-wrap"
             inverted
             trigger={
-              <Button icon onClick={this.toggleVisibility}>
+              <Button
+                icon
+                onClick={this.toggleVisibility}
+                className="data-figure-control"
+              >
                 <Icon name={spreadsheetSVG} size="24px" />
               </Button>
             }
@@ -172,7 +176,11 @@ class View extends React.Component {
             className="popup-wrap"
             inverted
             trigger={
-              <Button icon onClick={this.toggleMetadata}>
+              <Button
+                icon
+                onClick={this.toggleMetadata}
+                className="data-figure-control"
+              >
                 <Icon name={infoSVG} size="24px" />
               </Button>
             }
@@ -188,7 +196,7 @@ class View extends React.Component {
                 href={data.href}
                 target={data.openLinkInNewTab ? '_blank' : '_self'}
               >
-                <Button icon>
+                <Button icon className="data-figure-control">
                   <Icon name={applicationSVG} size="24px" />
                 </Button>
               </a>
@@ -201,7 +209,11 @@ class View extends React.Component {
             className="popup-wrap"
             inverted
             trigger={
-              <Button icon onClick={this.toggleLeftPopup}>
+              <Button
+                icon
+                onClick={this.toggleLeftPopup}
+                className="data-figure-control"
+              >
                 <Icon name={downloadSVG} size="24px" />
               </Button>
             }
@@ -209,11 +221,24 @@ class View extends React.Component {
           >
             download data
           </Popup>
+          <Popup
+            className="popup-wrap"
+            trigger={
+              <Button
+                icon
+                className="data-figure-control"
+                onClick={() => this.setState({ modalOpen: true, zoomed: true })}
+              >
+                <Icon name={zoomSVG} size="24px" />
+              </Button>
+            }
+            position="top center"
+          >
+            enlarge
+          </Popup>
         </Button.Group>
       </div>
-    ) : (
-      <Png data={data} detached={detached} />
-    );
+    ) : null;
   }
 }
 /**

@@ -5,6 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Menu, Sidebar, Grid } from 'semantic-ui-react';
+import { serializeNodes } from 'volto-slate/editor/render';
 import './less/public.less';
 
 /**
@@ -13,7 +14,11 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
-  const { geolocation } = data;
+  const {
+    geolocation,
+    metadata: { dataSources: { value, plaintext = '' } = {} } = {},
+  } = data;
+
   return (
     <Sidebar
       as={Menu}
@@ -31,13 +36,22 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             Metadata
           </Header>
         </Segment>
-        <Segment secondary>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: data.metadata?.dataSources,
-            }}
-          />
-        </Segment>
+        {!value ? (
+          <Segment secondary>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: plaintext,
+              }}
+            />
+          </Segment>
+        ) : (
+          <Segment secondary>
+            <Header style={{ color: '#517776' }} as="h2">
+              Data Sources:
+            </Header>
+            {serializeNodes(value || [])}
+          </Segment>
+        )}
         {geolocation && (
           <Segment secondary>
             <Header as="h3" style={{ color: '#517776' }}>
@@ -48,11 +62,11 @@ const Metadata = ({ visible, data, hideSidebar }) => {
                 <Grid.Row>
                   {geolocation?.map((item, index) =>
                     index < geolocation.length / 2 ? (
-                      <Grid.Column>
+                      <Grid.Column key={index}>
                         <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ) : (
-                      <Grid.Column>
+                      <Grid.Column key={index}>
                         <li key={index}>{item.label}</li>
                       </Grid.Column>
                     ),
@@ -67,8 +81,10 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <Header as="h3" style={{ color: '#517776' }}>
               Temporal coverage
             </Header>
-            {data.temporal.map((item) => (
-              <div style={{ textIndent: '15px' }}>{item?.label}</div>
+            {data.temporal.map((item, index) => (
+              <div key={index} style={{ textIndent: '15px' }}>
+                {item?.label}
+              </div>
             ))}
           </Segment>
         )}

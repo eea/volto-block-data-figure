@@ -40,7 +40,7 @@ export const extractTable = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const table = html.querySelector('.download-visualization a');
-  return table ? table.getAttribute('href') : '';
+  return table ? table.getAttribute('href') : null;
 };
 
 export const extractTemporal = (data) => {
@@ -63,7 +63,7 @@ export const extractMetadata = (data) => {
     }
   }
   return {
-    dataSources: dataSources?.innerHTML.trim(),
+    dataSources: { plaintext: dataSources?.innerHTML.trim() },
     geoCoverage: coverageList,
     downloadData: downloadData?.innerHTML.trim(),
   };
@@ -75,4 +75,15 @@ export const validateHostname = (url) => {
     .replace('https://', '')
     .split(/[/?#]/)[0];
   return settings.allowed_cors_destinations.includes(domain);
+};
+
+export const getParsedValue = (data = '') => {
+  const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
+
+  return [
+    {
+      type: 'p',
+      children: [{ text: parsedDoc }],
+    },
+  ];
 };

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
+import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
+
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
 import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-
+import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
 import './less/public.less';
 
@@ -42,6 +44,10 @@ const messages = defineMessages({
     id: 'Label ',
     defaultMessage: 'Label',
   },
+  dataSources: {
+    id: 'Data sources ',
+    defaultMessage: 'Data sources',
+  },
   openLinkInNewTab: {
     id: 'Open in a new tab',
     defaultMessage: 'Open in a new tab',
@@ -69,6 +75,20 @@ const ImageSidebar = ({
   intl,
   svgs,
 }) => {
+  const { metadata } = data;
+
+  const getDefaultValue = () => {
+    onChangeBlock(block, {
+      ...data,
+      metadata: {
+        ...data.metadata,
+        dataSources: {
+          value: getParsedValue(metadata?.dataSources?.plaintext),
+        },
+      },
+    });
+  };
+
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
   function handleAccClick(e, titleProps) {
@@ -336,6 +356,42 @@ const ImageSidebar = ({
                     });
                   }}
                   intl={intl}
+                />
+              </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 3}
+              index={3}
+              onClick={handleAccClick}
+            >
+              Data sources
+              {activeAccIndex === 3 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 3}>
+              <div>
+                <SlateRichTextWidget
+                  id="data_sources"
+                  title={intl.formatMessage(messages.dataSources)}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      metadata: {
+                        ...data.metadata,
+                        dataSources: {
+                          value,
+                        },
+                      },
+                    });
+                  }}
+                  className="data-source-toolbar"
+                  block={block}
+                  properties={data}
+                  value={metadata?.dataSources?.value || getDefaultValue()}
+                  placeholder="Enter Data Sources"
                 />
               </div>
             </Accordion.Content>

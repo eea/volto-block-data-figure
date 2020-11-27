@@ -5,7 +5,7 @@ pipeline {
         GIT_NAME = "volto-block-data-figure"
         NAMESPACE = "@eeacms"
         SONARQUBE_TAGS = "volto.eea.europa.eu"
-        DEPENDENCIES = "@eeacms/volto-corsproxy @eeacms/volto-widget-geolocation @eeacms/volto-widget-temporal-coverage"
+        DEPENDENCIES = "@eeacms/volto-corsproxy @eeacms/volto-widget-geolocation @eeacms/volto-widget-temporal-coverage volto-slate @eeacms/volto-block-style"
     }
 
   stages {
@@ -67,6 +67,31 @@ pipeline {
               }
             }
           }
+        )
+      }
+    }
+
+    stage('Integration tests') {
+      steps {
+        parallel(
+            
+          "Cypress": {
+            node(label: 'docker') {
+              script {
+                try {
+                  sh '''docker pull plone; docker run -d --name="$BUILD_TAG-plone" -e SITE="Plone" -e PROFILES="profile-plone.restapi:blocks" plone fg'''
+                  sh '''docker pull eeacms/volto-test; docker run -i --name="$BUILD_TAG-cypress" --link $BUILD_TAG-plone:plone -e NAMESPACE="$NAMESPACE" -e DEPENDENCIES="$DEPENDENCIES" -e GIT_NAME=$GIT_NAME -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/volto-test cypress'''
+                } finally {
+                  sh '''mkdir -p cypress-reports'''
+                  sh '''docker cp $BUILD_TAG-cypress:/opt/frontend/my-volto-project/src/addons/$GIT_NAME/cypress/videos cypress-reports/'''
+                  stash name: "cypress-reports", includes: "cypress-reports/**/*"
+                  archiveArtifacts artifacts: 'cypress-reports/videos/*.mp4', fingerprint: true
+                  sh '''echo "$(docker stop $BUILD_TAG-plone; docker rm -v $BUILD_TAG-plone; docker rm -v $BUILD_TAG-cypress)" '''
+                }
+              }
+            }
+          }
+                  
         )
       }
     }

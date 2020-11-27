@@ -79,7 +79,7 @@ class View extends React.Component {
       zoomed,
     } = this.state;
     const { data } = this.props;
-    return (
+    return data.url ? (
       <div style={{ paddingTop: '25px' }}>
         {data?.alt && <Header>{data.alt.replace('.svg', '')}</Header>}
         <Sidebar.Pushable as={Container}>
@@ -99,7 +99,7 @@ class View extends React.Component {
                       marginRight: data.inLeftColumn ? '0!important' : '1rem',
                     }}
                     src={
-                      data.url.includes(settings.apiPath)
+                      data.url?.includes(settings.apiPath)
                         ? `${flattenToAppURL(data.url)}/@@images/image`
                         : data.url
                     }
@@ -142,7 +142,7 @@ class View extends React.Component {
                     zoomed={zoomed}
                     style={{ maxHeight: '80vh', maxWidth: '100%' }}
                     src={
-                      data.url.includes(settings.apiPath)
+                      data.url?.includes(settings.apiPath)
                         ? `${flattenToAppURL(data.url)}/@@images/image`
                         : data.url
                     }
@@ -238,7 +238,7 @@ class View extends React.Component {
           </Popup>
         </Button.Group>
       </div>
-    );
+    ) : null;
   }
 }
 /**

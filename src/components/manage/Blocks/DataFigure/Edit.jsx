@@ -182,12 +182,10 @@ class Edit extends Component {
     if (arr.length > 0) {
       let url = extractSvg(arr.join(''));
       let temporal = extractTemporal(arr.join(''));
-      if (this.state.url.includes('daviz')) {
-        let metadata = extractMetadata(arr.join(''));
-        let href = extractTable(arr.join(''));
-        return [temporal, url, href, metadata];
-      }
-      return [temporal, url];
+      let metadata = extractMetadata(arr.join(''));
+      let href = extractTable(arr.join(''));
+
+      return [temporal, url, href, metadata];
     } else {
       return arr;
     }
@@ -195,10 +193,10 @@ class Edit extends Component {
 
   getGeoNameWithIds(metadata) {
     const { geoCoverage } = metadata;
-    const GeoNameWithIds = geoCoverage.map((item) => {
+    const GeoNameWithIds = geoCoverage?.map((item) => {
       return eeaCountries.find((name) => name.label === item);
     });
-    const filteredGeonames = GeoNameWithIds.filter(
+    const filteredGeonames = GeoNameWithIds?.filter(
       (item) => item !== undefined,
     );
     return filteredGeonames;

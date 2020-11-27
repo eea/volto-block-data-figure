@@ -40,7 +40,7 @@ export const extractTable = (data) => {
   const parser = new DOMParser();
   const html = parser.parseFromString(data, 'text/html');
   const table = html.querySelector('.download-visualization a');
-  return table ? table.getAttribute('href') : '';
+  return table ? table.getAttribute('href') : null;
 };
 
 export const extractTemporal = (data) => {

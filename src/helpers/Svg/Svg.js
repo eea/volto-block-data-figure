@@ -1,3 +1,4 @@
+import React from 'react';
 import { settings } from '@plone/volto/config';
 export const cleanSVG = (data) => {
   // base64 decode, if needed
@@ -78,12 +79,7 @@ export const validateHostname = (url) => {
 };
 
 export const getParsedValue = (data = '') => {
-  const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
+  const document = new DOMParser().parseFromString(data, 'text/html');
 
-  return [
-    {
-      type: 'p',
-      children: [{ text: parsedDoc }],
-    },
-  ];
+  return document.body;
 };

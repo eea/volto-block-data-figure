@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
+import { serializeNodesToText } from 'volto-slate/editor/render';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
@@ -11,6 +12,8 @@ import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
 import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
+import { deserialize } from 'volto-slate/editor/deserialize';
+import { settings } from '~/config';
 import './less/public.less';
 
 import imageSVG from '@plone/volto/icons/image.svg';
@@ -77,13 +80,36 @@ const ImageSidebar = ({
 }) => {
   const { metadata } = data;
 
+  const editor = {};
+  const { slate } = settings;
+  const { isInline = () => {}, isVoid = () => {} } = editor;
+  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
+  editor.isInline = (element) => {
+    return slate.inlineElements.includes(element.type)
+      ? true
+      : isInline(element);
+  };
+  editor.isVoid = (element) => {
+    return element.type === 'img' ? true : isVoid(element);
+  };
   const getDefaultValue = () => {
     onChangeBlock(block, {
       ...data,
       metadata: {
         ...data.metadata,
         dataSources: {
-          value: getParsedValue(metadata?.dataSources?.plaintext),
+          ...(data.metadata?.dataSources || {}),
+          value: metadata?.dataSources?.plaintext
+            ? deserialize(
+                editor,
+                getParsedValue(metadata?.dataSources?.plaintext),
+              )
+            : [
+                {
+                  type: 'p',
+                  children: [{ text: '' }],
+                },
+              ],
         },
       },
     });
@@ -382,6 +408,8 @@ const ImageSidebar = ({
                       metadata: {
                         ...data.metadata,
                         dataSources: {
+                          ...(data.metadata.dataSources || {}),
+                          plaintext: serializeNodesToText(value || []),
                           value,
                         },
                       },

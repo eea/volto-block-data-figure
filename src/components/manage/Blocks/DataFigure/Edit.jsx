@@ -110,7 +110,7 @@ class Edit extends Component {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
         url: nextProps.content['@id'],
-        alt: nextProps.content.title,
+        title: nextProps.content.title,
       });
     }
     if (
@@ -399,7 +399,7 @@ class Edit extends Component {
                   })()
                 : data.url
             }
-            alt={data.alt || ''}
+            alt={data.title || ''}
           />
         ) : (
           <div>

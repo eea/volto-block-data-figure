@@ -28,9 +28,9 @@ const messages = defineMessages({
     id: 'Origin',
     defaultMessage: 'Origin',
   },
-  AltText: {
-    id: 'Alt text',
-    defaultMessage: 'Alt text',
+  Title: {
+    id: 'Title',
+    defaultMessage: 'Title',
   },
   Align: {
     id: 'Alignment',
@@ -204,21 +204,21 @@ const ImageSidebar = ({
             )}
 
             <TextWidget
-              id="alt"
-              title={intl.formatMessage(messages.AltText)}
+              id="title"
+              title={intl.formatMessage(messages.Title)}
               required={false}
-              value={data.alt}
-              icon={data.alt ? clearSVG : null}
+              value={data.title}
+              icon={data.title ? clearSVG : null}
               iconAction={() =>
                 onChangeBlock(block, {
                   ...data,
-                  alt: '',
+                  title: '',
                 })
               }
               onChange={(name, value) => {
                 onChangeBlock(block, {
                   ...data,
-                  alt: value,
+                  title: value,
                 });
               }}
             />

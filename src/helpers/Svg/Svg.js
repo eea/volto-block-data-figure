@@ -1,4 +1,3 @@
-import React from 'react';
 import { settings } from '@plone/volto/config';
 export const cleanSVG = (data) => {
   // base64 decode, if needed

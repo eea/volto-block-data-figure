@@ -78,12 +78,7 @@ export const validateHostname = (url) => {
 };
 
 export const getParsedValue = (data = '') => {
-  const parsedDoc = data.replace(/(<([^>]+)>)/gi, '');
+  const document = new DOMParser().parseFromString(data, 'text/html');
 
-  return [
-    {
-      type: 'p',
-      children: [{ text: parsedDoc }],
-    },
-  ];
+  return document.body;
 };

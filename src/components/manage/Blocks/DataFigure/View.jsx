@@ -81,7 +81,7 @@ class View extends React.Component {
     const { data } = this.props;
     return data.url ? (
       <div style={{ paddingTop: '25px' }}>
-        {data?.alt && <Header>{data.alt.replace('.svg', '')}</Header>}
+        {data?.title && <Header>{data.title.replace('.svg', '')}</Header>}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">

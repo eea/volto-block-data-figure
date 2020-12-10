@@ -27,45 +27,23 @@ export const cleanSVG = (data) => {
 };
 
 export const extractSvg = (data) => {
-  const parser = new DOMParser();
-  const html = parser.parseFromString(data, 'text/html');
-  const img = Array.from(html.getElementsByTagName('img'));
-  const src = img.filter((it) => it.src.includes('embed-chart.svg?'));
-  if (src.length > 0) return src;
-  const nonDavizPNG = html.querySelector('.figures-download-links');
-  return nonDavizPNG ? nonDavizPNG.children[2].firstElementChild.href : [];
+  return data.items.filter((item) => item.url.includes('.svg'));
 };
 
 export const extractTable = (data) => {
-  const parser = new DOMParser();
-  const html = parser.parseFromString(data, 'text/html');
-  const table = html.querySelector('.download-visualization a');
-  return table ? table.getAttribute('href') : null;
+  return data.spreadsheet;
 };
 
 export const extractTemporal = (data) => {
-  const parser = new DOMParser();
-  const html = parser.parseFromString(data, 'text/html');
-  const coverage = html.querySelector('#tempCoverage');
-  return coverage ? coverage.innerText.trim() : '';
+  return data.temporalCoverage;
 };
 
 export const extractMetadata = (data) => {
-  let coverageList = [];
-  const parser = new DOMParser();
-  const html = parser.parseFromString(data, 'text/html');
-  const dataSources = html.querySelector('div.visualization-info');
-  const geoCoverage = html.querySelector('div.geotags');
-  const downloadData = html.querySelector('div.download-visualization');
-  if (geoCoverage) {
-    for (let items of geoCoverage.children) {
-      coverageList.push(items.innerText);
-    }
-  }
+  const { provenances, location, pdfStatic } = data;
   return {
-    dataSources: { plaintext: dataSources?.innerHTML.trim() },
-    geoCoverage: coverageList,
-    downloadData: downloadData?.innerHTML.trim(),
+    dataSources: provenances,
+    geoCoverage: location,
+    downloadData: pdfStatic,
   };
 };
 

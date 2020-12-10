@@ -161,7 +161,7 @@ const ImageSidebar = ({
                     <div key={ind}>
                       <p>Image {ind + 1}</p>
                       <img
-                        src={it.src}
+                        src={it.url}
                         key={ind}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}
@@ -169,7 +169,7 @@ const ImageSidebar = ({
                         onClick={() => {
                           onChangeBlock(block, {
                             ...data,
-                            url: it.src,
+                            url: it.url,
                           });
                         }}
                       />

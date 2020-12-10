@@ -179,16 +179,13 @@ class Edit extends Component {
   };
 
   extractAssets = (arr) => {
-    if (arr.length > 0) {
-      let url = extractSvg(arr.join(''));
-      let temporal = extractTemporal(arr.join(''));
-      let metadata = extractMetadata(arr.join(''));
-      let href = extractTable(arr.join(''));
+    const url = extractSvg(arr);
+    const temporal = extractTemporal(arr);
+    const metadata = extractMetadata(arr);
+    const href = extractTable(arr);
+    const title = arr.title;
 
-      return [temporal, url, href, metadata];
-    } else {
-      return arr;
-    }
+    return [temporal, url, title, href, metadata];
   };
 
   getGeoNameWithIds(metadata) {
@@ -203,17 +200,10 @@ class Edit extends Component {
   }
 
   externalURLContents = async (url) => {
-    let arr = [];
     await this.props.getProxiedExternalContent(url, {
-      headers: { Accept: 'text/html' },
+      headers: { Accept: 'application/json' },
     });
-    if (this.state.error) {
-      return arr;
-    }
-    for (const key in this.props.subrequests[url].data) {
-      arr.push(this.props.subrequests[url].data[key]);
-    }
-    return arr;
+    return this.props.subrequests[url]?.data;
   };
 
   /**
@@ -233,16 +223,20 @@ class Edit extends Component {
         let table,
           figureUrl = this.state.url;
         const arr = await this.externalURLContents(this.state.url);
-        const [temporal, url, href = null, metadata = {}] = this.extractAssets(
-          arr,
-        );
-        if (href) {
-          table = await this.externalURLContents(href);
-        }
-        if (url.length > 0) {
+        const [
+          temporal,
+          chartUrl,
+          title,
+          href = null,
+          metadata = {},
+        ] = this.extractAssets(arr);
+        // if (href) {
+        //   table = await this.externalURLContents(href);
+        // }
+        if (chartUrl.length > 0) {
           this.setState(
             {
-              url: url[0].src || url,
+              url: chartUrl[0].url || chartUrl,
               uploading: false,
             },
             () =>
@@ -250,11 +244,15 @@ class Edit extends Component {
                 ...this.props.data,
                 url: this.state.url,
                 figureUrl,
-                svgs: url,
+                title,
+                svgs: chartUrl,
                 table: table?.join('') || '',
                 metadata,
                 geolocation: this.getGeoNameWithIds(metadata),
-                temporal: [{ label: temporal, value: temporal }],
+                temporal: temporal.map((item) => ({
+                  value: item,
+                  label: item,
+                })),
               }),
           );
         } else if (

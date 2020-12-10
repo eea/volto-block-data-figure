@@ -246,7 +246,7 @@ class Edit extends Component {
                 figureUrl,
                 title,
                 svgs: chartUrl,
-                table: table?.join('') || '',
+                table: href || '',
                 metadata,
                 geolocation: this.getGeoNameWithIds(metadata),
                 temporal: temporal.map((item) => ({

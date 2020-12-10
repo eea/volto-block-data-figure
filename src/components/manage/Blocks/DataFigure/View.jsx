@@ -81,7 +81,7 @@ class View extends React.Component {
     const { data } = this.props;
     return data.url ? (
       <div style={{ paddingTop: '25px' }}>
-        {data?.title && <Header>{data.title.replace('.svg', '')}</Header>}
+        {data.title && <Header>{data.title}</Header>}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">
@@ -103,7 +103,7 @@ class View extends React.Component {
                         ? `${flattenToAppURL(data.url)}/@@images/image`
                         : data.url
                     }
-                    alt={data.alt || ''}
+                    alt={data.title || ''}
                   ></img>
                 </div>
                 <div className="card__face card__face--back">

@@ -27,7 +27,7 @@ export const cleanSVG = (data) => {
 };
 
 export const extractSvg = (data) => {
-  return data.items.filter((item) => item.url.includes('.svg'));
+  return data.items;
 };
 
 export const extractTable = (data) => {

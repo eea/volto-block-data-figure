@@ -223,6 +223,7 @@ class View extends React.Component {
           </Popup>
           <Popup
             className="popup-wrap"
+            inverted
             trigger={
               <Button
                 icon

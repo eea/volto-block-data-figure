@@ -20,6 +20,7 @@ const applyConfig = (config) => {
       addPermission: [],
       view: [],
     },
+    type: ['DavizVisualization', 'EEAFigure'],
   };
 
   // reducers

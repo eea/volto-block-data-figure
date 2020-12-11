@@ -13,6 +13,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
+import { blocks } from '~/config';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
@@ -177,15 +178,27 @@ class Edit extends Component {
       error: null,
     });
   };
+  extractTable = async (data) => {
+    let arr = [];
+    const tableUrl = `${data['@id']}/download.table`;
+    await this.props.getProxiedExternalContent(tableUrl, {
+      headers: { Accept: 'text/html' },
+    });
+    if (this.state.error) {
+      return arr;
+    }
+    for (const key in this.props.subrequests[tableUrl]?.data) {
+      arr.push(this.props.subrequests[tableUrl].data[key]);
+    }
+    return arr;
+  };
 
   extractAssets = (arr) => {
     const url = extractSvg(arr);
     const temporal = extractTemporal(arr);
     const metadata = extractMetadata(arr);
-    const href = extractTable(arr);
     const title = arr.title;
-
-    return [temporal, url, title, href, metadata];
+    return [temporal, url, title, metadata];
   };
 
   getGeoNameWithIds(metadata) {
@@ -223,17 +236,18 @@ class Edit extends Component {
         let table,
           figureUrl = this.state.url;
         const arr = await this.externalURLContents(this.state.url);
-        const [
-          temporal,
-          chartUrl,
-          title,
-          href = null,
-          metadata = {},
-        ] = this.extractAssets(arr);
-        // if (href) {
-        //   table = await this.externalURLContents(href);
-        // }
-        if (chartUrl.length > 0) {
+        const [temporal, chartUrl, title, metadata = {}] = this.extractAssets(
+          arr,
+        );
+        if (arr['@type'] === 'DavizVisualization') {
+          table = await this.extractTable(arr);
+        }
+        if (
+          blocks.blocksConfig['dataFigure'].type.some(
+            (item) => item === arr['@type'],
+          ) &&
+          chartUrl.length > 0
+        ) {
           this.setState(
             {
               url: chartUrl[0].url || chartUrl,
@@ -246,7 +260,7 @@ class Edit extends Component {
                 figureUrl,
                 title,
                 svgs: chartUrl,
-                table: href || '',
+                table: table?.join('') || '',
                 metadata,
                 geolocation: this.getGeoNameWithIds(metadata),
                 temporal: temporal.map((item) => ({

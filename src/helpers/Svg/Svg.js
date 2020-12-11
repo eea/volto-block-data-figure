@@ -30,10 +30,6 @@ export const extractSvg = (data) => {
   return data.items;
 };
 
-export const extractTable = (data) => {
-  return data.spreadsheet;
-};
-
 export const extractTemporal = (data) => {
   return data.temporalCoverage;
 };

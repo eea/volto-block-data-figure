@@ -1,7 +1,6 @@
 export {
   cleanSVG,
   extractSvg,
-  extractTable,
   extractTemporal,
   extractMetadata,
   validateHostname,

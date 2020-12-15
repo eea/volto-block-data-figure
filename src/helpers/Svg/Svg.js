@@ -51,8 +51,11 @@ export const validateHostname = (url) => {
   return settings.allowed_cors_destinations.includes(domain);
 };
 
-export const getParsedValue = (data = '') => {
-  const document = new DOMParser().parseFromString(data, 'text/html');
-
-  return document.body;
+export const getParsedValue = (data = []) => {
+  return [
+    {
+      type: 'p',
+      children: [{ text: data[0].title }],
+    },
+  ];
 };

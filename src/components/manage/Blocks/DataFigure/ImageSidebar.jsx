@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
@@ -12,8 +12,8 @@ import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
 import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
-import { deserialize } from 'volto-slate/editor/deserialize';
-import { settings } from '~/config';
+//import { deserialize } from 'volto-slate/editor/deserialize';
+//import { settings } from '~/config';
 import './less/public.less';
 
 import imageSVG from '@plone/volto/icons/image.svg';
@@ -79,21 +79,20 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const { metadata } = data;
-
-  useEffect(() => {
-    const editor = {};
-    const { slate } = settings;
-    const { isInline = () => {}, isVoid = () => {} } = editor;
-    editor.htmlTagsToSlate = slate.htmlTagsToSlate;
-    editor.isInline = (element) => {
-      return slate.inlineElements.includes(element.type)
-        ? true
-        : isInline(element);
-    };
-    editor.isVoid = (element) => {
-      return element.type === 'img' ? true : isVoid(element);
-    };
-  }, []);
+  // const editor = {};
+  // useEffect(() => {
+  //   const { slate } = settings;
+  //   const { isInline = () => {}, isVoid = () => {} } = editor;
+  //   editor.htmlTagsToSlate = slate.htmlTagsToSlate;
+  //   editor.isInline = (element) => {
+  //     return slate.inlineElements.includes(element.type)
+  //       ? true
+  //       : isInline(element);
+  //   };
+  //   editor.isVoid = (element) => {
+  //     return element.type === 'img' ? true : isVoid(element);
+  //   };
+  // }, []);
 
   const getDefaultValue = () => {
     onChangeBlock(block, {
@@ -101,12 +100,8 @@ const ImageSidebar = ({
       metadata: {
         ...data.metadata,
         dataSources: {
-          ...(data.metadata?.dataSources || {}),
-          value: metadata?.dataSources?.plaintext
-            ? deserialize(
-                editor,
-                getParsedValue(metadata?.dataSources?.plaintext),
-              )
+          value: metadata?.dataSources
+            ? getParsedValue(metadata?.dataSources)
             : [
                 {
                   type: 'p',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
@@ -80,18 +80,21 @@ const ImageSidebar = ({
 }) => {
   const { metadata } = data;
 
-  const editor = {};
-  const { slate } = settings;
-  const { isInline = () => {}, isVoid = () => {} } = editor;
-  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
-  editor.isInline = (element) => {
-    return slate.inlineElements.includes(element.type)
-      ? true
-      : isInline(element);
-  };
-  editor.isVoid = (element) => {
-    return element.type === 'img' ? true : isVoid(element);
-  };
+  useEffect(() => {
+    const editor = {};
+    const { slate } = settings;
+    const { isInline = () => {}, isVoid = () => {} } = editor;
+    editor.htmlTagsToSlate = slate.htmlTagsToSlate;
+    editor.isInline = (element) => {
+      return slate.inlineElements.includes(element.type)
+        ? true
+        : isInline(element);
+    };
+    editor.isVoid = (element) => {
+      return element.type === 'img' ? true : isVoid(element);
+    };
+  }, []);
+
   const getDefaultValue = () => {
     onChangeBlock(block, {
       ...data,

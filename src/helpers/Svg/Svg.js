@@ -26,15 +26,15 @@ export const cleanSVG = (data) => {
   return svg.outerHTML;
 };
 
-export const extractSvg = (data) => {
-  return data.items;
+export const extractSvg = (data = {}) => {
+  return data?.items;
 };
 
-export const extractTemporal = (data) => {
+export const extractTemporal = (data = {}) => {
   return data.temporalCoverage;
 };
 
-export const extractMetadata = (data) => {
+export const extractMetadata = (data = {}) => {
   const { provenances, location, pdfStatic } = data;
   return {
     dataSources: provenances,

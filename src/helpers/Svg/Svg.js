@@ -65,9 +65,8 @@ export const getParsedValue = (data = []) => {
   editor.isVoid = (element) => {
     return element.type === 'img' ? true : isVoid(element);
   };
-
   const htmlStr = data
-    .map((item) => `<a href=${item.link}><p>${item.title}</p></a>`)
+    .map((item) => `<p><a href=${item.link}>${item.title.trim()}</a></p>`)
     .join('\n');
   const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
   return deserialize(editor, doc.body);

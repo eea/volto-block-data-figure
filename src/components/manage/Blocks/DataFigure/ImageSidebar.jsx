@@ -78,14 +78,24 @@ const ImageSidebar = ({
 }) => {
   const { metadata } = data;
   const getDefaultValue = () => {
-    return metadata?.dataSources?.provenances
-      ? getParsedValue(metadata?.dataSources?.provenances)
-      : [
-          {
-            type: 'p',
-            children: [{ text: '' }],
+    if (metadata?.dataSources.provenances) {
+      onChangeBlock(block, {
+        ...data,
+        metadata: {
+          ...data.metadata,
+          dataSources: {
+            ...(data.metadata?.dataSources || {}),
+            value: getParsedValue(metadata?.dataSources?.provenances),
           },
-        ];
+        },
+      });
+    } else
+      return [
+        {
+          type: 'p',
+          children: [{ text: '' }],
+        },
+      ];
   };
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -382,15 +392,7 @@ const ImageSidebar = ({
                         ...data.metadata,
                         dataSources: {
                           ...(data.metadata?.dataSources || {}),
-                          value:
-                            value.length > 0
-                              ? value
-                              : [
-                                  {
-                                    type: 'p',
-                                    children: [{ text: '' }],
-                                  },
-                                ],
+                          value,
                         },
                       },
                     });

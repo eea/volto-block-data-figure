@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Menu, Sidebar } from 'semantic-ui-react';
+import { Segment, Menu, Sidebar, Header } from 'semantic-ui-react';
 
 const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
+  const { downloadData } = data.metadata || {};
   return (
     <Sidebar
       as={Menu}
@@ -15,11 +16,14 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
       width="very wide"
     >
       <Segment secondary attached>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: data.metadata?.downloadData,
-          }}
-        />
+        <Header style={{ color: '#517776' }} as="h2">
+          Download Data
+        </Header>
+        {downloadData && (
+          <a href={downloadData?.download}>
+            {downloadData?.filename || <span>Download in PDF</span>}
+          </a>
+        )}
       </Segment>
     </Sidebar>
   );

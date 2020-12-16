@@ -383,8 +383,15 @@ const ImageSidebar = ({
                         ...data.metadata,
                         dataSources: {
                           ...(data.metadata?.dataSources || {}),
-                          value: value.length> 0? value: 
-                          provinances: serializeNodesToText(value || []),
+                          value:
+                            value.length > 0
+                              ? value
+                              : [
+                                  {
+                                    type: 'p',
+                                    children: [{ text: '' }],
+                                  },
+                                ],
                         },
                       },
                     });

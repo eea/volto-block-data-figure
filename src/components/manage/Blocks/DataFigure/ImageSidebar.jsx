@@ -12,8 +12,7 @@ import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
 import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
-//import { deserialize } from 'volto-slate/editor/deserialize';
-//import { settings } from '~/config';
+
 import './less/public.less';
 
 import imageSVG from '@plone/volto/icons/image.svg';
@@ -384,7 +383,7 @@ const ImageSidebar = ({
                         ...data.metadata,
                         dataSources: {
                           ...(data.metadata?.dataSources || {}),
-                          value,
+                          value: value.length> 0? value: 
                           provinances: serializeNodesToText(value || []),
                         },
                       },

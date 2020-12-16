@@ -1,3 +1,4 @@
+import { deserialize } from 'volto-slate/editor/deserialize';
 import { settings } from '@plone/volto/config';
 export const cleanSVG = (data) => {
   // base64 decode, if needed
@@ -37,7 +38,7 @@ export const extractTemporal = (data = {}) => {
 export const extractMetadata = (data = {}) => {
   const { provenances, location, pdfStatic } = data;
   return {
-    dataSources: provenances,
+    dataSources: { provenances },
     geoCoverage: location,
     downloadData: pdfStatic,
   };
@@ -52,10 +53,22 @@ export const validateHostname = (url) => {
 };
 
 export const getParsedValue = (data = []) => {
-  return [
-    {
-      type: 'p',
-      children: [{ text: data[0].title }],
-    },
-  ];
+  const editor = {};
+  const { slate } = settings;
+  const { isInline = () => {}, isVoid = () => {} } = editor;
+  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
+  editor.isInline = (element) => {
+    return slate.inlineElements.includes(element.type)
+      ? true
+      : isInline(element);
+  };
+  editor.isVoid = (element) => {
+    return element.type === 'img' ? true : isVoid(element);
+  };
+
+  const htmlStr = data
+    .map((item) => `<a href=${item.link}><p>${item.title}</p></a>`)
+    .join('\n');
+  const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
+  return deserialize(editor, doc.body);
 };

@@ -23,6 +23,7 @@
     "@eeacms/volto-corsproxy": "^1.0.0",
     "@eeacms/volto-widget-geolocation": "^1.0.0",
     "@eeacms/volto-widget-temporal-coverage": "^1.0.0",
+    "slate": "0.59.0",
     "volto-slate": "^1.0.0"
   },
   "scripts": {

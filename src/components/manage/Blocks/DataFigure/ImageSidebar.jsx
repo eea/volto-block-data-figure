@@ -79,38 +79,15 @@ const ImageSidebar = ({
   svgs,
 }) => {
   const { metadata } = data;
-  // const editor = {};
-  // useEffect(() => {
-  //   const { slate } = settings;
-  //   const { isInline = () => {}, isVoid = () => {} } = editor;
-  //   editor.htmlTagsToSlate = slate.htmlTagsToSlate;
-  //   editor.isInline = (element) => {
-  //     return slate.inlineElements.includes(element.type)
-  //       ? true
-  //       : isInline(element);
-  //   };
-  //   editor.isVoid = (element) => {
-  //     return element.type === 'img' ? true : isVoid(element);
-  //   };
-  // }, []);
-
   const getDefaultValue = () => {
-    onChangeBlock(block, {
-      ...data,
-      metadata: {
-        ...data.metadata,
-        dataSources: {
-          value: metadata?.dataSources
-            ? getParsedValue(metadata?.dataSources)
-            : [
-                {
-                  type: 'p',
-                  children: [{ text: '' }],
-                },
-              ],
-        },
-      },
-    });
+    return metadata?.dataSources?.provenances
+      ? getParsedValue(metadata?.dataSources?.provenances)
+      : [
+          {
+            type: 'p',
+            children: [{ text: '' }],
+          },
+        ];
   };
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -406,9 +383,9 @@ const ImageSidebar = ({
                       metadata: {
                         ...data.metadata,
                         dataSources: {
-                          ...(data.metadata.dataSources || {}),
-                          plaintext: serializeNodesToText(value || []),
+                          ...(data.metadata?.dataSources || {}),
                           value,
+                          provinances: serializeNodesToText(value || []),
                         },
                       },
                     });

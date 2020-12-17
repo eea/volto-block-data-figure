@@ -53,7 +53,7 @@ describe('Blocks Tests', () => {
   });
   it('Add Data Figure with Daviz url', () => {
     const davizUrl =
-      'https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/daviz/change-in-sulphur-oxides-emissions';
+      'https://eea.europa.eu/SITE/data-and-maps/daviz/change-in-sulphur-oxides-emissions';
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
       .clear()
@@ -77,7 +77,7 @@ describe('Blocks Tests', () => {
   });
   it('Add Data Figure with static figures', () => {
     const davizUrl =
-      'https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
+      'https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
       .clear()

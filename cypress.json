@@ -1,5 +1,6 @@
 {
   "baseUrl": "http://localhost:3000",
   "viewportWidth": 1280,
-  "experimentalNetworkStubbing": true
+  "experimentalNetworkStubbing": true,
+  "experimentalFetchPolyfill": true
 }

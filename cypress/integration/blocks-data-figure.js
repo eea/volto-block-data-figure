@@ -53,7 +53,7 @@ describe('Blocks Tests', () => {
   });
   it('Add Data Figure with Daviz url', () => {
     const davizUrl =
-      'https://eea.europa.eu/SITE/data-and-maps/daviz/change-in-sulphur-oxides-emissions';
+      'https://www.eea.europa.eu/cypress/change-in-sulphur-oxides-emissions';
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
       .clear()
@@ -76,7 +76,7 @@ describe('Blocks Tests', () => {
     cy.get('img').should('have.attr', 'src');
   });
   it('Add Data Figure with static figures', () => {
-    const davizUrl =
+    const staticUrl =
       'https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
@@ -92,8 +92,10 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .title').contains('Media').click();
     cy.get('.ui.basic.icon.button.dataFigure').contains('Data Figure').click();
     cy.get('.ui:nth-child(3) > input').click();
-    cy.get('.ui:nth-child(3) > input').type(davizUrl);
+    cy.get('.ui:nth-child(3) > input').type(staticUrl);
     cy.get('.primary > .icon').click();
+    cy.server();
+    cy.route('GET', staticUrl, 'fix:example');
     cy.waitForResourceToLoad(200);
     cy.get('div.block.image').find('img').should('be.visible');
     cy.get('#toolbar-save > .icon').click();

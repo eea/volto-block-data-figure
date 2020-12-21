@@ -1,3 +1,5 @@
+import { getFigure, getData } from '../mocks/staticFigure';
+
 describe('Blocks Tests', () => {
   beforeEach(() => {
     cy.autologin();
@@ -21,12 +23,43 @@ describe('Blocks Tests', () => {
     cy.navigate('/cypress/my-page/edit');
     cy.get(`.block.title [data-contents]`);
   });
-
   afterEach(() => {
     cy.autologin();
     cy.removeContent('cypress');
   });
+  it('Add Data Figure with static figures', () => {
+    const staticUrl =
+      'https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
+    // Change page title
+    cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
+      .clear()
+      .type('My Add-on Page')
+      .get('.documentFirstHeading span[data-text]')
+      .contains('My Add-on Page');
 
+    cy.get('.documentFirstHeading > .public-DraftStyleDefault-block').type(
+      '{enter}',
+    );
+    cy.get('.ui.basic.icon.button.block-add-button').first().click();
+    cy.get('.blocks-chooser .title').contains('Media').click();
+    cy.get('.ui.basic.icon.button.dataFigure').contains('Data Figure').click();
+    cy.get('.ui:nth-child(3) > input').click();
+    cy.get('.ui:nth-child(3) > input').type(staticUrl);
+
+    cy.get('.primary > .icon').click();
+    cy.server();
+    cy.fixture('./example.json').then((items) => {
+      getData(items);
+    });
+    cy.fixture('./figure.json').then((items) => {
+      getFigure(items);
+    });
+    cy.waitForResourceToLoad('@getData');
+    cy.waitForResourceToLoad('@getFigure');
+    cy.get('div.block.image').find('img').should('be.visible');
+    cy.get('#toolbar-save > .icon').click();
+    cy.get('img').should('be.visible');
+  });
   it('Add Data Figure block: Empty', () => {
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')

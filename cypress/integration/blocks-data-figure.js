@@ -30,6 +30,13 @@ describe('Blocks Tests', () => {
     cy.fixture('./figure.json').then((items) => {
       getFigure(items);
     });
+    cy.route({
+      method: 'GET',
+      url: '/api/@geodata',
+      response: {
+        password: 'test123',
+      },
+    }).as('geodata');
   });
   afterEach(() => {
     cy.autologin();

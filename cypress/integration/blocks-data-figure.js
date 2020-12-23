@@ -22,6 +22,14 @@ describe('Blocks Tests', () => {
     cy.waitForResourceToLoad('my-page');
     cy.navigate('/cypress/my-page/edit');
     cy.get(`.block.title [data-contents]`);
+
+    cy.server();
+    cy.fixture('./example.json').then((items) => {
+      getData(items);
+    });
+    cy.fixture('./figure.json').then((items) => {
+      getFigure(items);
+    });
   });
   afterEach(() => {
     cy.autologin();
@@ -45,20 +53,15 @@ describe('Blocks Tests', () => {
     cy.get('.ui.basic.icon.button.dataFigure').contains('Data Figure').click();
     cy.get('.ui:nth-child(3) > input').click();
     cy.get('.ui:nth-child(3) > input').type(staticUrl);
-
     cy.get('.primary > .icon').click();
-    cy.server();
-    cy.fixture('./example.json').then((items) => {
-      getData(items);
-    });
-    cy.fixture('./figure.json').then((items) => {
-      getFigure(items);
-    });
-    cy.waitForResourceToLoad('@getData');
-    cy.waitForResourceToLoad('@getFigure');
+
     cy.get('div.block.image').find('img').should('be.visible');
-    cy.get('#toolbar-save > .icon').click();
-    cy.get('img').should('be.visible');
+    cy.get('#toolbar-save > .icon')
+      .click()
+
+      .then(() => {
+        cy.get('.scene img').should('be.visible');
+      });
   });
   it('Add Data Figure block: Empty', () => {
     // Change page title

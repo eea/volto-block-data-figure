@@ -1,19 +1,19 @@
 {
   "@components": {
     "actions": {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@actions"
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@actions"
     },
     "breadcrumbs": {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@breadcrumbs"
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@breadcrumbs"
     },
     "navigation": {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@navigation"
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@navigation"
     },
     "workflow": {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@workflow"
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@workflow"
     }
   },
-  "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity",
+  "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity",
   "@type": "EEAFigure",
   "UID": "3d7aa45d77d04de598d516d300db1bbe",
   "allowDiscussion": false,
@@ -49,14 +49,14 @@
   "is_folderish": true,
   "items": [
     {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity",
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity",
       "@type": "EEAFigureFile",
       "description": "",
       "review_state": null,
       "title": "The average summer season intensity of urban heat island (\u00b0C) and the projected number of extreme heatwaves in near future (2020-2052; RCP8.5)"
     },
     {
-      "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/map-package",
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/map-package",
       "@type": "EEAFigureFile",
       "description": "",
       "review_state": null,
@@ -120,7 +120,7 @@
   },
   "nextPreviousEnabled": false,
   "parent": {
-    "@id": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures",
+    "@id": "https://eea.europa.eu/SITE/data-and-maps/figures",
     "@type": "Folder",
     "description": "",
     "review_state": "published",
@@ -131,16 +131,16 @@
   "pdfMaxItems": null,
   "pdfStatic": {
     "content-type": "application/octet-stream",
-    "download": "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@@download/pdfStatic",
+    "download": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@@download/pdfStatic",
     "filename": null,
     "size": 0
   },
   "pdfTheme": "",
   "processor": [],
   "relatedItems": [
-    "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/data/external/projected-number-of-extreme-heatwaves",
-    "https://alin.dev2aws.eea.europa.eu/SITE/data-and-maps/data/external/urban-heat-island-summer-intensity",
-    "https://alin.dev2aws.eea.europa.eu/SITE/publications/urban-adaptation-in-europe"
+    "https://eea.europa.eu/SITE/data-and-maps/data/external/projected-number-of-extreme-heatwaves",
+    "https://eea.europa.eu/SITE/data-and-maps/data/external/urban-heat-island-summer-intensity",
+    "https://eea.europa.eu/SITE/publications/urban-adaptation-in-europe"
   ],
   "review_state": "visible",
   "rights": {

@@ -55,11 +55,17 @@ describe('Blocks Tests', () => {
     cy.get('.ui:nth-child(3) > input').type(staticUrl);
     cy.get('.primary > .icon').click();
 
+    cy.get('div.block.image')
+      .find('img')
+      .invoke('width')
+      .should('be.greaterThan', 0);
+
     cy.get('div.block.image').find('img').should('be.visible');
+
     cy.get('#toolbar-save > .icon')
       .click()
-
       .then(() => {
+        cy.wait(1000);
         cy.get('.scene img').should('be.visible');
       });
   });

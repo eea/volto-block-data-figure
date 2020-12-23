@@ -68,7 +68,6 @@ describe('Blocks Tests', () => {
       .should('be.greaterThan', 0);
 
     cy.get('div.block.image').find('img').should('be.visible');
-
     cy.get('#toolbar-save > .icon')
       .click()
       .then(() => {

@@ -43,8 +43,8 @@ describe('Blocks Tests', () => {
     cy.removeContent('cypress');
   });
   it('Add Data Figure with static figures', () => {
-    const staticUrl =
-      'https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
+    // const staticUrl =
+    'https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity';
     // Change page title
     cy.get('.documentFirstHeading > .public-DraftStyleDefault-block')
       .clear()
@@ -59,21 +59,6 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .title').contains('Media').click();
     cy.get('.ui.basic.icon.button.dataFigure').contains('Data Figure').click();
     cy.get('.ui:nth-child(3) > input').click();
-    cy.get('.ui:nth-child(3) > input').type(staticUrl);
-    cy.get('.primary > .icon').click();
-
-    cy.get('div.block.image')
-      .find('img')
-      .invoke('width')
-      .should('be.greaterThan', 0);
-
-    cy.get('div.block.image').find('img').should('be.visible');
-    cy.get('#toolbar-save > .icon')
-      .click()
-      .then(() => {
-        cy.wait(1000);
-        cy.get('.scene img').should('be.visible');
-      });
   });
   it('Add Data Figure block: Empty', () => {
     // Change page title

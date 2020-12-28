@@ -1,0 +1,110 @@
+{
+  "@components": {
+    "actions": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@actions"
+    },
+    "breadcrumbs": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@breadcrumbs"
+    },
+    "navigation": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@navigation"
+    },
+    "workflow": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@workflow"
+    }
+  },
+  "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity",
+  "@type": "EEAFigureFile",
+  "UID": "09ceede78db741a98c50276b76e6027c",
+  "allowDiscussion": false,
+  "category": "hard",
+  "constrainTypesMode": 0,
+  "contributors": [],
+  "coverImage": null,
+  "creation_date": "2020-08-05T10:35:28+00:00",
+  "creators": ["rodriama"],
+  "description": {
+    "content-type": "text/plain",
+    "data": ""
+  },
+  "effectiveDate": null,
+  "excludeFromNav": false,
+  "expirationDate": null,
+  "file": {
+    "content-type": "application/postscript",
+    "download": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@@download/file",
+    "filename": "120001_MAP2.5-MAP-URBAN-ADAPT-The-average-summer-season_v2.eps",
+    "size": 7372138
+  },
+  "forcedisableautolinks": false,
+  "id": "the-average-summer-season-intensity",
+  "immediatelyAddableTypes": [],
+  "is_folderish": true,
+  "items": [
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/120001_MAP2.5-MAP-URBAN-ADAPT-The-average-summer-season_v2.eps.zoom.png",
+      "@type": "Image",
+      "description": "",
+      "review_state": "visible",
+      "title": ""
+    },
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/120001_MAP2.5-MAP-URBAN-ADAPT-The-average-summer-season_v2.eps.75dpi.gif",
+      "@type": "Image",
+      "description": "",
+      "review_state": "visible",
+      "title": ""
+    },
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/120001_MAP2.5-MAP-URBAN-ADAPT-The-average-summer-season_v2.eps.75dpi.tif",
+      "@type": "Image",
+      "description": "",
+      "review_state": "visible",
+      "title": ""
+    },
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/120001_MAP2.5-MAP-URBAN-ADAPT-The-average-summer-season_v2.eps.75dpi.png",
+      "@type": "Image",
+      "description": "",
+      "review_state": "visible",
+      "title": ""
+    }
+  ],
+  "items_total": 4,
+  "language": "en",
+  "layout": "eeafigurefile_view",
+  "locallyAllowedTypes": [],
+  "location": [],
+  "modification_date": "2020-08-05T10:35:28+00:00",
+  "nextPreviousEnabled": false,
+  "parent": {
+    "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity",
+    "@type": "EEAFigure",
+    "description": "The map presents the projected number of exreme heatwaves in the near future across Europe and the summer intensity of the urban heat island effect in 100 European cities.",
+    "review_state": "visible",
+    "title": "The average summer season intensity of urban heat island (\u00b0C) and the projected number of extreme heatwaves in near future (2020-2052; RCP8.5)"
+  },
+  "pdfMaxBreadth": null,
+  "pdfMaxDepth": null,
+  "pdfMaxItems": null,
+  "pdfStatic": {
+    "content-type": "application/octet-stream",
+    "download": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity/@@download/pdfStatic",
+    "filename": null,
+    "size": 0
+  },
+  "pdfTheme": "",
+  "relatedItems": [],
+  "review_state": null,
+  "rights": {
+    "content-type": "text/plain",
+    "data": ""
+  },
+  "shortId": "",
+  "subject": [],
+  "temporalCoverage": [],
+  "themes": [],
+  "title": "The average summer season intensity of urban heat island (\u00b0C) and the projected number of extreme heatwaves in near future (2020-2052; RCP8.5)",
+  "tocExclude": "",
+  "tocdepth": 4
+}

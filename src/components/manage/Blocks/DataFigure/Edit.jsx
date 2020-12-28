@@ -19,7 +19,6 @@ import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
 import {
   extractSvg,
-  extractTable,
   extractTemporal,
   extractMetadata,
   validateHostname,
@@ -184,7 +183,7 @@ class Edit extends Component {
     await this.props.getProxiedExternalContent(tableUrl, {
       headers: { Accept: 'text/html' },
     });
-    if (this.state.error) {
+    if (this.props.subrequests[tableUrl].error) {
       return arr;
     }
     for (const key in this.props.subrequests[tableUrl]?.data) {
@@ -193,8 +192,17 @@ class Edit extends Component {
     return arr;
   };
 
-  extractAssets = (arr) => {
-    const url = extractSvg(arr);
+  extractAssets = async (arr) => {
+    let url;
+    if (arr['@type'] === 'EEAFigure') {
+      const result = await this.externalURLContents(arr.items[0].url);
+      const pngUrl = result.items.filter((item) =>
+        item['@id'].includes('.png'),
+      );
+      url = pngUrl;
+    } else {
+      url = extractSvg(arr);
+    }
     const temporal = extractTemporal(arr);
     const metadata = extractMetadata(arr);
     const title = arr.title;
@@ -236,9 +244,12 @@ class Edit extends Component {
         let table,
           figureUrl = this.state.url;
         const arr = await this.externalURLContents(this.state.url);
-        const [temporal, chartUrl, title, metadata = {}] = this.extractAssets(
-          arr,
-        );
+        const [
+          temporal,
+          chartUrl = [],
+          title,
+          metadata = {},
+        ] = await this.extractAssets(arr);
         if (arr['@type'] === 'DavizVisualization') {
           table = await this.extractTable(arr);
         }

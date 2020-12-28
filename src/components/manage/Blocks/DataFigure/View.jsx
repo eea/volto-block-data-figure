@@ -39,7 +39,7 @@ class View extends React.Component {
     visible: false,
     showMetadata: false,
     modalOpen: false,
-    zoomed: false,
+    zoomed: 'false',
     isLeftClicked: false,
   };
 
@@ -126,7 +126,9 @@ class View extends React.Component {
             <Modal
               style={{ width: 'unset' }}
               open={modalOpen}
-              onClose={() => this.setState({ modalOpen: false, zoomed: false })}
+              onClose={() =>
+                this.setState({ modalOpen: false, zoomed: 'false' })
+              }
             >
               <Modal.Content image>
                 {visible ? (
@@ -146,7 +148,7 @@ class View extends React.Component {
                         ? `${flattenToAppURL(data.url)}/@@images/image`
                         : data.url
                     }
-                    onClick={() => this.setState({ zoomed: true })}
+                    onClick={() => this.setState({ zoomed: 'true' })}
                     alt={data.alt || ''}
                   ></img>
                 )}
@@ -228,7 +230,9 @@ class View extends React.Component {
               <Button
                 icon
                 className="data-figure-control"
-                onClick={() => this.setState({ modalOpen: true, zoomed: true })}
+                onClick={() =>
+                  this.setState({ modalOpen: true, zoomed: 'true' })
+                }
               >
                 <Icon name={zoomSVG} size="24px" />
               </Button>

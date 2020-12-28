@@ -1,5 +1,196 @@
 {
-  "name": "Using fixtures to represent data",
-  "email": "hello@cypress.io",
-  "body": "Fixtures are a great way to mock data for responses to routes"
+  "@components": {
+    "actions": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@actions"
+    },
+    "breadcrumbs": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@breadcrumbs"
+    },
+    "navigation": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@navigation"
+    },
+    "workflow": {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@workflow"
+    }
+  },
+  "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity",
+  "@type": "EEAFigure",
+  "UID": "3d7aa45d77d04de598d516d300db1bbe",
+  "allowDiscussion": false,
+  "constrainTypesMode": 0,
+  "contact": {
+    "content-type": "text/plain",
+    "data": "In-house contact: Aleksandra Kazmierczak; aleksandra.kazmierczak@eea.europa.eu\r\nOperator: Amanda Rodr\u00edguez; arodriguez@bilbomatica.es"
+  },
+  "contributors": [],
+  "coverImage": null,
+  "creation_date": "2020-08-05T10:10:39+00:00",
+  "creators": ["kazmiale", "rodriama"],
+  "dataOwner": ["http://www.eea.europa.eu"],
+  "dataSource": {
+    "content-type": "text/plain",
+    "data": ""
+  },
+  "description": {
+    "content-type": "text/plain",
+    "data": "The map presents the projected number of exreme heatwaves in the near future across Europe and the summer intensity of the urban heat island effect in 100 European cities."
+  },
+  "disableProgressTrailViewlet": false,
+  "eeaManagementPlan": ["2020", "1.4.2"],
+  "effectiveDate": "2020-08-05T11:16:54+00:00",
+  "excludeFromNav": false,
+  "expirationDate": null,
+  "externalRelations": [],
+  "figureType": "map",
+  "forcedisableautolinks": false,
+  "geographicCoverage": [],
+  "id": "the-average-summer-season-intensity",
+  "immediatelyAddableTypes": [],
+  "is_folderish": true,
+  "items": [
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/the-average-summer-season-intensity",
+      "@type": "EEAFigureFile",
+      "description": "",
+      "review_state": null,
+      "title": "The average summer season intensity of urban heat island (\u00b0C) and the projected number of extreme heatwaves in near future (2020-2052; RCP8.5)"
+    },
+    {
+      "@id": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/map-package",
+      "@type": "EEAFigureFile",
+      "description": "",
+      "review_state": null,
+      "title": "Map package"
+    }
+  ],
+  "items_total": 2,
+  "language": "en",
+  "lastUpload": "2020-07-02T11:59:39+00:00",
+  "layout": "eeafigure_view",
+  "locallyAllowedTypes": [],
+  "location": [
+    "Albania",
+    "Austria",
+    "Belgium",
+    "Bosnia and Herzegovina",
+    "Bulgaria",
+    "Croatia",
+    "Cyprus",
+    "Czechia",
+    "Denmark",
+    "Estonia",
+    "Finland",
+    "France",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "Iceland",
+    "Ireland",
+    "Italy",
+    "Kosovo",
+    "Latvia",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Malta",
+    "Montenegro",
+    "Netherlands",
+    "North Macedonia",
+    "Norway",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Serbia",
+    "Slovakia",
+    "Slovenia",
+    "Spain",
+    "Sweden",
+    "Switzerland",
+    "Turkey",
+    "United Kingdom"
+  ],
+  "methodology": {
+    "content-type": "text/plain",
+    "data": ""
+  },
+  "modification_date": "2020-08-05T11:16:54+00:00",
+  "moreInfo": {
+    "content-type": "text/html",
+    "data": "<p>The intensity of UHI was estimated for 100 European cities in the framework of the Copernicus European Health contract for the Copernicus Climate Change Service (C3S). High resolution (100m) hourly temperature (2008-2017) was simulated with the urban climate model UrbClim (De Ridder et al., 2015). Summer season is June, July and August. The intensity of UHI is represented by spatial P90 (90th percentile) UHI intensity of a given city. This indicator is calculated by subtracting the rural (non-water) spatial P10 (10th percentile) temperature value from the average, height-corrected (to exclude terrain effects), air temperature map. For information on individual cities and detailed modelling of the UHIs for the 100 European cities see the Urban Adaptation Map Viewer.<br />Source: Author\u2019s compilation based on EEA (2019e) and VITO (2019)</p>"
+  },
+  "nextPreviousEnabled": false,
+  "parent": {
+    "@id": "https://eea.europa.eu/SITE/data-and-maps/figures",
+    "@type": "Folder",
+    "description": "",
+    "review_state": "published",
+    "title": "Maps and graphs"
+  },
+  "pdfMaxBreadth": null,
+  "pdfMaxDepth": null,
+  "pdfMaxItems": null,
+  "pdfStatic": {
+    "content-type": "application/octet-stream",
+    "download": "https://eea.europa.eu/SITE/data-and-maps/figures/the-average-summer-season-intensity/@@download/pdfStatic",
+    "filename": null,
+    "size": 0
+  },
+  "pdfTheme": "",
+  "processor": [],
+  "relatedItems": [
+    "https://eea.europa.eu/SITE/data-and-maps/data/external/projected-number-of-extreme-heatwaves",
+    "https://eea.europa.eu/SITE/data-and-maps/data/external/urban-heat-island-summer-intensity",
+    "https://eea.europa.eu/SITE/publications/urban-adaptation-in-europe"
+  ],
+  "review_state": "visible",
+  "rights": {
+    "content-type": "text/plain",
+    "data": "EEA standard re-use policy: unless otherwise indicated, re-use of content on the EEA website for commercial or non-commercial purposes is permitted free of charge, provided that the source is acknowledged (https://www.eea.europa.eu/legal/copyright). Copyright holder: European Environment Agency (EEA)."
+  },
+  "shortId": "",
+  "subject": ["climate change", "adaptation"],
+  "temporalCoverage": [
+    "2048",
+    "2049",
+    "2050",
+    "2051",
+    "2052",
+    "2018",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028",
+    "2029",
+    "2030",
+    "2031",
+    "2032",
+    "2033",
+    "2034",
+    "2035",
+    "2036",
+    "2037",
+    "2038",
+    "2039",
+    "2040",
+    "2041",
+    "2042",
+    "2043",
+    "2044",
+    "2045",
+    "2046",
+    "2047"
+  ],
+  "themes": ["climate-change-adaptation"],
+  "title": "The average summer season intensity of urban heat island (\u00b0C) and the projected number of extreme heatwaves in near future (2020-2052; RCP8.5)",
+  "tocExclude": "",
+  "tocdepth": 4,
+  "units": {
+    "content-type": "text/plain",
+    "data": ""
+  }
 }

@@ -253,7 +253,17 @@ class Edit extends Component {
         if (arr['@type'] === 'DavizVisualization') {
           table = await this.extractTable(arr);
         }
-        if (
+        if (this.state.error) {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          );
+        } else if (
           blocks.blocksConfig['dataFigure'].type.some(
             (item) => item === arr['@type'],
           ) &&

@@ -46,7 +46,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Segment>
         ) : (
           <Segment secondary>
-            <Header style={{ color: '#517776' }} as="h2">
+            <Header style={{ color: '#517776' }} as="h3">
               Data Sources:
             </Header>
             {serializeNodes(value || [])}

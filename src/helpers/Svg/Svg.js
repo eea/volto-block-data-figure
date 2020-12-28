@@ -40,15 +40,23 @@ export const extractMetadata = (data = {}) => {
   return {
     dataSources: { provenances },
     geoCoverage: location,
-    downloadData: {
-      html: `${data['@id']}/download.table`,
-      csv: `${data['@id']}/download.csv`,
-      tsv: `${data['@id']}/download.tsv`,
-      json: `${data['@id']}/download.json`,
-      exhibit: `${data['@id']}/download.exhibit`,
-      xml: `${data['@id']}/download.xml`,
-      xmlSchema: `${data['@id']}/download.schema.xml`,
-    },
+    downloadData:
+      data['@type'] === 'DavizVisualization'
+        ? {
+            html: `${data['@id']}/download.table`,
+            csv: `${data['@id']}/download.csv`,
+            tsv: `${data['@id']}/download.tsv`,
+            json: `${data['@id']}/download.json`,
+            exhibit: `${data['@id']}/download.exhibit`,
+            xml: `${data['@id']}/download.xml`,
+            xmlSchema: `${data['@id']}/download.schema.xml`,
+          }
+        : {
+            gif: '',
+            tif: '',
+            png: '',
+            postscript: '',
+          },
   };
 };
 

@@ -51,7 +51,7 @@ export const extractMetadata = (data = {}) => {
             xml: `${data['@id']}/download.xml`,
             xmlSchema: `${data['@id']}/download.schema.xml`,
           }
-        : data.items.map((item) => item.url),
+        : data.items?.map((item) => item.url),
   };
 };
 

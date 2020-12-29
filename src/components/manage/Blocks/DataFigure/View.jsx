@@ -16,6 +16,7 @@ import {
   Header,
 } from 'semantic-ui-react';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
+import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
@@ -167,12 +168,16 @@ class View extends React.Component {
                 onClick={this.toggleVisibility}
                 className="data-figure-control"
               >
-                <Icon name={spreadsheetSVG} size="24px" />
+                {visible ? (
+                  <Icon name={imageSVG} size="24px" />
+                ) : (
+                  <Icon name={spreadsheetSVG} size="24px" />
+                )}
               </Button>
             }
             position="top center"
           >
-            data table
+            {visible ? 'data figure' : 'data table'}
           </Popup>
           <Popup
             className="popup-wrap"

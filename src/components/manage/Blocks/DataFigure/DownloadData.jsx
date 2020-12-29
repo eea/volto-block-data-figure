@@ -22,10 +22,10 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
             Download Data
           </Header>
         </Segment>
-        {downloadData && (
+        {downloadData && data.figureType === 'DavizVisualization' ? (
           <Segment secondary attached>
             <Header as="h5">Formats suitable for human consumption</Header>
-            <List horizontal relaxed className="download-data">
+            <List horizontal className="download-data">
               <List.Item href={downloadData.html} style={{ margin: '2px' }}>
                 HTML
               </List.Item>
@@ -35,7 +35,7 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
             <Header as="h5">
               Formats suitable for machine-to-machine communication
             </Header>
-            <List horizontal relaxed className="download-data">
+            <List horizontal className="download-data">
               <List.Item href={downloadData.json} style={{ margin: '2px' }}>
                 JSON
               </List.Item>
@@ -45,6 +45,19 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
                 XML with Schema
               </List.Item>
             </List>
+          </Segment>
+        ) : data.figureType === 'EEAFigure' ? (
+          <Segment secondary attached>
+            <Header as="h5">Download</Header>
+            <List relaxed>
+              {downloadData.map((item) => (
+                <List.Item href={item}>{item}</List.Item>
+              ))}
+            </List>
+          </Segment>
+        ) : (
+          <Segment>
+            <Header as="h5">Data not available</Header>
           </Segment>
         )}
       </Segment.Group>

@@ -194,19 +194,23 @@ class Edit extends Component {
 
   extractAssets = async (arr) => {
     let url;
+    let metadata;
     if (arr['@type'] === 'EEAFigure') {
       const result = await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) =>
         item['@id'].includes('.png'),
       );
       url = pngUrl;
+      metadata = extractMetadata(result);
     } else {
       url = extractSvg(arr);
+      metadata = extractMetadata(arr);
     }
     const temporal = extractTemporal(arr);
-    const metadata = extractMetadata(arr);
+    //const metadata = extractMetadata(arr); common metadata, if we want to use.
     const title = arr.title;
-    return [temporal, url, title, metadata];
+    const figureType = arr['@type'];
+    return [temporal, url, title, figureType, metadata];
   };
 
   getGeoNameWithIds(metadata) {
@@ -248,12 +252,23 @@ class Edit extends Component {
           temporal,
           chartUrl = [],
           title,
+          figureType,
           metadata = {},
         ] = await this.extractAssets(arr);
         if (arr['@type'] === 'DavizVisualization') {
           table = await this.extractTable(arr);
         }
-        if (
+        if (this.state.error) {
+          this.setState({ uploading: false }, () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.Error)}
+                content={this.props.intl.formatMessage(messages.ErrorMessage)}
+              />,
+            ),
+          );
+        } else if (
           blocks.blocksConfig['dataFigure'].type.some(
             (item) => item === arr['@type'],
           ) &&
@@ -269,6 +284,7 @@ class Edit extends Component {
                 ...this.props.data,
                 url: this.state.url,
                 figureUrl,
+                figureType,
                 title,
                 svgs: chartUrl,
                 table: table?.join('') || '',

@@ -36,11 +36,22 @@ export const extractTemporal = (data = {}) => {
 };
 
 export const extractMetadata = (data = {}) => {
-  const { provenances, location, pdfStatic } = data;
+  const { provenances, location } = data;
   return {
     dataSources: { provenances },
     geoCoverage: location,
-    downloadData: pdfStatic,
+    downloadData:
+      data['@type'] === 'DavizVisualization'
+        ? {
+            html: `${data['@id']}/download.table`,
+            csv: `${data['@id']}/download.csv`,
+            tsv: `${data['@id']}/download.tsv`,
+            json: `${data['@id']}/download.json`,
+            exhibit: `${data['@id']}/download.exhibit`,
+            xml: `${data['@id']}/download.xml`,
+            xmlSchema: `${data['@id']}/download.schema.xml`,
+          }
+        : data.items?.map((item) => item.url),
   };
 };
 

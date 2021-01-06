@@ -257,6 +257,10 @@ class Edit extends Component {
         ] = await this.extractAssets(arr);
         if (arr['@type'] === 'DavizVisualization') {
           table = await this.extractTable(arr);
+          table = table?.join('') || '';
+          const parser = new DOMParser();
+          const xml = parser.parseFromString(table, 'text/html');
+          table = xml.getElementsByTagName('table')?.[0]?.outerHTML || '';
         }
         if (this.state.error) {
           this.setState({ uploading: false }, () =>
@@ -287,7 +291,7 @@ class Edit extends Component {
                 figureType,
                 title,
                 svgs: chartUrl,
-                table: table?.join('') || '',
+                table: table || '',
                 metadata,
                 geolocation: this.getGeoNameWithIds(metadata),
                 temporal: temporal.map((item) => ({

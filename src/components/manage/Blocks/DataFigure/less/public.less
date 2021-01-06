@@ -36,6 +36,35 @@
   left: 0;
   overflow: auto;
   text-align: left;
+
+  h2 {
+    display: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0px;
+
+    tr:first-of-type {
+      position: fixed;
+      display: inline-table;
+      width: 100%;
+    }
+
+    th {
+      background-color: #787878;
+      color: #fff;
+      text-align: center;
+    }
+
+    tr,
+    td {
+      padding: 8px;
+      border: 1px solid #787878;
+      color: #787878;
+    }
+  }
 }
 
 .card__face--back {

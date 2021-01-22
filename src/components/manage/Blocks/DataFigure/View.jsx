@@ -3,7 +3,6 @@
  * @module components/manage/Blocks/DataFigure/View
  */
 import cx from 'classnames';
-import { settings } from '@plone/volto/config';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -24,7 +23,6 @@ import downloadSVG from '@plone/volto/icons/download.svg';
 import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
 import DownloadData from './DownloadData';
-import { flattenToAppURL } from '@plone/volto/helpers';
 import React from 'react';
 import Table from './Table';
 import './less/public.less';
@@ -99,11 +97,7 @@ class View extends React.Component {
                           : '0',
                       marginRight: data.inLeftColumn ? '0!important' : '1rem',
                     }}
-                    src={
-                      data.url?.includes(settings.apiPath)
-                        ? `${flattenToAppURL(data.url)}/@@images/image`
-                        : data.url
-                    }
+                    src={`${data.url}/@@images/image`}
                     alt={data.title || ''}
                   ></img>
                 </div>
@@ -144,11 +138,7 @@ class View extends React.Component {
                     className={cx({ 'full-width': data.align === 'full' })}
                     zoomed={zoomed}
                     style={{ maxHeight: '80vh', maxWidth: '100%' }}
-                    src={
-                      data.url?.includes(settings.apiPath)
-                        ? `${flattenToAppURL(data.url)}/@@images/image`
-                        : data.url
-                    }
+                    src={`${data.url}/@@images/image`}
                     onClick={() => this.setState({ zoomed: 'true' })}
                     alt={data.alt || ''}
                   ></img>

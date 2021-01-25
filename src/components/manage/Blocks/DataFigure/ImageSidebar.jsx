@@ -97,7 +97,7 @@ const ImageSidebar = ({
         },
       ];
   };
-
+  const isSVGImage = (url) => url.includes('.svg');
   const isImageData = data['@type'] === 'Image';
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -146,7 +146,11 @@ const ImageSidebar = ({
                     <div key={ind}>
                       <p>Image {ind + 1}</p>
                       <img
-                        src={`${it.url}/@@images/image`}
+                        src={
+                          isSVGImage(it.url)
+                            ? it.url
+                            : `${it.url}/@@images/image`
+                        }
                         key={ind}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}

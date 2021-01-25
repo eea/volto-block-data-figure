@@ -22,6 +22,7 @@ import {
   extractTemporal,
   extractMetadata,
   validateHostname,
+  isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
@@ -446,7 +447,9 @@ class Edit extends Component {
                       )}/@@images/image/preview`;
                     if (data.size === 's')
                       return `${flattenToAppURL(data.url)}/@@images/image/mini`;
-                    return `${flattenToAppURL(data.url)}/@@images/image`;
+                    return isSVGImage(data.url)
+                      ? `${flattenToAppURL(data.url)}`
+                      : `${flattenToAppURL(data.url)}/@@images/image`;
                   })()
                 : data.url
             }

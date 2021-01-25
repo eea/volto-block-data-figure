@@ -9,7 +9,10 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
+import {
+  getParsedValue,
+  isSVGImage,
+} from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
@@ -97,7 +100,6 @@ const ImageSidebar = ({
         },
       ];
   };
-  const isSVGImage = (url) => url.includes('.svg');
   const isImageData = data['@type'] === 'Image';
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);

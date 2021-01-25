@@ -31,6 +31,7 @@ export const extractSvg = (data = {}) => {
   return data?.items;
 };
 
+export const isSVGImage = (url) => url.includes('.svg');
 export const extractTemporal = (data = {}) => {
   return data.temporalCoverage;
 };

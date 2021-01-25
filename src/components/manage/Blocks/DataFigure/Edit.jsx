@@ -181,10 +181,13 @@ class Edit extends Component {
   extractTable = async (data) => {
     let arr = [];
     const tableUrl = `${data['@id']}/download.table`;
-    await this.props.getProxiedExternalContent(tableUrl, {
-      headers: { Accept: 'text/html' },
-    });
-    //const internalUrl = flattenToAppURL(data['@id']);
+    if (isInternalURL(tableUrl)) {
+      await getContent(tableUrl, null, tableUrl);
+    } else {
+      await this.props.getProxiedExternalContent(tableUrl, {
+        headers: { Accept: 'text/html' },
+      });
+    }
     if (this.props.subrequests[tableUrl]?.error) {
       return arr;
     }

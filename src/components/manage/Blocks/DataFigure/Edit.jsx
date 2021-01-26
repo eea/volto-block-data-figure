@@ -24,6 +24,7 @@ import {
   validateHostname,
   isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
+import { getDownloadTable } from '@eeacms/volto-block-data-figure/actions';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
@@ -181,18 +182,17 @@ class Edit extends Component {
   extractTable = async (data) => {
     let arr = [];
     const tableUrl = `${data['@id']}/download.table`;
-    if (isInternalURL(tableUrl)) {
-      await getContent(tableUrl, null, tableUrl);
-    } else {
-      await this.props.getProxiedExternalContent(tableUrl, {
-        headers: { Accept: 'text/html' },
-      });
-    }
-    if (this.props.subrequests[tableUrl]?.error) {
+    const internalUrl = flattenToAppURL(tableUrl);
+    const externalTableUrl = `https://www.eea.europa.eu/${internalUrl}`;
+    await this.props.getProxiedExternalContent(externalTableUrl, {
+      headers: { Accept: 'text/html' },
+    });
+
+    if (this.props.subrequests[externalTableUrl]?.error) {
       return arr;
     }
-    for (const key in this.props.subrequests[tableUrl]?.data) {
-      arr.push(this.props.subrequests[tableUrl].data[key]);
+    for (const key in this.props.subrequests[externalTableUrl]?.data) {
+      arr.push(this.props.subrequests[externalTableUrl].data[key]);
     }
     return arr;
   };
@@ -557,6 +557,6 @@ export default compose(
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
     }),
-    { getContent, createContent, getProxiedExternalContent },
+    { getContent, createContent, getProxiedExternalContent, getDownloadTable },
   ),
 )(Edit);

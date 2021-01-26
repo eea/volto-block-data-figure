@@ -9,8 +9,11 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import { getParsedValue } from '@eeacms/volto-block-data-figure/helpers';
-import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers';
+import {
+  getParsedValue,
+  isSVGImage,
+} from '@eeacms/volto-block-data-figure/helpers';
+import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
 
@@ -58,8 +61,8 @@ const messages = defineMessages({
     defaultMessage: 'No image selected',
   },
   externalURL: {
-    id: 'External URL',
-    defaultMessage: 'External URL',
+    id: 'URL',
+    defaultMessage: 'URL',
   },
   size: {
     id: 'Size',
@@ -97,6 +100,7 @@ const ImageSidebar = ({
         },
       ];
   };
+  const isImageData = data['@type'] === 'Image';
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
@@ -129,22 +133,26 @@ const ImageSidebar = ({
       {data.url && (
         <>
           <Segment className="sidebar-metadata-container" secondary>
-            {isInternalURL(data.url) && data.url.split('/').slice(-1)[0]}
-            {isInternalURL(data.url) && (
+            {isImageData && data.url.split('/').slice(-1)[0]}
+            {isImageData && (
               <img
                 width="100%"
-                src={`${flattenToAppURL(data.url)}/@@images/image/mini`}
+                src={`${flattenToAppURL(data.url)}/@@images/image`}
                 alt={data.alt}
               />
             )}
-            {!isInternalURL(data.url) && (
+            {!isImageData && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, ind) => (
                     <div key={ind}>
                       <p>Image {ind + 1}</p>
                       <img
-                        src={it.url}
+                        src={
+                          isSVGImage(it.url)
+                            ? it.url
+                            : `${it.url}/@@images/image`
+                        }
                         key={ind}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}
@@ -172,7 +180,7 @@ const ImageSidebar = ({
             )}
           </Segment>
           <Segment className="form sidebar-image-data">
-            {isInternalURL(data.url) && (
+            {isImageData && (
               <TextWidget
                 id="Origin"
                 title={intl.formatMessage(messages.Origin)}
@@ -193,7 +201,7 @@ const ImageSidebar = ({
                 onChange={() => {}}
               />
             )}
-            {!isInternalURL(data.url) && (
+            {!isImageData && (
               <TextWidget
                 id="external"
                 title={intl.formatMessage(messages.externalURL)}

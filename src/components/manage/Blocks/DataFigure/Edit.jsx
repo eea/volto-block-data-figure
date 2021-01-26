@@ -22,11 +22,12 @@ import {
   extractTemporal,
   extractMetadata,
   validateHostname,
+  isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent } from '@plone/volto/actions';
+import { getContent, createContent } from '@plone/volto/actions';
 import {
   flattenToAppURL,
   getBaseUrl,
@@ -180,14 +181,17 @@ class Edit extends Component {
   extractTable = async (data) => {
     let arr = [];
     const tableUrl = `${data['@id']}/download.table`;
-    await this.props.getProxiedExternalContent(tableUrl, {
+    const internalUrl = flattenToAppURL(tableUrl);
+    const externalTableUrl = `https://www.eea.europa.eu/${internalUrl}`;
+    await this.props.getProxiedExternalContent(externalTableUrl, {
       headers: { Accept: 'text/html' },
     });
-    if (this.props.subrequests[tableUrl].error) {
+
+    if (this.props.subrequests[externalTableUrl]?.error) {
       return arr;
     }
-    for (const key in this.props.subrequests[tableUrl]?.data) {
-      arr.push(this.props.subrequests[tableUrl].data[key]);
+    for (const key in this.props.subrequests[externalTableUrl]?.data) {
+      arr.push(this.props.subrequests[externalTableUrl].data[key]);
     }
     return arr;
   };
@@ -196,7 +200,9 @@ class Edit extends Component {
     let url;
     let metadata;
     if (arr['@type'] === 'EEAFigure') {
-      const result = await this.externalURLContents(arr.items[0].url);
+      const result = isInternalURL(arr.items[0].url)
+        ? await this.internalURLContents(arr.items[0].url)
+        : await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) =>
         item['@id'].includes('.png'),
       );
@@ -224,6 +230,11 @@ class Edit extends Component {
     return filteredGeonames;
   }
 
+  internalURLContents = async (url) => {
+    await this.props.getContent(url, null, url);
+    return this.props.subrequests[url]?.data;
+  };
+
   externalURLContents = async (url) => {
     await this.props.getProxiedExternalContent(url, {
       headers: { Accept: 'application/json' },
@@ -242,83 +253,75 @@ class Edit extends Component {
       uploading: true,
     });
 
-    if (!isInternalURL(this.state.url)) {
-      const isValidUrl = validateHostname(this.state.url);
-      if (isValidUrl) {
-        let table,
-          figureUrl = this.state.url;
-        const arr = await this.externalURLContents(this.state.url);
-        const [
-          temporal,
-          chartUrl = [],
-          title,
-          figureType,
-          metadata = {},
-        ] = await this.extractAssets(arr);
-        if (arr['@type'] === 'DavizVisualization') {
-          table = await this.extractTable(arr);
-          table = table?.join('') || '';
-          const parser = new DOMParser();
-          const xml = parser.parseFromString(table, 'text/html');
-          table = xml.getElementsByTagName('table')?.[0]?.outerHTML || '';
-        }
-        if (this.state.error) {
-          this.setState({ uploading: false }, () =>
-            toast.error(
-              <Toast
-                error
-                title={this.props.intl.formatMessage(messages.Error)}
-                content={this.props.intl.formatMessage(messages.ErrorMessage)}
-              />,
-            ),
-          );
-        } else if (
-          blocks.blocksConfig['dataFigure'].type.some(
-            (item) => item === arr['@type'],
-          ) &&
-          chartUrl.length > 0
-        ) {
-          this.setState(
-            {
-              url: chartUrl[0].url || chartUrl,
-              uploading: false,
-            },
-            () =>
-              this.props.onChangeBlock(this.props.block, {
-                ...this.props.data,
-                url: this.state.url,
-                figureUrl,
-                figureType,
-                title,
-                svgs: chartUrl,
-                table: table || '',
-                metadata,
-                geolocation: this.getGeoNameWithIds(metadata),
-                temporal: temporal.map((item) => ({
-                  value: item,
-                  label: item,
-                })),
-              }),
-          );
-        } else if (
-          this.state.url.includes('embed-chart.svg') ||
-          this.state.url.includes('.png')
-        ) {
-          this.props.onChangeBlock(this.props.block, {
-            ...this.props.data,
-            url: this.state.url,
-          });
-        } else {
-          this.setState({ uploading: false }, () =>
-            toast.error(
-              <Toast
-                error
-                title={this.props.intl.formatMessage(messages.Error)}
-                content={this.props.intl.formatMessage(messages.ErrorMessage)}
-              />,
-            ),
-          );
-        }
+    // if (!isInternalURL(this.state.url)) {
+    const isValidUrl =
+      isInternalURL(this.state.url) || validateHostname(this.state.url);
+    if (isValidUrl) {
+      let table,
+        figureUrl = this.state.url;
+      const arr = isInternalURL(this.state.url)
+        ? await this.internalURLContents(this.state.url)
+        : await this.externalURLContents(this.state.url);
+      const [
+        temporal,
+        chartUrl = [],
+        title,
+        figureType,
+        metadata = {},
+      ] = await this.extractAssets(arr);
+      if (arr['@type'] === 'DavizVisualization') {
+        table = await this.extractTable(arr);
+        table = table?.join('') || '';
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(table, 'text/html');
+        table = xml.getElementsByTagName('table')?.[0]?.outerHTML || '';
+      }
+      if (this.state.error) {
+        this.setState({ uploading: false }, () =>
+          toast.error(
+            <Toast
+              error
+              title={this.props.intl.formatMessage(messages.Error)}
+              content={this.props.intl.formatMessage(messages.ErrorMessage)}
+            />,
+          ),
+        );
+      } else if (
+        blocks.blocksConfig['dataFigure'].type.some(
+          (item) => item === arr['@type'],
+        ) &&
+        chartUrl.length > 0
+      ) {
+        this.setState(
+          {
+            url: chartUrl[0].url || chartUrl,
+            uploading: false,
+          },
+          () =>
+            this.props.onChangeBlock(this.props.block, {
+              ...this.props.data,
+              url: this.state.url,
+              figureUrl,
+              figureType,
+              title,
+              svgs: chartUrl,
+              table: table || '',
+              metadata,
+              geolocation: this.getGeoNameWithIds(metadata),
+              temporal: temporal.map((item) => ({
+                value: item,
+                label: item,
+              })),
+            }),
+        );
+      } else if (
+        this.state.url.includes('embed-chart.svg') ||
+        this.state.url.includes('.png')
+      ) {
+        this.props.onChangeBlock(this.props.block, {
+          ...this.props.data,
+          url: this.state.url,
+        });
       } else {
         this.setState({ uploading: false }, () =>
           toast.error(
@@ -331,10 +334,15 @@ class Edit extends Component {
         );
       }
     } else {
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        url: this.state.url,
-      });
+      this.setState({ uploading: false }, () =>
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.Error)}
+            content={this.props.intl.formatMessage(messages.ErrorMessage)}
+          />,
+        ),
+      );
     }
   };
 
@@ -438,7 +446,9 @@ class Edit extends Component {
                       )}/@@images/image/preview`;
                     if (data.size === 's')
                       return `${flattenToAppURL(data.url)}/@@images/image/mini`;
-                    return `${flattenToAppURL(data.url)}/@@images/image`;
+                    return isSVGImage(data.url)
+                      ? `${flattenToAppURL(data.url)}`
+                      : `${flattenToAppURL(data.url)}/@@images/image`;
                   })()
                 : data.url
             }
@@ -455,7 +465,7 @@ class Edit extends Component {
                         <Loader indeterminate>Uploading image</Loader>
                       </Dimmer>
                     )}
-                    <center>
+                    <div className="no-image-wrapper">
                       <img src={imageBlockSVG} alt="" />
                       <div className="toolbar-inner">
                         <Button.Group>
@@ -519,7 +529,7 @@ class Edit extends Component {
                           </Button>
                         </Button.Group>
                       </div>
-                    </center>
+                    </div>
                   </Message>
                 </div>
               )}
@@ -546,6 +556,6 @@ export default compose(
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
     }),
-    { createContent, getProxiedExternalContent },
+    { getContent, createContent, getProxiedExternalContent },
   ),
 )(Edit);

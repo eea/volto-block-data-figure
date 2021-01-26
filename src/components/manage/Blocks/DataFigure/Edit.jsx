@@ -24,7 +24,6 @@ import {
   validateHostname,
   isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
-import { getDownloadTable } from '@eeacms/volto-block-data-figure/actions';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
@@ -557,6 +556,6 @@ export default compose(
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
     }),
-    { getContent, createContent, getProxiedExternalContent, getDownloadTable },
+    { getContent, createContent, getProxiedExternalContent },
   ),
 )(Edit);

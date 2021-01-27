@@ -14,6 +14,7 @@ import {
   Modal,
   Header,
 } from 'semantic-ui-react';
+import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
@@ -97,7 +98,11 @@ class View extends React.Component {
                           : '0',
                       marginRight: data.inLeftColumn ? '0!important' : '1rem',
                     }}
-                    src={`${data.url}/@@images/image`}
+                    src={
+                      isSVGImage(data.url)
+                        ? data.url
+                        : `${data.url}/@@images/image`
+                    }
                     alt={data.title || ''}
                   ></img>
                 </div>

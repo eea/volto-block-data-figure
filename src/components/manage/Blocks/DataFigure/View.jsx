@@ -15,6 +15,7 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
+import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
@@ -78,7 +79,7 @@ class View extends React.Component {
       modalOpen,
       zoomed,
     } = this.state;
-    const { data } = this.props;
+    const { data, detached } = this.props;
     return data.url ? (
       <div style={{ paddingTop: '25px' }}>
         {data.title && <Header>{data.title}</Header>}
@@ -87,24 +88,24 @@ class View extends React.Component {
             <div className="scene scene--card">
               <div className={`card ${visible ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
-                  <img
-                    className={cx({ 'full-width': data.align === 'full' })}
-                    style={{
-                      width: data.width ? data.width + 'px' : '100%',
-                      height: data.height ? data.height + 'px' : '100%',
-                      marginLeft:
-                        data.inLeftColumn && data.width
-                          ? `-${parseInt(data.width) + 10}px`
-                          : '0',
-                      marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                    }}
-                    src={
-                      isSVGImage(data.url)
-                        ? data.url
-                        : `${data.url}/@@images/image`
-                    }
-                    alt={data.title || ''}
-                  ></img>
+                  {isSVGImage(data.url) ? (
+                    <Svg data={data} detached={detached} />
+                  ) : (
+                    <img
+                      className={cx({ 'full-width': data.align === 'full' })}
+                      style={{
+                        width: data.width ? data.width + 'px' : '100%',
+                        height: data.height ? data.height + 'px' : '100%',
+                        marginLeft:
+                          data.inLeftColumn && data.width
+                            ? `-${parseInt(data.width) + 10}px`
+                            : '0',
+                        marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                      }}
+                      src={`${data.url}/@@images/image`}
+                      alt={data.title || ''}
+                    ></img>
+                  )}
                 </div>
                 <div className="card__face card__face--back">
                   <Table data={data} />

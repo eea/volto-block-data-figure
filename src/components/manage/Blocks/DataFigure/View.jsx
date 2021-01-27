@@ -138,6 +138,8 @@ class View extends React.Component {
                       __html: data.table,
                     }}
                   />
+                ) : isSVGImage(data.url) ? (
+                  <Svg data={data} detached={detached} />
                 ) : (
                   <img
                     aria-hidden="true"

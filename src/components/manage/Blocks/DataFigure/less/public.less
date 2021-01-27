@@ -80,22 +80,52 @@
 }
 
 .metadata-btn-group {
-  width: 25%;
-  margin: 0 40% !important;
+  width: 100%;
+  margin: auto !important;
+  text-align: center;
 }
 
 .scale-image {
   transform: scale(0.72);
 }
 
-// div.scene .overlay {
-//   opacity: 0;
-//   transition: 0.5s ease;
-// }
+.data-figure-zoom {
+  width: 90% !important;
 
-// div.card__face--front:hover .overlay {
-//   opacity: 1;
-// }
+  .data-figure-image {
+    display: block !important;
+    text-align: center;
+  }
+
+  .data-figure {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    background-color: #fff;
+
+    th {
+      background-color: #787878;
+      color: #fff;
+      text-align: center;
+    }
+
+    tr,
+    td {
+      padding: 8px;
+      border: 1px solid #787878;
+      color: #787878;
+    }
+  }
+}
+
+.data-figure-temporal-coverage {
+  display: flex;
+  flex-flow: wrap;
+}
 
 .data-source-toolbar {
   left: 740px !important;

@@ -125,13 +125,13 @@ class View extends React.Component {
           />
           <Transition visible={modalOpen} animation="scale" duration={300}>
             <Modal
-              style={{ width: 'unset' }}
+              className="data-figure-zoom"
               open={modalOpen}
               onClose={() =>
                 this.setState({ modalOpen: false, zoomed: 'false' })
               }
             >
-              <Modal.Content image>
+              <Modal.Content image className="data-figure-image">
                 {visible ? (
                   <div
                     dangerouslySetInnerHTML={{
@@ -156,95 +156,97 @@ class View extends React.Component {
           </Transition>
         </Sidebar.Pushable>
         <Divider hidden />
-        <Button.Group className="metadata-btn-group" basic>
-          <Popup
-            className="popup-wrap"
-            inverted
-            trigger={
-              <Button
-                icon
-                onClick={this.toggleVisibility}
-                className="data-figure-control"
-              >
-                {visible ? (
-                  <Icon name={imageSVG} size="24px" />
-                ) : (
-                  <Icon name={spreadsheetSVG} size="24px" />
-                )}
-              </Button>
-            }
-            position="top center"
-          >
-            {visible ? 'data figure' : 'data table'}
-          </Popup>
-          <Popup
-            className="popup-wrap"
-            inverted
-            trigger={
-              <Button
-                icon
-                onClick={this.toggleMetadata}
-                className="data-figure-control"
-              >
-                <Icon name={infoSVG} size="24px" />
-              </Button>
-            }
-            position="top center"
-          >
-            metadata
-          </Popup>
-          <Popup
-            className="popup-wrap"
-            inverted
-            trigger={
-              <a
-                href={data.href}
-                target={data.openLinkInNewTab ? '_blank' : '_self'}
-              >
-                <Button icon className="data-figure-control">
-                  <Icon name={applicationSVG} size="24px" />
+        <div className="metadata-btn-group">
+          <Button.Group basic>
+            <Popup
+              className="popup-wrap"
+              inverted
+              trigger={
+                <Button
+                  icon
+                  onClick={this.toggleVisibility}
+                  className="data-figure-control"
+                >
+                  {visible ? (
+                    <Icon name={imageSVG} size="24px" />
+                  ) : (
+                    <Icon name={spreadsheetSVG} size="24px" />
+                  )}
                 </Button>
-              </a>
-            }
-            position="top center"
-          >
-            {data.label || <p>Interactive link</p>}
-          </Popup>
-          <Popup
-            className="popup-wrap"
-            inverted
-            trigger={
-              <Button
-                icon
-                onClick={this.toggleLeftPopup}
-                className="data-figure-control"
-              >
-                <Icon name={downloadSVG} size="24px" />
-              </Button>
-            }
-            position="top center"
-          >
-            download data
-          </Popup>
-          <Popup
-            className="popup-wrap"
-            inverted
-            trigger={
-              <Button
-                icon
-                className="data-figure-control"
-                onClick={() =>
-                  this.setState({ modalOpen: true, zoomed: 'true' })
-                }
-              >
-                <Icon name={zoomSVG} size="24px" />
-              </Button>
-            }
-            position="top center"
-          >
-            enlarge
-          </Popup>
-        </Button.Group>
+              }
+              position="top center"
+            >
+              {visible ? 'data figure' : 'data table'}
+            </Popup>
+            <Popup
+              className="popup-wrap"
+              inverted
+              trigger={
+                <Button
+                  icon
+                  onClick={this.toggleMetadata}
+                  className="data-figure-control"
+                >
+                  <Icon name={infoSVG} size="24px" />
+                </Button>
+              }
+              position="top center"
+            >
+              metadata
+            </Popup>
+            <Popup
+              className="popup-wrap"
+              inverted
+              trigger={
+                <a
+                  href={data.href}
+                  target={data.openLinkInNewTab ? '_blank' : '_self'}
+                >
+                  <Button icon className="data-figure-control">
+                    <Icon name={applicationSVG} size="24px" />
+                  </Button>
+                </a>
+              }
+              position="top center"
+            >
+              {data.label || <p>Interactive link</p>}
+            </Popup>
+            <Popup
+              className="popup-wrap"
+              inverted
+              trigger={
+                <Button
+                  icon
+                  onClick={this.toggleLeftPopup}
+                  className="data-figure-control"
+                >
+                  <Icon name={downloadSVG} size="24px" />
+                </Button>
+              }
+              position="top center"
+            >
+              download data
+            </Popup>
+            <Popup
+              className="popup-wrap"
+              inverted
+              trigger={
+                <Button
+                  icon
+                  className="data-figure-control"
+                  onClick={() =>
+                    this.setState({ modalOpen: true, zoomed: 'true' })
+                  }
+                >
+                  <Icon name={zoomSVG} size="24px" />
+                </Button>
+              }
+              position="top center"
+            >
+              enlarge
+            </Popup>
+          </Button.Group>
+        </div>
       </div>
     ) : null;
   }

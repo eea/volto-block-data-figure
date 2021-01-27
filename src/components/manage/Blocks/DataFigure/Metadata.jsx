@@ -81,11 +81,13 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <Header as="h3" style={{ color: '#517776' }}>
               Temporal coverage
             </Header>
-            {data.temporal.map((item, index) => (
-              <div key={index} style={{ textIndent: '15px' }}>
-                {item?.label}
-              </div>
-            ))}
+            <div className="data-figure-temporal-coverage">
+              {data.temporal.map((item, index) => (
+                <div key={index} style={{ textIndent: '15px' }}>
+                  {item?.label}
+                </div>
+              ))}
+            </div>
           </Segment>
         )}
       </Segment.Group>

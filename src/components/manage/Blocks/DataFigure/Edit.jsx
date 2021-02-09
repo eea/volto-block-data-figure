@@ -170,9 +170,9 @@ class Edit extends Component {
    * @param {Object} target Target object
    * @returns {undefined}
    */
-  onChangeUrl = (url) => {
+  onChangeUrl = ({ target }) => {
     this.setState({
-      url: flattenToContentURL(url),
+      url: flattenToContentURL(target.value),
       error: null,
     });
   };
@@ -478,16 +478,7 @@ class Edit extends Component {
                             onClick={(e) => {
                               e.stopPropagation();
                               this.props.openObjectBrowser({
-                                mode: 'link',
-                                maximumSelectionSize: 1,
-                                selectableTypes: [
-                                  'DavizVisualization',
-                                  'EEAFigure',
-                                  'Image',
-                                ],
-                                onSelectItem: (url) => {
-                                  this.onChangeUrl(url);
-                                },
+                                selectableTypes: ['DavizVisualization'],
                               });
                             }}
                           >
@@ -508,9 +499,7 @@ class Edit extends Component {
                         </Button.Group>
                         <Input
                           onKeyDown={this.onKeyDownVariantMenuForm}
-                          onChange={({ target }) =>
-                            this.onChangeUrl(target.value)
-                          }
+                          onChange={this.onChangeUrl}
                           placeholder={placeholder}
                           value={this.state.url}
                           // Prevents propagation to the Dropzone and the opening

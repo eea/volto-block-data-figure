@@ -22,17 +22,15 @@ import {
   extractTemporal,
   extractMetadata,
   validateHostname,
+  isInternalContentURL,
+  flattenToContentURL,
   isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
 import { getContent, createContent } from '@plone/volto/actions';
-import {
-  flattenToAppURL,
-  getBaseUrl,
-  isInternalURL,
-} from '@plone/volto/helpers';
+import { getBaseUrl } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
@@ -174,24 +172,28 @@ class Edit extends Component {
    */
   onChangeUrl = ({ target }) => {
     this.setState({
-      url: target.value,
+      url: flattenToContentURL(target.value),
       error: null,
     });
   };
+
   extractTable = async (data) => {
     let arr = [];
     const tableUrl = `${data['@id']}/download.table`;
-    const internalUrl = flattenToAppURL(tableUrl);
-    const externalTableUrl = `https://www.eea.europa.eu/${internalUrl}`;
-    await this.props.getProxiedExternalContent(externalTableUrl, {
-      headers: { Accept: 'text/html' },
-    });
+    const url = flattenToContentURL(tableUrl);
+    if (isInternalContentURL(url)) {
+      await this.props.getContent(url, null, url);
+    } else {
+      await this.props.getProxiedExternalContent(url, {
+        headers: { Accept: 'text/html' },
+      });
+    }
 
-    if (this.props.subrequests[externalTableUrl]?.error) {
+    if (this.props.subrequests[url]?.error) {
       return arr;
     }
-    for (const key in this.props.subrequests[externalTableUrl]?.data) {
-      arr.push(this.props.subrequests[externalTableUrl].data[key]);
+    for (const key in this.props.subrequests[url]?.data) {
+      arr.push(this.props.subrequests[url].data[key]);
     }
     return arr;
   };
@@ -200,7 +202,7 @@ class Edit extends Component {
     let url;
     let metadata;
     if (arr['@type'] === 'EEAFigure') {
-      const result = isInternalURL(arr.items[0].url)
+      const result = isInternalContentURL(arr.items[0].url)
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) =>
@@ -253,13 +255,12 @@ class Edit extends Component {
       uploading: true,
     });
 
-    // if (!isInternalURL(this.state.url)) {
     const isValidUrl =
-      isInternalURL(this.state.url) || validateHostname(this.state.url);
+      isInternalContentURL(this.state.url) || validateHostname(this.state.url);
     if (isValidUrl) {
       let table,
         figureUrl = this.state.url;
-      const arr = isInternalURL(this.state.url)
+      const arr = isInternalContentURL(this.state.url)
         ? await this.internalURLContents(this.state.url)
         : await this.externalURLContents(this.state.url);
       const [
@@ -315,7 +316,7 @@ class Edit extends Component {
             }),
         );
       } else if (
-        this.state.url.includes('embed-chart.svg') ||
+        this.state.url.includes('.svg') ||
         this.state.url.includes('.png')
       ) {
         this.props.onChangeBlock(this.props.block, {
@@ -435,20 +436,22 @@ class Edit extends Component {
               small: data.size === 's',
             })}
             src={
-              isInternalURL(data.url)
+              isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
                   (() => {
                     if (data.size === 'l')
-                      return `${flattenToAppURL(data.url)}/@@images/image`;
+                      return `${flattenToContentURL(data.url)}/@@images/image`;
                     if (data.size === 'm')
-                      return `${flattenToAppURL(
+                      return `${flattenToContentURL(
                         data.url,
                       )}/@@images/image/preview`;
                     if (data.size === 's')
-                      return `${flattenToAppURL(data.url)}/@@images/image/mini`;
+                      return `${flattenToContentURL(
+                        data.url,
+                      )}/@@images/image/mini`;
                     return isSVGImage(data.url)
-                      ? `${flattenToAppURL(data.url)}`
-                      : `${flattenToAppURL(data.url)}/@@images/image`;
+                      ? `${flattenToContentURL(data.url)}`
+                      : `${flattenToContentURL(data.url)}/@@images/image`;
                   })()
                 : data.url
             }
@@ -474,7 +477,9 @@ class Edit extends Component {
                             icon
                             onClick={(e) => {
                               e.stopPropagation();
-                              this.props.openObjectBrowser();
+                              this.props.openObjectBrowser({
+                                selectableTypes: ['DavizVisualization'],
+                              });
                             }}
                           >
                             <Icon name={navTreeSVG} size="24px" />

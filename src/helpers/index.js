@@ -5,5 +5,7 @@ export {
   extractMetadata,
   validateHostname,
   isSVGImage,
+  isInternalContentURL,
+  flattenToContentURL,
   getParsedValue,
 } from '@eeacms/volto-block-data-figure/helpers/Svg/Svg';

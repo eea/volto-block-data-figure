@@ -1,5 +1,6 @@
 import { deserialize } from 'volto-slate/editor/deserialize';
 import { settings } from '@plone/volto/config';
+import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
 export const cleanSVG = (data) => {
   // base64 decode, if needed
   let text, svg;
@@ -62,6 +63,27 @@ export const validateHostname = (url) => {
     .replace('https://', '')
     .split(/[/?#]/)[0];
   return settings.allowed_cors_destinations.includes(domain);
+};
+
+export const isInternalContentURL = (url) => {
+  if (isInternalURL(url)) {
+    return true;
+  }
+  const domain = url
+    .replace('http://', '')
+    .replace('https://', '')
+    .split(/[/?#]/)[0];
+  return settings.apiPath.includes(domain);
+};
+
+export const flattenToContentURL = (url) => {
+  url = flattenToAppURL(url);
+  if (url.startsWith('http')) {
+    if (isInternalContentURL(url)) {
+      return url.replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
+    }
+  }
+  return url;
 };
 
 export const getParsedValue = (data = []) => {

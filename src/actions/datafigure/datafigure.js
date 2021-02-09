@@ -4,6 +4,7 @@
  */
 
 import { GET_SVG } from '@eeacms/volto-block-data-figure/constants/ActionTypes';
+import { GET_CONTENT } from '@plone/volto/constants/ActionTypes';
 /**
  * Get SVG function.
  * @function getSVG
@@ -19,6 +20,18 @@ export function getSVG(url) {
       headers: {
         Accept: 'image/svg+xml',
       },
+    },
+  };
+}
+
+export function getInternalContent(url, request = {}) {
+  return {
+    type: GET_CONTENT,
+    subrequest: url,
+    request: {
+      op: 'get',
+      path: url,
+      ...request,
     },
   };
 }

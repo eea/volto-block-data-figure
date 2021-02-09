@@ -77,8 +77,8 @@ export const isInternalContentURL = (url) => {
 };
 
 export const flattenToContentURL = (url) => {
-  url = flattenToAppURL(url);
-  if (url.startsWith('http')) {
+  url = url ? flattenToAppURL(url) : url;
+  if (url?.startsWith('http')) {
     if (isInternalContentURL(url)) {
       return url.replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
     }

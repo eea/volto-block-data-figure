@@ -27,9 +27,10 @@ import {
   isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
+import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { getContent, createContent } from '@plone/volto/actions';
+import { createContent } from '@plone/volto/actions';
 import { getBaseUrl } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
@@ -166,15 +167,25 @@ class Edit extends Component {
 
   /**
    * Change url handler
-   * @method onChangeUrl
+   * @method onChangeTargetUrl
    * @param {Object} target Target object
    * @returns {undefined}
    */
-  onChangeUrl = ({ target }) => {
+  onChangeTargetUrl = ({ target }) => {
     this.setState({
       url: flattenToContentURL(target.value),
       error: null,
     });
+  };
+
+  /**
+   * Change url handler
+   * @method onChangeUrl
+   * @param {String} url URL string
+   * @returns {undefined}
+   */
+  onChangeUrl = (url) => {
+    this.setState({ url: url, error: null });
   };
 
   extractTable = async (data) => {
@@ -182,7 +193,9 @@ class Edit extends Component {
     const tableUrl = `${data['@id']}/download.table`;
     const url = flattenToContentURL(tableUrl);
     if (isInternalContentURL(url)) {
-      await this.props.getContent(url, null, url);
+      await this.props.getInternalContent(url, {
+        headers: { Accept: 'text/html' },
+      });
     } else {
       await this.props.getProxiedExternalContent(url, {
         headers: { Accept: 'text/html' },
@@ -233,7 +246,7 @@ class Edit extends Component {
   }
 
   internalURLContents = async (url) => {
-    await this.props.getContent(url, null, url);
+    await this.props.getInternalContent(url);
     return this.props.subrequests[url]?.data;
   };
 
@@ -478,7 +491,16 @@ class Edit extends Component {
                             onClick={(e) => {
                               e.stopPropagation();
                               this.props.openObjectBrowser({
-                                selectableTypes: ['DavizVisualization'],
+                                mode: 'daviz',
+                                selectableTypes: [
+                                  'DavizVisualization',
+                                  'EEAFigure',
+                                  'Image',
+                                ],
+                                onSelectItem: (url, item) => {
+                                  this.onChangeUrl(url);
+                                  this.props.closeObjectBrowser();
+                                },
                               });
                             }}
                           >
@@ -499,7 +521,7 @@ class Edit extends Component {
                         </Button.Group>
                         <Input
                           onKeyDown={this.onKeyDownVariantMenuForm}
-                          onChange={this.onChangeUrl}
+                          onChange={this.onChangeTargetUrl}
                           placeholder={placeholder}
                           value={this.state.url}
                           // Prevents propagation to the Dropzone and the opening
@@ -561,6 +583,10 @@ export default compose(
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
     }),
-    { getContent, createContent, getProxiedExternalContent },
+    {
+      getInternalContent,
+      createContent,
+      getProxiedExternalContent,
+    },
   ),
 )(Edit);

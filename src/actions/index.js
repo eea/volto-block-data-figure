@@ -3,4 +3,7 @@
  * @module actions
  * @example import { getSVG } from 'actions';
  */
-export { getSVG } from '@eeacms/volto-block-data-figure/actions/datafigure/datafigure';
+export {
+  getSVG,
+  getInternalContent,
+} from '@eeacms/volto-block-data-figure/actions/datafigure/datafigure';

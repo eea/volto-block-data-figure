@@ -53,6 +53,10 @@ const messages = defineMessages({
     id: 'Please use valid daviz url.',
     defaultMessage: 'Please use valid daviz url.',
   },
+  thereWereSomeErrors: {
+    id: 'There were some errors.',
+    defaultMessage: 'There were some errors.',
+  },
 });
 
 /**
@@ -193,9 +197,22 @@ class Edit extends Component {
     const tableUrl = `${data['@id']}/download.table`;
     const url = flattenToContentURL(tableUrl);
     if (isInternalContentURL(url)) {
-      await this.props.getInternalContent(url, {
-        headers: { Accept: 'text/html' },
-      });
+      try {
+        await this.props.getInternalContent(url, {
+          headers: { Accept: 'text/html' },
+        });
+      } catch (e) {
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.thereWereSomeErrors)}
+            content={this.props.intl.formatMessage({
+              id: e.message,
+              defaultMessage: e.message,
+            })}
+          />,
+        );
+      }
     } else {
       await this.props.getProxiedExternalContent(url, {
         headers: { Accept: 'text/html' },

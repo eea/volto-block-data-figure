@@ -6,4 +6,5 @@
 export {
   getSVG,
   getInternalContent,
+  createImageContent,
 } from '@eeacms/volto-block-data-figure/actions/datafigure/datafigure';

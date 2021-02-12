@@ -27,10 +27,12 @@ import {
   isSVGImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
-import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
+import {
+  getInternalContent,
+  createImageContent,
+} from '@eeacms/volto-block-data-figure/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent } from '@plone/volto/actions';
 import { getBaseUrl } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
@@ -87,7 +89,7 @@ class Edit extends Component {
     onFocusPreviousBlock: PropTypes.func.isRequired,
     onFocusNextBlock: PropTypes.func.isRequired,
     handleKeyDown: PropTypes.func.isRequired,
-    createContent: PropTypes.func.isRequired,
+    createImageContent: PropTypes.func.isRequired,
     openObjectBrowser: PropTypes.func.isRequired,
   };
 
@@ -139,7 +141,7 @@ class Edit extends Component {
     });
     readAsDataURL(file).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      this.props.createContent(
+      this.props.createImageContent(
         getBaseUrl(this.props.pathname),
         {
           '@type': 'Image',
@@ -396,7 +398,7 @@ class Edit extends Component {
 
     readAsDataURL(file[0]).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      this.props.createContent(
+      this.props.createImageContent(
         getBaseUrl(this.props.pathname),
         {
           '@type': 'Image',
@@ -602,7 +604,7 @@ export default compose(
     }),
     {
       getInternalContent,
-      createContent,
+      createImageContent,
       getProxiedExternalContent,
     },
   ),

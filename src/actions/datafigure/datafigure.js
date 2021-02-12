@@ -4,7 +4,11 @@
  */
 
 import { GET_SVG } from '@eeacms/volto-block-data-figure/constants/ActionTypes';
-import { GET_CONTENT } from '@plone/volto/constants/ActionTypes';
+import {
+  GET_CONTENT,
+  CREATE_CONTENT,
+} from '@plone/volto/constants/ActionTypes';
+import { nestContent } from '@plone/volto/helpers';
 /**
  * Get SVG function.
  * @function getSVG
@@ -33,5 +37,31 @@ export function getInternalContent(url, request = {}) {
       path: url,
       ...request,
     },
+  };
+}
+
+export function createImageContent(url, content, subrequest) {
+  const { image } = content;
+  return {
+    type: CREATE_CONTENT,
+    subrequest,
+    mode: 'serial',
+    request: Array.isArray(content)
+      ? content.map((item) => ({
+          op: 'post',
+          path: url,
+          data: item,
+          headers: {
+            Accept: image['content-type'],
+          },
+        }))
+      : {
+          op: 'post',
+          path: url,
+          data: nestContent(content),
+          headers: {
+            Accept: image['content-type'],
+          },
+        },
   };
 }

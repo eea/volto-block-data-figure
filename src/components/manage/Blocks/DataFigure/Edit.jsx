@@ -139,20 +139,41 @@ class Edit extends Component {
     });
     readAsDataURL(file).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      this.props.createContent(
-        getBaseUrl(this.props.pathname),
-        {
-          '@type': 'Image',
-          title: file.name,
-          image: {
-            data: fields[3],
-            encoding: fields[2],
-            'content-type': fields[1],
-            filename: file.name,
+      const localImageUrl = URL.createObjectURL(file);
+      const imageObject = new Image();
+      imageObject.onload = () => {
+        file.width = imageObject.naturalWidth;
+        file.height = imageObject.naturalHeight;
+        URL.revokeObjectURL(file);
+      };
+      imageObject.src = localImageUrl;
+      if (this.isValidImage(file)) {
+        this.props.createContent(
+          getBaseUrl(this.props.pathname),
+          {
+            '@type': 'Image',
+            title: file.name,
+            image: {
+              data: fields[3],
+              encoding: fields[2],
+              'content-type': fields[1],
+              filename: file.name,
+            },
           },
-        },
-        this.props.block,
-      );
+          this.props.block,
+        );
+      } else {
+        this.setState({
+          uploading: false,
+        });
+        toast.error(
+          <Toast
+            error
+            title={this.props.intl.formatMessage(messages.thereWereSomeErrors)}
+            content={this.props.intl.formatMessage(messages.Error)}
+          />,
+        );
+      }
     });
   };
 
@@ -180,6 +201,18 @@ class Edit extends Component {
       url: flattenToContentURL(target.value),
       error: null,
     });
+  };
+
+  /**
+   * @method isValidImage
+   * @param {Object} file file object
+   * @memberof Edit
+   * @returns {Boolean}
+   */
+  isValidImage = (file) => {
+    if (file.height > 100 || file.width > 100) {
+      return false;
+    }
   };
 
   /**

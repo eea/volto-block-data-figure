@@ -21,6 +21,7 @@ const applyConfig = (config) => {
       view: [],
     },
     type: ['DavizVisualization', 'EEAFigure'],
+    allowed_resolution: '1400x800',
   };
 
   // reducers

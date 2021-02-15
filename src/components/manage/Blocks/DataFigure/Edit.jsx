@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
 import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { toast } from 'react-toastify';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
@@ -133,20 +133,25 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onUploadImage = ({ target }) => {
-    const file = target.files[0];
+    let file = target.files[0];
     this.setState({
       uploading: true,
     });
-    readAsDataURL(file).then((data) => {
+    readAsDataURL(file).then(async (data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      const localImageUrl = URL.createObjectURL(file);
-      const imageObject = new Image();
-      imageObject.onload = () => {
-        file.width = imageObject.naturalWidth;
-        file.height = imageObject.naturalHeight;
-        URL.revokeObjectURL(file);
-      };
-      imageObject.src = localImageUrl;
+      let localImageUrl = window.URL.createObjectURL(file);
+      await new Promise((resolve, reject) => {
+        let imageObject = new Image();
+        imageObject.onload = () => {
+          file.width = imageObject.naturalWidth;
+          file.height = imageObject.naturalHeight;
+          window.URL.revokeObjectURL(localImageUrl);
+          resolve();
+        };
+        imageObject.onerror = reject;
+        imageObject.src = localImageUrl;
+      });
+
       if (this.isValidImage(file)) {
         this.props.createContent(
           getBaseUrl(this.props.pathname),
@@ -163,15 +168,29 @@ class Edit extends Component {
           this.props.block,
         );
       } else {
-        this.setState({
-          uploading: false,
-        });
-        toast.error(
-          <Toast
-            error
-            title={this.props.intl.formatMessage(messages.thereWereSomeErrors)}
-            content={this.props.intl.formatMessage(messages.Error)}
-          />,
+        this.setState(
+          {
+            uploading: false,
+          },
+          () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(
+                  messages.thereWereSomeErrors,
+                )}
+                content={
+                  <FormattedMessage
+                    id="Minimum resolution should be {resolution}!"
+                    defaultMessage="Minimum resolution should be {resolution}!"
+                    values={{
+                      resolution:
+                        blocks.blocksConfig['dataFigure'].allowed_resolution,
+                    }}
+                  />
+                }
+              />,
+            ),
         );
       }
     });
@@ -210,9 +229,14 @@ class Edit extends Component {
    * @returns {Boolean}
    */
   isValidImage = (file) => {
-    if (file.height > 100 || file.width > 100) {
+    const resolution = blocks.blocksConfig['dataFigure'].allowed_resolution;
+    if (
+      file.width > resolution.split('x')[0] ||
+      file.height > resolution.split('x')[1]
+    ) {
       return false;
     }
+    return true;
   };
 
   /**

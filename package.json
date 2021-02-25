@@ -19,11 +19,11 @@
     "url": "git@github.com:eea/volto-block-data-figure.git"
   },
   "dependencies": {
-    "@eeacms/volto-block-style": "^1.0.0",
-    "@eeacms/volto-corsproxy": "^1.0.0",
+    "@eeacms/volto-block-style": "^2.0.0",
+    "@eeacms/volto-corsproxy": "^2.0.0",
     "@eeacms/volto-widget-geolocation": "^1.0.0",
     "@eeacms/volto-widget-temporal-coverage": "^1.0.0",
-    "volto-slate": "^1.0.0"
+    "volto-slate": "^2.0.0"
   },
   "scripts": {
     "release": "release-it",

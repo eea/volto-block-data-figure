@@ -25,7 +25,7 @@
    ],
 
    "dependencies": {
-       "@eeacms/volto-block-data-figure": "^1.0.0"
+       "@eeacms/volto-block-data-figure": "^2.0.0"
    }
    ```
 
@@ -39,7 +39,6 @@
 1. Go to http://localhost:3000
 
 1. Happy editing!
-
 
 ## How to contribute
 

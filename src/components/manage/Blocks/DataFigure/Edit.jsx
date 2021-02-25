@@ -13,7 +13,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import cx from 'classnames';
 import Dropzone from 'react-dropzone';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 
 import ImageSidebar from './ImageSidebar';
 import Svg from './Svg';
@@ -318,7 +318,7 @@ class Edit extends Component {
           ),
         );
       } else if (
-        blocks.blocksConfig['dataFigure'].type.some(
+        config.blocks.blocksConfig['dataFigure'].type.some(
           (item) => item === arr['@type'],
         ) &&
         chartUrl.length > 0

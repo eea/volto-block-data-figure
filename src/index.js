@@ -1,5 +1,8 @@
-import { EditDataFigureBlock } from './components';
-import { ViewDataFigureBlock } from './components';
+import {
+  DataFigureBlockEdit,
+  DataFigureBlockView,
+  DataFigureBlockSchema,
+} from './components';
 import iconSVG from '@plone/volto/icons/image.svg';
 import { datafigure } from './reducers';
 
@@ -10,8 +13,9 @@ const applyConfig = (config) => {
     title: 'Data Figure',
     icon: iconSVG,
     group: 'media',
-    view: ViewDataFigureBlock,
-    edit: EditDataFigureBlock,
+    view: DataFigureBlockView,
+    edit: DataFigureBlockEdit,
+    schema: DataFigureBlockSchema,
     restricted: false,
     mostUsed: false,
     blockHasOwnFocusManagement: false,

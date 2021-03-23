@@ -17,7 +17,6 @@ import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
 
-import imageSVG from '@plone/volto/icons/image.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
 import upSVG from '@plone/volto/icons/up-key.svg';
 import downSVG from '@plone/volto/icons/down-key.svg';
@@ -78,6 +77,7 @@ const ImageSidebar = ({
   resetSubmitUrl,
   intl,
   svgs,
+  instructions,
 }) => {
   const { metadata } = data;
   const getDefaultValue = () => {
@@ -113,20 +113,10 @@ const ImageSidebar = ({
 
   return (
     <Segment.Group raised>
-      <header className="header pulled">
-        <h2>
-          <FormattedMessage id="Image" defaultMessage="Image" />
-        </h2>
-      </header>
-
-      {!data.url && (
+      {!data.url && instructions && (
         <>
-          <Segment className="sidebar-metadata-container" secondary>
-            <FormattedMessage
-              id="No image selected"
-              defaultMessage="No image selected"
-            />
-            <Icon name={imageSVG} size="100px" color="#b8c6c8" />
+          <Segment attached>
+            <div dangerouslySetInnerHTML={{ __html: instructions }} />
           </Segment>
         </>
       )}

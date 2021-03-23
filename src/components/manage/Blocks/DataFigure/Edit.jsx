@@ -441,10 +441,16 @@ class Edit extends Component {
    * @returns {string} Markup for the component.
    */
   render() {
-    const { data, detached } = this.props;
+    const { data, detached, formDescription } = this.props;
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
+
+    // Get editing instructions from block settings or props
+    let instructions = data?.instructions?.data || data?.instructions;
+    if (!instructions || instructions === '<p><br/></p>') {
+      instructions = formDescription;
+    }
     return (
       <div
         className={cx(
@@ -584,6 +590,7 @@ class Edit extends Component {
           <ImageSidebar
             {...this.props}
             svgs={this.props.data.svgs}
+            instructions={instructions}
             resetSubmitUrl={this.resetSubmitUrl}
           />
         </SidebarPortal>

@@ -22,7 +22,7 @@
     "@eeacms/volto-corsproxy",
     "@eeacms/volto-widget-geolocation",
     "@eeacms/volto-widget-temporal-coverage",
-    "volto-slate"
+    "volto-slate:asDefault"
   ],
   "dependencies": {
     "@eeacms/volto-corsproxy": "^2.0.0",

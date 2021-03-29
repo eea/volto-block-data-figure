@@ -112,7 +112,7 @@ const ImageSidebar = ({
   }
 
   return (
-    <Segment.Group raised>
+    <div className="ui form">
       {!data.url && instructions && (
         <>
           <Segment attached>
@@ -406,7 +406,7 @@ const ImageSidebar = ({
           </Accordion>
         </>
       )}
-    </Segment.Group>
+    </div>
   );
 };
 

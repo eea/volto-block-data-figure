@@ -57,6 +57,11 @@ const messages = defineMessages({
     id: 'There were some errors.',
     defaultMessage: 'There were some errors.',
   },
+  disabledMessage: {
+    id: 'You need to save the document before beeing able to edit this area.',
+    defaultMessage:
+      'You need to save the document before beeing able to edit this area.',
+  },
 });
 
 /**
@@ -454,12 +459,16 @@ class Edit extends Component {
     return (
       <div
         className={cx(
-          'block image align',
+          'block image align data-figure-edit',
           {
             center: !Boolean(data.align),
           },
           data.align,
         )}
+        data-disabled-msg={
+          data.disabledMessage ||
+          this.props.intl.formatMessage(messages.disabledMessage)
+        }
       >
         {data.url && data.url.includes('.svg') ? (
           <Svg data={data} detached={detached} />

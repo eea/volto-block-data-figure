@@ -7,6 +7,7 @@ const Schema = {
       fields: [
         'placeholder',
         'instructions',
+        'disabledMessage',
         'required',
         'fixed',
         'disableNewBlocks',
@@ -26,6 +27,11 @@ const Schema = {
       description: 'Detailed expected value within this block',
       type: 'string',
       widget: 'richtext',
+    },
+    disabledMessage: {
+      title: 'Disabled message',
+      description: "e.g.: Can't upload image while adding. Please save first.",
+      type: 'string',
     },
     required: {
       title: 'Required',

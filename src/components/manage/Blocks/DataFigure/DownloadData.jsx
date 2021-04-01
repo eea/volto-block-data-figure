@@ -16,7 +16,7 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
       visible={isLeftClicked}
       width="very wide"
     >
-      <Segment.Group attached>
+      <Segment.Group>
         <Segment attached>
           <Header style={{ color: '#517776' }} as="h2">
             Download Data

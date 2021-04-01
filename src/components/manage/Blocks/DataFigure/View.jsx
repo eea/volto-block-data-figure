@@ -164,6 +164,7 @@ class View extends React.Component {
               trigger={
                 <Button
                   icon
+                  disabled={!data.table}
                   onClick={this.toggleVisibility}
                   className="data-figure-control"
                 >

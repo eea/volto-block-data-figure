@@ -76,7 +76,7 @@
 
 .popup-wrap {
   border-radius: 0;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 .metadata-btn-group {
@@ -137,4 +137,35 @@
 
 .download-data {
   display: inline-flex !important;
+}
+
+#page-add {
+  .data-figure-edit {
+    & {
+      pointer-events: none;
+      position: relative;
+    }
+
+    img {
+      opacity: 0.1;
+    }
+
+    .toolbar-inner {
+      display: none;
+    }
+
+    &:hover::before {
+      border: none;
+    }
+
+    &::before {
+      content: attr(data-disabled-msg);
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      z-index: 2;
+      opacity: 0.333;
+    }
+  }
 }

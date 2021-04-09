@@ -81,13 +81,13 @@ const ImageSidebar = ({
 }) => {
   const { metadata } = data;
   const getDefaultValue = () => {
-    if (metadata?.dataSources.provenances) {
+    if (metadata?.dataSources?.provenances) {
       onChangeBlock(block, {
         ...data,
         metadata: {
           ...data.metadata,
           dataSources: {
-            ...(data.metadata?.dataSources || {}),
+            ...(data?.metadata?.dataSources || {}),
             value: getParsedValue(metadata?.dataSources?.provenances),
           },
         },
@@ -389,7 +389,7 @@ const ImageSidebar = ({
                       metadata: {
                         ...data.metadata,
                         dataSources: {
-                          ...(data.metadata?.dataSources || {}),
+                          ...(data?.metadata?.dataSources || {}),
                           value,
                         },
                       },

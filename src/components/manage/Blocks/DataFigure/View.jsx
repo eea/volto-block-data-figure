@@ -185,6 +185,7 @@ class View extends React.Component {
               trigger={
                 <Button
                   icon
+                  disabled={!Object.keys(data?.metadata || {}).length}
                   onClick={this.toggleMetadata}
                   className="data-figure-control"
                 >
@@ -200,7 +201,7 @@ class View extends React.Component {
               inverted
               trigger={
                 <a
-                  href={data?.href ? data.href : false}
+                  href={data?.href ? data.href : null}
                   target={data.openLinkInNewTab ? '_blank' : '_self'}
                 >
                   <Button
@@ -222,6 +223,7 @@ class View extends React.Component {
               trigger={
                 <Button
                   icon
+                  disabled={!data?.metadata?.downloadData}
                   onClick={this.toggleLeftPopup}
                   className="data-figure-control"
                 >

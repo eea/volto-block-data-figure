@@ -14,10 +14,9 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
-  const {
-    geolocation,
-    metadata: { dataSources: { value, plaintext = '' } = {} } = {},
-  } = data;
+  const { geolocation, metadata } = data;
+  const { dataSources = {} } = metadata;
+  const { value, plaintext = '' } = dataSources;
 
   return (
     <Sidebar

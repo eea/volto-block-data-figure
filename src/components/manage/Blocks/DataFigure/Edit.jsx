@@ -109,6 +109,20 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
+    data: {
+      url: null,
+      href: null,
+      label: null,
+      openLinkInNewTab: null,
+      figureUrl: null,
+      figureType: null,
+      title: null,
+      svgs: null,
+      table: null,
+      metadata: {},
+      geolocation: null,
+      temporal: null,
+    },
   };
 
   /**
@@ -128,6 +142,7 @@ class Edit extends Component {
       });
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
+        ...this.state.data,
         url: nextProps.content['@id'],
         title: nextProps.content.title,
       });
@@ -227,19 +242,6 @@ class Edit extends Component {
       );
     });
   };
-
-  /**
-   * Align block handler
-   * @method onAlignBlock
-   * @param {string} align Alignment option
-   * @returns {undefined}
-   */
-  onAlignBlock(align) {
-    this.props.onChangeBlock(this.props.block, {
-      ...this.props.data,
-      align,
-    });
-  }
 
   /**
    * Change url handler
@@ -403,6 +405,7 @@ class Edit extends Component {
           () =>
             this.props.onChangeBlock(this.props.block, {
               ...this.props.data,
+              ...this.state.data,
               url: this.state.url,
               href: figureUrl,
               label: `explore ${title}`,
@@ -426,6 +429,7 @@ class Edit extends Component {
       ) {
         this.props.onChangeBlock(this.props.block, {
           ...this.props.data,
+          ...this.state.data,
           url: this.state.url,
         });
       } else {

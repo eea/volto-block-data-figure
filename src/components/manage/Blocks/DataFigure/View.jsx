@@ -200,7 +200,7 @@ class View extends React.Component {
               inverted
               trigger={
                 <a
-                  href={data.href}
+                  href={data?.href ? data.href : false}
                   target={data.openLinkInNewTab ? '_blank' : '_self'}
                 >
                   <Button

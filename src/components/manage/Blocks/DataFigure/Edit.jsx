@@ -174,6 +174,12 @@ class Edit extends Component {
   }
 
   onValidateImage = (image) => {
+    // Empty image
+    if (!image?.name) {
+      return this.props.intl.formatMessage(messages.invalidImage);
+    }
+
+    // Avoid uploading scale images
     if (image?.name?.startsWith('image_')) {
       toast.error(
         <Toast

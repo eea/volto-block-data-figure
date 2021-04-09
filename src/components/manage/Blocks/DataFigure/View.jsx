@@ -203,7 +203,11 @@ class View extends React.Component {
                   href={data.href}
                   target={data.openLinkInNewTab ? '_blank' : '_self'}
                 >
-                  <Button icon className="data-figure-control">
+                  <Button
+                    icon
+                    className="data-figure-control"
+                    disabled={!data.href}
+                  >
                     <Icon name={applicationSVG} size="24px" />
                   </Button>
                 </a>

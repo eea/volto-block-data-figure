@@ -404,6 +404,9 @@ class Edit extends Component {
             this.props.onChangeBlock(this.props.block, {
               ...this.props.data,
               url: this.state.url,
+              href: figureUrl,
+              label: `explore ${title}`,
+              openLinkInNewTab: true,
               figureUrl,
               figureType,
               title,
@@ -411,7 +414,7 @@ class Edit extends Component {
               table: table || '',
               metadata,
               geolocation: this.getGeoNameWithIds(metadata),
-              temporal: temporal.map((item) => ({
+              temporal: temporal?.map((item) => ({
                 value: item,
                 label: item,
               })),

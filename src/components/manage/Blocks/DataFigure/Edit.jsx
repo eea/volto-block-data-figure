@@ -62,6 +62,16 @@ const messages = defineMessages({
     defaultMessage:
       'You need to save the document before beeing able to edit this area.',
   },
+  invalidImage: {
+    id: 'Invalid Image',
+    defaultMessage: 'Invalid Image',
+  },
+  imageNameError: {
+    id:
+      'Invalid image. Image name can NOT start with image_. Please rename it first.',
+    defaultMessage:
+      'Invalid image. Image name can NOT start with image_. Please rename it first.',
+  },
 });
 
 /**
@@ -122,26 +132,77 @@ class Edit extends Component {
         title: nextProps.content.title,
       });
     }
+
+    // Invalid Daviz URL
     if (
       this.props.subrequests[this.state.url]?.loading &&
       nextProps.subrequests[this.state.url]?.error
     ) {
+      toast.error(
+        <Toast
+          error
+          title={this.props.intl.formatMessage(messages.invalidImage)}
+          content={nextProps.subrequests[this.state.url]?.error}
+        />,
+      );
       this.setState({
         error: nextProps.subrequests[this.state.url].error,
+        uploading: false,
+      });
+    }
+
+    // Invalid Image Upload
+    if (
+      this.props.subrequests[this.props.block]?.loading &&
+      nextProps.subrequests[this.props.block]?.error
+    ) {
+      toast.error(
+        <Toast
+          error
+          title={this.props.intl.formatMessage(messages.invalidImage)}
+          content={
+            nextProps.subrequests[this.props.block].error.response.statusText
+          }
+        />,
+      );
+      this.setState({
+        error:
+          nextProps.subrequests[this.props.block].error.response.statusText,
+        uploading: false,
       });
     }
   }
+
+  onValidateImage = (image) => {
+    if (image?.name?.startsWith('image_')) {
+      toast.error(
+        <Toast
+          error
+          title={this.props.intl.formatMessage(messages.invalidImage)}
+          content={this.props.intl.formatMessage(messages.imageNameError)}
+        />,
+      );
+      return this.props.intl.formatMessage(messages.imageNameError);
+    }
+  };
 
   /**
    * Upload image handler
    * @method onUploadImage
    * @returns {undefined}
    */
-  onUploadImage = ({ target }) => {
-    const file = target.files[0];
+  onUploadImage = (e) => {
+    e.stopPropagation();
+    const file = e.target.files[0];
+    const error = this.onValidateImage(file);
+    if (error) {
+      return;
+    }
+
     this.setState({
       uploading: true,
     });
+
     readAsDataURL(file).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
       this.props.createContent(
@@ -194,7 +255,7 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onChangeUrl = (url) => {
-    this.setState({ url: url, error: null });
+    this.setState({ url: url, error: null, uploading: false });
   };
 
   extractTable = async (data) => {
@@ -385,6 +446,7 @@ class Edit extends Component {
   resetSubmitUrl = () => {
     this.setState({
       url: '',
+      uploading: false,
     });
   };
 
@@ -395,6 +457,11 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onDrop = (file) => {
+    const error = this.onValidateImage(file[0]);
+    if (error) {
+      return;
+    }
+
     this.setState({
       uploading: true,
     });

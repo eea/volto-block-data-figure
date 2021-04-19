@@ -232,7 +232,7 @@ class View extends React.Component {
               }
               position="top center"
             >
-              download data
+              download
             </Popup>
             <Popup
               className="popup-wrap"

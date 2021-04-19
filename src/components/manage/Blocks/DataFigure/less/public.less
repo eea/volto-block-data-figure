@@ -136,13 +136,17 @@
 
 .download-data {
   display: inline-flex !important;
+
+  a {
+    padding-top: 0 !important;
+  }
 }
 
 #page-add {
   .data-figure-edit {
     & {
-      pointer-events: none;
       position: relative;
+      pointer-events: none;
     }
 
     img {
@@ -158,13 +162,13 @@
     }
 
     &::before {
-      content: attr(data-disabled-msg);
       position: absolute;
+      z-index: 2;
       top: 40%;
       left: 50%;
-      transform: translate(-50%, 0);
-      z-index: 2;
+      content: attr(data-disabled-msg);
       opacity: 0.333;
+      transform: translate(-50%, 0);
     }
   }
 }

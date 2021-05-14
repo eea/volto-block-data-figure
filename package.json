@@ -26,13 +26,13 @@
   ],
   "dependencies": {
     "@eeacms/volto-corsproxy": "^2.0.0",
-    "@eeacms/volto-widget-geolocation": "^1.0.0",
-    "@eeacms/volto-widget-temporal-coverage": "^1.0.0",
+    "@eeacms/volto-widget-geolocation": "^2.0.0",
+    "@eeacms/volto-widget-temporal-coverage": "^2.0.0",
     "volto-slate": "^2.0.0"
   },
   "scripts": {
     "release": "release-it",
-    "bootstrap": "node bootstrap",
+    "bootstrap": "npm install -g ejs; npm link ejs; node bootstrap",
     "stylelint": "../../../node_modules/stylelint/bin/stylelint.js --allow-empty-input 'src/**/*.{css,less}'",
     "stylelint:overrides": "../../../node_modules/.bin/stylelint --syntax less --allow-empty-input 'theme/**/*.overrides' 'src/**/*.overrides'",
     "stylelint:fix": "yarn stylelint --fix && yarn stylelint:overrides --fix",

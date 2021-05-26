@@ -350,16 +350,12 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 2}>
               <div className="sidebar-geo-data">
                 <TemporalWidget
-                  data={data}
+                  value={data.value || data.temporal} //data.temporal are prefetched content.
                   block={block}
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      temporal: name
-                        ? name.map((item) => {
-                            return { label: item.label, value: item.value };
-                          })
-                        : null,
+                      value,
                     });
                   }}
                   intl={intl}

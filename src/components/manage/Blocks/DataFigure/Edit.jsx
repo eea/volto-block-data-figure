@@ -417,10 +417,12 @@ class Edit extends Component {
               table: table || '',
               metadata,
               geolocation: this.getGeoNameWithIds(metadata),
-              temporal: temporal?.map((item) => ({
-                value: item,
-                label: item,
-              })),
+              value: {
+                temporal: temporal?.map((item) => ({
+                  value: item,
+                  label: item,
+                })),
+              },
             }),
         );
       } else if (

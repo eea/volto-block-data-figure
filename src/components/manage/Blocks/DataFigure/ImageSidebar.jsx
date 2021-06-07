@@ -350,12 +350,12 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 2}>
               <div className="sidebar-geo-data">
                 <TemporalWidget
-                  value={data.value}
+                  value={data}
                   block={block}
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      value,
+                      ...value,
                     });
                   }}
                   intl={intl}

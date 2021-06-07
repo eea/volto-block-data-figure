@@ -25,10 +25,10 @@
     "volto-slate:asDefault"
   ],
   "dependencies": {
-    "@eeacms/volto-corsproxy": "^2.0.0",
-    "@eeacms/volto-widget-geolocation": "^2.0.0",
-    "@eeacms/volto-widget-temporal-coverage": "^2.0.0",
-    "volto-slate": "^2.0.0"
+    "@eeacms/volto-corsproxy": ">=2.0.0",
+    "@eeacms/volto-widget-geolocation": ">=2.3.0",
+    "@eeacms/volto-widget-temporal-coverage": ">=2.2.0",
+    "volto-slate": ">=2.0.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",

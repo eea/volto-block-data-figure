@@ -313,23 +313,34 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 1}>
               <div className="sidebar-geo-data">
                 <GeolocationWidget
-                  data={data}
+                  value={data}
                   block={block}
+                  id="geolocation"
                   onChange={(name, value) => {
-                    onChangeBlock(block, {
-                      ...data,
-                      geolocation: isArray(name)
-                        ? name.map((item) => {
-                            return { label: item.label, value: item.value };
-                          })
-                        : null,
-                    });
+                    if (name === 'geolocation') {
+                      onChangeBlock(block, {
+                        ...data,
+                        [name]: value?.[name] || value,
+                      });
+                    } else {
+                      onChangeBlock(block, {
+                        ...data,
+                        [name]: value,
+                      });
+                    }
                   }}
                   onChangeSchema={(name, value) => {
-                    onChangeBlock(block, {
-                      ...data,
-                      [value]: name,
-                    });
+                    if (name === 'geolocation') {
+                      onChangeBlock(block, {
+                        ...data,
+                        [name]: value?.[name] || value,
+                      });
+                    } else {
+                      onChangeBlock(block, {
+                        ...data,
+                        [name]: value,
+                      });
+                    }
                   }}
                   intl={intl}
                 />

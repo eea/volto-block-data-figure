@@ -317,30 +317,16 @@ const ImageSidebar = ({
                   block={block}
                   id="geolocation"
                   onChange={(name, value) => {
-                    if (name === 'geolocation') {
-                      onChangeBlock(block, {
-                        ...data,
-                        [name]: value?.[name] || value,
-                      });
-                    } else {
-                      onChangeBlock(block, {
-                        ...data,
-                        [name]: value,
-                      });
-                    }
+                    onChangeBlock(block, {
+                      ...data,
+                      [name]: value?.[name] || value,
+                    });
                   }}
                   onChangeSchema={(name, value) => {
-                    if (name === 'geolocation') {
-                      onChangeBlock(block, {
-                        ...data,
-                        [name]: value?.[name] || value,
-                      });
-                    } else {
-                      onChangeBlock(block, {
-                        ...data,
-                        [name]: value,
-                      });
-                    }
+                    onChangeBlock(block, {
+                      ...data,
+                      [name]: value?.[name] || value,
+                    });
                   }}
                   intl={intl}
                 />
@@ -366,7 +352,7 @@ const ImageSidebar = ({
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      ...value,
+                      [name]: value?.[name] || value,
                     });
                   }}
                   intl={intl}

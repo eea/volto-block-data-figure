@@ -313,22 +313,19 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 1}>
               <div className="sidebar-geo-data">
                 <GeolocationWidget
-                  data={data}
+                  value={data}
                   block={block}
+                  id="geolocation"
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      geolocation: isArray(name)
-                        ? name.map((item) => {
-                            return { label: item.label, value: item.value };
-                          })
-                        : null,
+                      [name]: value?.[name] || value,
                     });
                   }}
                   onChangeSchema={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      [value]: name,
+                      [name]: value?.[name] || value,
                     });
                   }}
                   intl={intl}
@@ -350,12 +347,12 @@ const ImageSidebar = ({
             <Accordion.Content active={activeAccIndex === 2}>
               <div className="sidebar-geo-data">
                 <TemporalWidget
-                  value={data.value}
+                  value={data}
                   block={block}
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      value,
+                      [name]: value?.[name] || value,
                     });
                   }}
                   intl={intl}

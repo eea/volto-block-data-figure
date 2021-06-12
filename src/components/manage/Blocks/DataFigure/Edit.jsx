@@ -8,7 +8,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { readAsDataURL } from 'promise-file-reader';
-import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
+import {
+  Button,
+  Dimmer,
+  Input,
+  Loader,
+  Message,
+  Header,
+} from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import cx from 'classnames';
@@ -25,6 +32,7 @@ import {
   isInternalContentURL,
   flattenToContentURL,
   isSVGImage,
+  getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
@@ -109,6 +117,7 @@ class Edit extends Component {
   state = {
     uploading: false,
     url: '',
+    position: 0,
     data: {
       url: null,
       href: null,
@@ -145,6 +154,16 @@ class Edit extends Component {
         ...this.state.data,
         url: nextProps.content['@id'],
         title: nextProps.content.title,
+      });
+    }
+
+    if (!this.state.position) {
+      // Block position in page
+      this.setState({
+        position: getBlockPosition(
+          this.props.metadata || this.props.properties,
+          this.props.block,
+        ),
       });
     }
 
@@ -266,6 +285,13 @@ class Edit extends Component {
     this.setState({ url: url, error: null, uploading: false });
   };
 
+  onClearUrl = () => {
+    this.props.onChangeBlock(this.props.block, {
+      ...this.props.data,
+      ...this.state.data,
+    });
+  };
+
   extractTable = async (data) => {
     let arr = [];
     const tableUrl = `${data['@id']}/download.table`;
@@ -304,7 +330,6 @@ class Edit extends Component {
 
   extractAssets = async (arr) => {
     let url;
-    let metadata;
     if (arr['@type'] === 'EEAFigure') {
       const result = isInternalContentURL(arr.items[0].url)
         ? await this.internalURLContents(arr.items[0].url)
@@ -313,13 +338,11 @@ class Edit extends Component {
         item['@id'].includes('.png'),
       );
       url = pngUrl;
-      metadata = extractMetadata(result);
     } else {
       url = extractSvg(arr);
-      metadata = extractMetadata(arr);
     }
+    const metadata = extractMetadata(arr);
     const temporal = extractTemporal(arr);
-    //const metadata = extractMetadata(arr); common metadata, if we want to use.
     const title = arr.title;
     const figureType = arr['@type'];
     return [temporal, url, title, figureType, metadata];
@@ -417,12 +440,10 @@ class Edit extends Component {
               table: table || '',
               metadata,
               geolocation: this.getGeoNameWithIds(metadata),
-              value: {
-                temporal: temporal?.map((item) => ({
-                  value: item,
-                  label: item,
-                })),
-              },
+              temporal: temporal?.map((item) => ({
+                value: item,
+                label: item,
+              })),
             }),
         );
       } else if (
@@ -463,6 +484,7 @@ class Edit extends Component {
       url: '',
       uploading: false,
     });
+    this.onClearUrl();
   };
 
   /**
@@ -538,6 +560,7 @@ class Edit extends Component {
     if (!instructions || instructions === '<p><br/></p>') {
       instructions = formDescription;
     }
+
     return (
       <div
         className={cx(
@@ -552,6 +575,11 @@ class Edit extends Component {
           this.props.intl.formatMessage(messages.disabledMessage)
         }
       >
+        {data.title && (
+          <Header>
+            Figure {this.state.position}. {data.title}
+          </Header>
+        )}
         {data.url && data.url.includes('.svg') ? (
           <Svg data={data} detached={detached} />
         ) : data.url ? (
@@ -649,7 +677,7 @@ class Edit extends Component {
                               className="cancel"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                this.setState({ url: '' });
+                                this.resetSubmitUrl();
                               }}
                             >
                               <Icon name={clearSVG} size="30px" />

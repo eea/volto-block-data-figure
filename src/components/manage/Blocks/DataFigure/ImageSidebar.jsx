@@ -9,10 +9,7 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import {
-  getParsedValue,
-  isSVGImage,
-} from '@eeacms/volto-block-data-figure/helpers';
+import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
@@ -81,24 +78,12 @@ const ImageSidebar = ({
 }) => {
   const { metadata } = data;
   const getDefaultValue = () => {
-    if (metadata?.dataSources?.provenances) {
-      onChangeBlock(block, {
-        ...data,
-        metadata: {
-          ...data.metadata,
-          dataSources: {
-            ...(data?.metadata?.dataSources || {}),
-            value: getParsedValue(metadata?.dataSources?.provenances),
-          },
-        },
-      });
-    } else
-      return [
-        {
-          type: 'p',
-          children: [{ text: '' }],
-        },
-      ];
+    return [
+      {
+        type: 'p',
+        children: [{ text: '' }],
+      },
+    ];
   };
   const isImageData = data['@type'] === 'Image';
 
@@ -181,10 +166,6 @@ const ImageSidebar = ({
                   data.url
                     ? () => {
                         resetSubmitUrl();
-                        onChangeBlock(block, {
-                          ...data,
-                          url: '',
-                        });
                       }
                     : () => openObjectBrowser()
                 }
@@ -200,11 +181,6 @@ const ImageSidebar = ({
                 icon={clearSVG}
                 iconAction={() => {
                   resetSubmitUrl();
-
-                  onChangeBlock(block, {
-                    ...data,
-                    url: '',
-                  });
                 }}
                 onChange={() => {}}
               />

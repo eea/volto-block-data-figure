@@ -86,8 +86,10 @@ class View extends React.Component {
     const { data, detached } = this.props;
 
     // Block position in page
-    const metadata = this.props.metadata || this.props.properties;
-    const position = getBlockPosition(metadata, this.props.id);
+    const position = getBlockPosition(
+      this.props.metadata || this.props.properties,
+      this.props.id,
+    );
 
     return data.url ? (
       <div style={{ paddingTop: '25px' }}>

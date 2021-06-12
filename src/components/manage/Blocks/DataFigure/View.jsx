@@ -14,7 +14,10 @@ import {
   Modal,
   Header,
 } from 'semantic-ui-react';
-import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
+import {
+  isSVGImage,
+  getBlockPosition,
+} from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
@@ -42,6 +45,7 @@ class View extends React.Component {
     modalOpen: false,
     zoomed: 'false',
     isLeftClicked: false,
+    position: 0,
   };
 
   hideSidebar = () => {
@@ -80,9 +84,18 @@ class View extends React.Component {
       zoomed,
     } = this.state;
     const { data, detached } = this.props;
+
+    // Block position in page
+    const metadata = this.props.metadata || this.props.properties;
+    const position = getBlockPosition(metadata, this.props.id);
+
     return data.url ? (
       <div style={{ paddingTop: '25px' }}>
-        {data.title && <Header>{data.title}</Header>}
+        {data.title && (
+          <Header>
+            Figure {position}. {data.title}
+          </Header>
+        )}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">

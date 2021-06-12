@@ -40,7 +40,10 @@ export const extractTemporal = (data = {}) => {
 export const extractMetadata = (data = {}) => {
   const { provenances, location } = data;
   return {
-    dataSources: { provenances },
+    dataSources: {
+      provenances,
+      value: getParsedValue(provenances),
+    },
     geoCoverage: location,
     downloadData:
       data['@type'] === 'DavizVisualization'

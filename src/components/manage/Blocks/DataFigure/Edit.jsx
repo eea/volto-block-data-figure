@@ -176,7 +176,9 @@ class Edit extends Component {
         <Toast
           error
           title={this.props.intl.formatMessage(messages.invalidImage)}
-          content={nextProps.subrequests[this.state.url]?.error}
+          content={
+            nextProps.subrequests[this.state.url]?.error?.response?.statusText
+          }
         />,
       );
       this.setState({
@@ -195,13 +197,13 @@ class Edit extends Component {
           error
           title={this.props.intl.formatMessage(messages.invalidImage)}
           content={
-            nextProps.subrequests[this.props.block].error.response.statusText
+            nextProps.subrequests[this.props.block]?.error?.response?.statusText
           }
         />,
       );
       this.setState({
         error:
-          nextProps.subrequests[this.props.block].error.response.statusText,
+          nextProps.subrequests[this.props.block]?.error?.response?.statusText,
         uploading: false,
       });
     }
@@ -446,10 +448,7 @@ class Edit extends Component {
               })),
             }),
         );
-      } else if (
-        this.state.url.includes('.svg') ||
-        this.state.url.includes('.png')
-      ) {
+      } else if (this.state.url.match(/\.(jpeg|jpg|gif|png|svg)$/) != null) {
         this.props.onChangeBlock(this.props.block, {
           ...this.props.data,
           ...this.state.data,

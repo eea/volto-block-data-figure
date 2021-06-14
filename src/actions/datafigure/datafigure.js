@@ -30,7 +30,7 @@ export function getInternalContent(url, request = {}) {
     subrequest: url,
     request: {
       op: 'get',
-      path: url,
+      path: url + '?expand=charts',
       ...request,
     },
   };

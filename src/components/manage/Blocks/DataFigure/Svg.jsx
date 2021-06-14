@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './less/public.less';
-import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
+import { cleanSVG, isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
 import { isInternalURL } from '@plone/volto/helpers';
@@ -22,7 +22,7 @@ const Svg = ({ data, detached }) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (data.url.includes('.svg')) {
+    if (isSVGImage(data.url)) {
       if (!isInternalURL(data.url)) {
         dispatch(
           getProxiedExternalContent(data.url, {

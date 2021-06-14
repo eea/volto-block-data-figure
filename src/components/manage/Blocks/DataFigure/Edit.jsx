@@ -31,7 +31,9 @@ import {
   validateHostname,
   isInternalContentURL,
   flattenToContentURL,
+  isChartImage,
   isSVGImage,
+  isPNGImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
@@ -336,10 +338,13 @@ class Edit extends Component {
       const result = isInternalContentURL(arr.items[0].url)
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
-      const pngUrl = result.items.filter((item) =>
-        item['@id'].includes('.png'),
-      );
+      const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
       url = pngUrl;
+    } else if (arr['@type'] === 'DavizVisualization') {
+      const svgUrl = arr['@components']?.['charts']?.['items'] || [];
+      url = svgUrl.map((item) => {
+        return { url: item['fallback-image'], title: item['title'] };
+      });
     } else {
       url = extractSvg(arr);
     }
@@ -579,31 +584,15 @@ class Edit extends Component {
             Figure {this.state.position}. {data.title}
           </Header>
         )}
-        {data.url && data.url.includes('.svg') ? (
+        {data.url && isSVGImage(data.url) ? (
           <Svg data={data} detached={detached} />
         ) : data.url ? (
           <img
-            className={cx({
-              'full-width': data.align === 'full',
-              large: data.size === 'l',
-              medium: data.size === 'm',
-              small: data.size === 's',
-            })}
             src={
               isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
                   (() => {
-                    if (data.size === 'l')
-                      return `${flattenToContentURL(data.url)}/@@images/image`;
-                    if (data.size === 'm')
-                      return `${flattenToContentURL(
-                        data.url,
-                      )}/@@images/image/preview`;
-                    if (data.size === 's')
-                      return `${flattenToContentURL(
-                        data.url,
-                      )}/@@images/image/mini`;
-                    return isSVGImage(data.url)
+                    return isChartImage(data.url)
                       ? `${flattenToContentURL(data.url)}`
                       : `${flattenToContentURL(data.url)}/@@images/image`;
                   })()

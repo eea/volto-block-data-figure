@@ -5,6 +5,7 @@ export {
   extractMetadata,
   validateHostname,
   isSVGImage,
+  isPNGImage,
   isTableImage,
   isChartImage,
   isInternalContentURL,

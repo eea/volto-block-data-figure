@@ -32,6 +32,8 @@ import {
   isInternalContentURL,
   flattenToContentURL,
   isChartImage,
+  isSVGImage,
+  isPNGImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
@@ -336,9 +338,7 @@ class Edit extends Component {
       const result = isInternalContentURL(arr.items[0].url)
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
-      const pngUrl = result.items.filter((item) =>
-        item['@id'].endsWith('dpi.png'),
-      );
+      const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
       url = pngUrl;
     } else if (arr['@type'] === 'DavizVisualization') {
       const svgUrl = arr['@components']?.['charts']?.['items'] || [];
@@ -584,7 +584,7 @@ class Edit extends Component {
             Figure {this.state.position}. {data.title}
           </Header>
         )}
-        {data.url && data.url.endsWith('.svg') ? (
+        {data.url && isSVGImage(data.url) ? (
           <Svg data={data} detached={detached} />
         ) : data.url ? (
           <img

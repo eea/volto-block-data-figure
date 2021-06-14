@@ -11,7 +11,7 @@ import './less/public.less';
 import { cleanSVG } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import { isInternalURL } from '@plone/volto/helpers';
+import { isInternalURL, isSVGImage } from '@plone/volto/helpers';
 /**
  * Svg block class.
  * @class Svg
@@ -22,7 +22,7 @@ const Svg = ({ data, detached }) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (data.url.endsWith('.svg')) {
+    if (isSVGImage(data.url)) {
       if (!isInternalURL(data.url)) {
         dispatch(
           getProxiedExternalContent(data.url, {

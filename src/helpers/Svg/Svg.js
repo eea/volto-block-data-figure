@@ -29,11 +29,14 @@ export const cleanSVG = (data) => {
 };
 
 export const extractSvg = (data = {}) => {
-  return data?.items?.filter((item) => item['@id'].endsWith('.svg'));
+  return data?.items?.filter((item) => isSVGImage(item['@id']));
 };
 
-export const isSVGImage = (url) => url.endsWith('.svg');
-export const isTableImage = (url) => url.includes('.table');
+export const cleanUrl = (url) => url?.split('#')[0].split('?')[0];
+export const isSVGImage = (url) => cleanUrl(url).endsWith('.svg');
+export const isPNGImage = (url) => cleanUrl(url).endsWith('dpi.png');
+export const isTableImage = (url) =>
+  cleanUrl(url).endsWith('table.preview.png');
 export const isChartImage = (url) => isSVGImage(url) || isTableImage(url);
 
 export const extractTemporal = (data = {}) => {

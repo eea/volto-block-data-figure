@@ -22,7 +22,7 @@ const Svg = ({ data, detached }) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (data.url.includes('.svg')) {
+    if (data.url.endsWith('.svg')) {
       if (!isInternalURL(data.url)) {
         dispatch(
           getProxiedExternalContent(data.url, {

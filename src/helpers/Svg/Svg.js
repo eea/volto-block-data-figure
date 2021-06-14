@@ -29,10 +29,10 @@ export const cleanSVG = (data) => {
 };
 
 export const extractSvg = (data = {}) => {
-  return data?.items?.filter((item) => item['@id'].includes('.svg'));
+  return data?.items?.filter((item) => item['@id'].endsWith('.svg'));
 };
 
-export const isSVGImage = (url) => url.includes('.svg');
+export const isSVGImage = (url) => url.endsWith('.svg');
 export const isTableImage = (url) => url.includes('.table');
 export const isChartImage = (url) => isSVGImage(url) || isTableImage(url);
 

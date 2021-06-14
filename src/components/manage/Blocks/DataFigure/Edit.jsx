@@ -337,7 +337,7 @@ class Edit extends Component {
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) =>
-        item['@id'].includes('dpi.png'),
+        item['@id'].endsWith('dpi.png'),
       );
       url = pngUrl;
     } else if (arr['@type'] === 'DavizVisualization') {
@@ -584,7 +584,7 @@ class Edit extends Component {
             Figure {this.state.position}. {data.title}
           </Header>
         )}
-        {data.url && data.url.includes('.svg') ? (
+        {data.url && data.url.endsWith('.svg') ? (
           <Svg data={data} detached={detached} />
         ) : data.url ? (
           <img

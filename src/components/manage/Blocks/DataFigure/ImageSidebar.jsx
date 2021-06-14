@@ -9,7 +9,11 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
+import {
+  isChartImage,
+  isInternalContentURL,
+  flattenToContentURL,
+} from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
@@ -121,10 +125,10 @@ const ImageSidebar = ({
                 {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, ind) => (
                     <div key={ind}>
-                      <p>Image {ind + 1}</p>
+                      <p>{it.title || `Image {ind + 1}`}</p>
                       <img
                         src={
-                          isSVGImage(it.url)
+                          isChartImage(it.url)
                             ? it.url
                             : `${it.url}/@@images/image`
                         }
@@ -145,7 +149,18 @@ const ImageSidebar = ({
                   <div>
                     <p>Image</p>
                     <img
-                      src={data.url}
+                      src={
+                        isInternalContentURL(data.url)
+                          ? // Backwards compat in the case that the block is storing the full server URL
+                            (() => {
+                              return isChartImage(data.url)
+                                ? `${flattenToContentURL(data.url)}`
+                                : `${flattenToContentURL(
+                                    data.url,
+                                  )}/@@images/image`;
+                            })()
+                          : data.url
+                      }
                       alt={data.alt}
                       style={{ width: '50%', cursor: 'pointer' }}
                     />

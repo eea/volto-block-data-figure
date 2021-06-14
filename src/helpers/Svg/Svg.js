@@ -33,6 +33,9 @@ export const extractSvg = (data = {}) => {
 };
 
 export const isSVGImage = (url) => url.includes('.svg');
+export const isTableImage = (url) => url.includes('.table');
+export const isChartImage = (url) => isSVGImage(url) || isTableImage(url);
+
 export const extractTemporal = (data = {}) => {
   return data.temporalCoverage;
 };

@@ -16,6 +16,7 @@ import {
 } from 'semantic-ui-react';
 import {
   isSVGImage,
+  isTableImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
@@ -117,7 +118,11 @@ class View extends React.Component {
                             : '0',
                         marginRight: data.inLeftColumn ? '0!important' : '1rem',
                       }}
-                      src={`${data.url}/@@images/image`}
+                      src={
+                        isTableImage(data.url)
+                          ? data.url
+                          : `${data.url}/@@images/image`
+                      }
                       alt={data.title || ''}
                     ></img>
                   )}
@@ -161,7 +166,11 @@ class View extends React.Component {
                     className={cx({ 'full-width': data.align === 'full' })}
                     zoomed={zoomed}
                     style={{ maxHeight: '80vh', maxWidth: '100%' }}
-                    src={`${data.url}/@@images/image`}
+                    src={
+                      isTableImage(data.url)
+                        ? data.url
+                        : `${data.url}/@@images/image`
+                    }
                     onClick={() => this.setState({ zoomed: 'true' })}
                     alt={data.alt || ''}
                   ></img>

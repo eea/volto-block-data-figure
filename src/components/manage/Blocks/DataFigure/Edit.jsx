@@ -31,7 +31,7 @@ import {
   validateHostname,
   isInternalContentURL,
   flattenToContentURL,
-  isSVGImage,
+  isChartImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
@@ -592,7 +592,7 @@ class Edit extends Component {
               isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
                   (() => {
-                    return isSVGImage(data.url)
+                    return isChartImage(data.url)
                       ? `${flattenToContentURL(data.url)}`
                       : `${flattenToContentURL(data.url)}/@@images/image`;
                   })()

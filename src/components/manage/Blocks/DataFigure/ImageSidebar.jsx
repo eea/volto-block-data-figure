@@ -9,7 +9,7 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
-import { isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
+import { isChartImage } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import './less/public.less';
@@ -124,7 +124,7 @@ const ImageSidebar = ({
                       <p>{it.title || `Image {ind + 1}`}</p>
                       <img
                         src={
-                          isSVGImage(it.url)
+                          isChartImage(it.url)
                             ? it.url
                             : `${it.url}/@@images/image`
                         }

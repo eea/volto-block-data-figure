@@ -121,7 +121,7 @@ const ImageSidebar = ({
                 {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, ind) => (
                     <div key={ind}>
-                      <p>Image {ind + 1}</p>
+                      <p>{it.title || `Image {ind + 1}`}</p>
                       <img
                         src={
                           isSVGImage(it.url)

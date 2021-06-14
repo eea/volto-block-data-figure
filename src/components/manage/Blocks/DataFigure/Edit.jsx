@@ -340,6 +340,11 @@ class Edit extends Component {
         item['@id'].includes('dpi.png'),
       );
       url = pngUrl;
+    } else if (arr['@type'] === 'DavizVisualization') {
+      const svgUrl = arr['@components']?.['charts']?.['items'] || [];
+      url = svgUrl.map((item) => {
+        return { url: item['fallback-image'], title: item['title'] };
+      });
     } else {
       url = extractSvg(arr);
     }
@@ -583,26 +588,10 @@ class Edit extends Component {
           <Svg data={data} detached={detached} />
         ) : data.url ? (
           <img
-            className={cx({
-              'full-width': data.align === 'full',
-              large: data.size === 'l',
-              medium: data.size === 'm',
-              small: data.size === 's',
-            })}
             src={
               isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
                   (() => {
-                    if (data.size === 'l')
-                      return `${flattenToContentURL(data.url)}/@@images/image`;
-                    if (data.size === 'm')
-                      return `${flattenToContentURL(
-                        data.url,
-                      )}/@@images/image/preview`;
-                    if (data.size === 's')
-                      return `${flattenToContentURL(
-                        data.url,
-                      )}/@@images/image/mini`;
                     return isSVGImage(data.url)
                       ? `${flattenToContentURL(data.url)}`
                       : `${flattenToContentURL(data.url)}/@@images/image`;

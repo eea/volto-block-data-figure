@@ -29,7 +29,7 @@ export const cleanSVG = (data) => {
 };
 
 export const extractSvg = (data = {}) => {
-  return data?.items;
+  return data?.items?.filter((item) => item['@id'].includes('.svg'));
 };
 
 export const isSVGImage = (url) => url.includes('.svg');

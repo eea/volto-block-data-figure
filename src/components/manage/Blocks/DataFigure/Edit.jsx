@@ -337,7 +337,7 @@ class Edit extends Component {
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) =>
-        item['@id'].includes('.png'),
+        item['@id'].includes('dpi.png'),
       );
       url = pngUrl;
     } else {

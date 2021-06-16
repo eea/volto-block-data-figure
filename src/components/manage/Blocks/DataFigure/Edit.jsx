@@ -130,6 +130,7 @@ class Edit extends Component {
       title: null,
       svgs: null,
       table: null,
+      tabledata: null,
       metadata: {},
       geolocation: null,
       temporal: null,
@@ -297,39 +298,7 @@ class Edit extends Component {
   };
 
   extractTable = async (data) => {
-    let arr = [];
-    const tableUrl = `${data['@id']}/download.table`;
-    const url = flattenToContentURL(tableUrl);
-    if (isInternalContentURL(url)) {
-      try {
-        await this.props.getInternalContent(url, {
-          headers: { Accept: 'text/html' },
-        });
-      } catch (e) {
-        toast.error(
-          <Toast
-            error
-            title={this.props.intl.formatMessage(messages.thereWereSomeErrors)}
-            content={this.props.intl.formatMessage({
-              id: e.message,
-              defaultMessage: e.message,
-            })}
-          />,
-        );
-      }
-    } else {
-      await this.props.getProxiedExternalContent(url, {
-        headers: { Accept: 'text/html' },
-      });
-    }
-
-    if (this.props.subrequests[url]?.error) {
-      return arr;
-    }
-    for (const key in this.props.subrequests[url]?.data) {
-      arr.push(this.props.subrequests[url].data[key]);
-    }
-    return arr;
+    return data?.['@components']?.['table'] || {};
   };
 
   extractAssets = async (arr) => {
@@ -392,7 +361,7 @@ class Edit extends Component {
     const isValidUrl =
       isInternalContentURL(this.state.url) || validateHostname(this.state.url);
     if (isValidUrl) {
-      let table,
+      let tabledata,
         figureUrl = this.state.url;
       const arr = isInternalContentURL(this.state.url)
         ? await this.internalURLContents(this.state.url)
@@ -405,11 +374,7 @@ class Edit extends Component {
         metadata = {},
       ] = await this.extractAssets(arr);
       if (arr['@type'] === 'DavizVisualization') {
-        table = await this.extractTable(arr);
-        table = table?.join('') || '';
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(table, 'text/html');
-        table = xml.getElementsByTagName('table')?.[0]?.outerHTML || '';
+        tabledata = await this.extractTable(arr);
       }
       if (this.state.error) {
         this.setState({ uploading: false }, () =>
@@ -444,7 +409,7 @@ class Edit extends Component {
               figureType,
               title,
               svgs: chartUrl,
-              table: table || '',
+              tabledata: tabledata,
               metadata,
               geolocation: this.getGeoNameWithIds(metadata),
               temporal: temporal?.map((item) => ({

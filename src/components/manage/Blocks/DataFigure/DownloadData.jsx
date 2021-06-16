@@ -56,7 +56,11 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
                   title = item.split('.').pop().toUpperCase();
                   url = item;
                 }
-                return <List.Item href={url}>{title.toUpperCase()}</List.Item>;
+                return (
+                  <List.Item key={url} href={url}>
+                    {title.toUpperCase()}
+                  </List.Item>
+                );
               })}
             </List>
           </Segment>

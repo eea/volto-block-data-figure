@@ -303,11 +303,13 @@ class Edit extends Component {
 
   extractAssets = async (arr) => {
     let url;
+    const metadata = extractMetadata(arr);
     if (arr['@type'] === 'EEAFigure') {
       const result = isInternalContentURL(arr.items[0].url)
         ? await this.internalURLContents(arr.items[0].url)
         : await this.externalURLContents(arr.items[0].url);
       const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
+      metadata.downloadData = result.items.map((item) => item.url);
       url = pngUrl;
     } else if (arr['@type'] === 'DavizVisualization') {
       const svgUrl = arr['@components']?.['charts']?.['items'] || [];
@@ -317,7 +319,6 @@ class Edit extends Component {
     } else {
       url = extractSvg(arr);
     }
-    const metadata = extractMetadata(arr);
     const temporal = extractTemporal(arr);
     const title = arr.title;
     const figureType = arr['@type'];

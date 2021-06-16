@@ -44,7 +44,11 @@ export const extractTemporal = (data = {}) => {
 };
 
 export const extractMetadata = (data = {}) => {
-  const { provenances, location } = data;
+  const { location } = data;
+  const provenances =
+    data?.['@components']?.['provenances']?.['items'] ||
+    data?.['provenances'] ||
+    [];
   return {
     dataSources: {
       provenances,

@@ -30,7 +30,7 @@ import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
-import Table from './Table';
+import DataTable from './Table';
 import './less/public.less';
 
 /**
@@ -93,7 +93,7 @@ class View extends React.Component {
     );
 
     return data.url ? (
-      <div style={{ paddingTop: '25px' }}>
+      <div className="data-figure-block">
         {data.title && (
           <Header>
             Figure {position}. {data.title}
@@ -128,7 +128,7 @@ class View extends React.Component {
                   )}
                 </div>
                 <div className="card__face card__face--back">
-                  <Table data={data} />
+                  <DataTable data={data} />
                 </div>
               </div>
             </div>
@@ -153,11 +153,7 @@ class View extends React.Component {
             >
               <Modal.Content image className="data-figure-image">
                 {visible ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: data.table,
-                    }}
-                  />
+                  <DataTable data={data} />
                 ) : isSVGImage(data.url) ? (
                   <Svg data={data} detached={detached} />
                 ) : (
@@ -188,7 +184,7 @@ class View extends React.Component {
               trigger={
                 <Button
                   icon
-                  disabled={!data.table}
+                  disabled={!data.tabledata}
                   onClick={this.toggleVisibility}
                   className="data-figure-control"
                 >

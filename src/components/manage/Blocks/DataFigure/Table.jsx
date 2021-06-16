@@ -21,7 +21,7 @@ const DataTable = ({ data }) => {
   const rows = data?.tabledata?.items || [];
   return headers ? (
     <>
-      <Table compact>
+      <Table compact striped>
         <Table.Header>
           <Table.Row>
             {headers.map((item) => (

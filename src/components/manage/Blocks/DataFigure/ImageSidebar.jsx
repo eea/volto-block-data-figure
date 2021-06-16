@@ -123,16 +123,16 @@ const ImageSidebar = ({
             {!isImageData && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {isArray(svgs) && svgs.length > 0 ? (
-                  svgs.map((it, ind) => (
-                    <div key={ind}>
-                      <p>{it.title || `Image {ind + 1}`}</p>
+                  svgs.map((it, idx) => (
+                    <div key={idx}>
+                      <p>{it.title}</p>
                       <img
                         src={
                           isChartImage(it.url)
                             ? it.url
                             : `${it.url}/@@images/image`
                         }
-                        key={ind}
+                        key={idx}
                         alt={it.alt}
                         style={{ width: '50%', cursor: 'pointer' }}
                         aria-hidden="true"

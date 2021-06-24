@@ -17,9 +17,9 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
+import loadable from '@loadable/component';
 import { toast } from 'react-toastify';
 import cx from 'classnames';
-import Dropzone from 'react-dropzone';
 import config from '@plone/volto/registry';
 
 import ImageSidebar from './ImageSidebar';
@@ -49,6 +49,8 @@ import clearSVG from '@plone/volto/icons/clear.svg';
 import navTreeSVG from '@plone/volto/icons/nav.svg';
 import aheadSVG from '@plone/volto/icons/ahead.svg';
 import uploadSVG from '@plone/volto/icons/upload.svg';
+
+const Dropzone = loadable(() => import('react-dropzone'));
 
 const messages = defineMessages({
   ImageBlockInputPlaceholder: {

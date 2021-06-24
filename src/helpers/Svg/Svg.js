@@ -93,10 +93,10 @@ export const flattenToContentURL = (url) => {
   url = url ? flattenToAppURL(url) : url;
   if (url?.startsWith('http')) {
     if (isInternalContentURL(url)) {
-      return url.replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
+      return cleanUrl(url).replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
     }
   }
-  return url;
+  return cleanUrl(url);
 };
 
 export const getParsedValue = (data = []) => {

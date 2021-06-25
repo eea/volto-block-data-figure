@@ -37,7 +37,9 @@ export const isSVGImage = (url) => cleanUrl(url).endsWith('.svg');
 export const isPNGImage = (url) => cleanUrl(url).endsWith('dpi.png');
 export const isTableImage = (url) =>
   cleanUrl(url).endsWith('table.preview.png');
-export const isChartImage = (url) => isSVGImage(url) || isTableImage(url);
+export const isChartSVGImage = (url) =>
+  cleanUrl(url).endsWith('embed-chart.svg');
+export const isChartImage = (url) => isChartSVGImage(url) || isTableImage(url);
 
 export const extractTemporal = (data = {}) => {
   return data.temporalCoverage;

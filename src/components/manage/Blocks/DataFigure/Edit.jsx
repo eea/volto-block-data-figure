@@ -252,12 +252,14 @@ class Edit extends Component {
 
     readAsDataURL(file).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
+      const type = fields[1] === 'image/svg+xml' ? 'File' : 'Image';
+      const field = type.toLowerCase();
       this.props.createContent(
         getBaseUrl(this.props.pathname),
         {
-          '@type': 'Image',
+          '@type': type,
           title: file.name,
-          image: {
+          [field]: {
             data: fields[3],
             encoding: fields[2],
             'content-type': fields[1],
@@ -477,12 +479,14 @@ class Edit extends Component {
 
     readAsDataURL(file[0]).then((data) => {
       const fields = data.match(/^data:(.*);(.*),(.*)$/);
+      const type = fields[1] === 'image/svg+xml' ? 'File' : 'Image';
+      const field = type.toLowerCase();
       this.props.createContent(
         getBaseUrl(this.props.pathname),
         {
-          '@type': 'Image',
+          '@type': type,
           title: file[0].name,
-          image: {
+          [field]: {
             data: fields[3],
             encoding: fields[2],
             'content-type': fields[1],

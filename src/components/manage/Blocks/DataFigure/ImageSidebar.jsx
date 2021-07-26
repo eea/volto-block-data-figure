@@ -340,6 +340,7 @@ const ImageSidebar = ({
                 <TemporalWidget
                   value={data}
                   block={block}
+                  id="temporal"
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,

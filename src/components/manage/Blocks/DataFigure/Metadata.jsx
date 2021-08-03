@@ -51,10 +51,10 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             {serializeNodes(value || [])}
           </Segment>
         )}
-        {geolocation && (
+        {geolocation.length ? (
           <Segment secondary>
             <Header as="h3" style={{ color: '#517776' }}>
-              Geographic coverage
+              Geographic coverage:
             </Header>
             <ul>
               <Grid columns={2}>
@@ -74,11 +74,11 @@ const Metadata = ({ visible, data, hideSidebar }) => {
               </Grid>
             </ul>
           </Segment>
-        )}
-        {data.temporal && (
+        ) : null}
+        {data.temporal.length ? (
           <Segment secondary>
             <Header as="h3" style={{ color: '#517776' }}>
-              Temporal coverage
+              Temporal coverage:
             </Header>
             <div className="data-figure-temporal-coverage">
               {data.temporal.map((item, index) => (
@@ -88,7 +88,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
               ))}
             </div>
           </Segment>
-        )}
+        ) : null}
       </Segment.Group>
     </Sidebar>
   );

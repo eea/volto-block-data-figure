@@ -15,9 +15,12 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
-  const { geolocation, metadata = {} } = data;
+  const { metadata = {} } = data;
   const { dataSources = {} } = metadata;
   const { value, plaintext = '' } = dataSources;
+
+  let geolocation = data.geolocation || [];
+  let temporal = data.temporal || [];
 
   return (
     <Sidebar
@@ -76,12 +79,12 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             </ul>
           </Segment>
         ) : null}
-        {data.temporal.length ? (
+        {temporal.length ? (
           <Segment secondary>
             <Header as="h3" className={'data-figure-block-header'}>
               Temporal coverage:
             </Header>
-            <TemporalWidgetView value={data.temporal} />
+            <TemporalWidgetView value={temporal} />
           </Segment>
         ) : null}
       </Segment.Group>

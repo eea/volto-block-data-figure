@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Menu, Sidebar, Grid } from 'semantic-ui-react';
 import { serializeNodes } from 'volto-slate/editor/render';
+import { TemporalWidgetView } from '@eeacms/volto-widget-temporal-coverage/components';
 import './less/public.less';
 
 /**
@@ -14,9 +15,12 @@ import './less/public.less';
  * @extends Component
  */
 const Metadata = ({ visible, data, hideSidebar }) => {
-  const { geolocation, metadata = {} } = data;
+  const { metadata = {} } = data;
   const { dataSources = {} } = metadata;
   const { value, plaintext = '' } = dataSources;
+
+  let geolocation = data.geolocation || [];
+  let temporal = data.temporal || [];
 
   return (
     <Sidebar
@@ -31,7 +35,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
     >
       <Segment.Group raised>
         <Segment>
-          <Header style={{ color: '#517776' }} as="h2">
+          <Header as="h2" className={'data-figure-block-header'}>
             Metadata
           </Header>
         </Segment>
@@ -45,16 +49,16 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Segment>
         ) : (
           <Segment secondary>
-            <Header style={{ color: '#517776' }} as="h3">
+            <Header as="h3" className={'data-figure-block-header'}>
               Data Sources:
             </Header>
             {serializeNodes(value || [])}
           </Segment>
         )}
-        {geolocation && (
+        {geolocation.length ? (
           <Segment secondary>
-            <Header as="h3" style={{ color: '#517776' }}>
-              Geographic coverage
+            <Header as="h3" className={'data-figure-block-header'}>
+              Geographic coverage:
             </Header>
             <ul>
               <Grid columns={2}>
@@ -74,21 +78,15 @@ const Metadata = ({ visible, data, hideSidebar }) => {
               </Grid>
             </ul>
           </Segment>
-        )}
-        {data.temporal && (
+        ) : null}
+        {temporal.length ? (
           <Segment secondary>
-            <Header as="h3" style={{ color: '#517776' }}>
-              Temporal coverage
+            <Header as="h3" className={'data-figure-block-header'}>
+              Temporal coverage:
             </Header>
-            <div className="data-figure-temporal-coverage">
-              {data.temporal.map((item, index) => (
-                <div key={index} style={{ textIndent: '15px' }}>
-                  {item?.label}
-                </div>
-              ))}
-            </div>
+            <TemporalWidgetView value={temporal} />
           </Segment>
-        )}
+        ) : null}
       </Segment.Group>
     </Sidebar>
   );

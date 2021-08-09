@@ -42,7 +42,7 @@ export const isChartSVGImage = (url) =>
 export const isChartImage = (url) => isChartSVGImage(url) || isTableImage(url);
 
 export const extractTemporal = (data = {}) => {
-  return data.temporalCoverage;
+  return data.temporalCoverage || [];
 };
 
 export const extractMetadata = (data = {}) => {

@@ -135,7 +135,7 @@ class Edit extends Component {
       tabledata: null,
       metadata: {},
       geolocation: null,
-      temporal: null,
+      temporal: [],
     },
   };
 

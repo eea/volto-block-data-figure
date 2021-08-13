@@ -602,12 +602,20 @@ class Edit extends Component {
                               });
                             }}
                           >
-                            <Icon name={navTreeSVG} size="24px" />
+                            <Icon
+                              name={navTreeSVG}
+                              size="24px"
+                              title="Browser for existing Data Visualization"
+                            />
                           </Button>
                         </Button.Group>
                         <Button.Group>
                           <label className="ui button basic icon">
-                            <Icon name={uploadSVG} size="24px" />
+                            <Icon
+                              name={uploadSVG}
+                              size="24px"
+                              title="Upload image from your computer"
+                            />
                             <input
                               {...getInputProps({
                                 type: 'file',
@@ -636,7 +644,11 @@ class Edit extends Component {
                                 this.resetSubmitUrl();
                               }}
                             >
-                              <Icon name={clearSVG} size="30px" />
+                              <Icon
+                                name={clearSVG}
+                                size="30px"
+                                title="Cancel"
+                              />
                             </Button>
                           </Button.Group>
                         )}
@@ -650,7 +662,7 @@ class Edit extends Component {
                               this.onSubmitUrl();
                             }}
                           >
-                            <Icon name={aheadSVG} size="30px" />
+                            <Icon name={aheadSVG} size="30px" title="Add" />
                           </Button>
                         </Button.Group>
                       </div>

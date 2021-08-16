@@ -34,6 +34,7 @@ import {
   isChartImage,
   isSVGImage,
   isPNGImage,
+  isTableImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
@@ -49,6 +50,8 @@ import clearSVG from '@plone/volto/icons/clear.svg';
 import navTreeSVG from '@plone/volto/icons/nav.svg';
 import aheadSVG from '@plone/volto/icons/ahead.svg';
 import uploadSVG from '@plone/volto/icons/upload.svg';
+
+import DataTable from './Table';
 
 const Dropzone = loadable(() => import('react-dropzone'));
 
@@ -315,9 +318,14 @@ class Edit extends Component {
       url = pngUrl;
     } else if (arr['@type'] === 'DavizVisualization') {
       const svgUrl = arr['@components']?.['charts']?.['items'] || [];
-      url = svgUrl.map((item) => {
-        return { url: item['fallback-image'], title: item['title'] };
-      });
+      url = svgUrl
+        .map((item) => {
+          const fallback = item['fallback-image'];
+          return !fallback.includes('dashboard')
+            ? { url: fallback, title: item['title'] }
+            : null;
+        })
+        .filter((item) => item);
     } else {
       url = extractSvg(arr);
     }
@@ -554,6 +562,8 @@ class Edit extends Component {
         )}
         {data.url && isSVGImage(data.url) ? (
           <Svg data={data} detached={detached} />
+        ) : data.url && isTableImage(data.url) ? (
+          <DataTable data={data} />
         ) : data.url ? (
           <img
             src={

@@ -92,6 +92,8 @@ class View extends React.Component {
       this.props.id,
     );
 
+    const is_flipped = isTableImage(data?.url || '') || visible;
+
     return data.url ? (
       <div className="data-figure-block">
         {data.title && (
@@ -102,7 +104,7 @@ class View extends React.Component {
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
             <div className="scene scene--card">
-              <div className={`card ${visible ? ' is-flipped' : ''}`}>
+              <div className={`card ${is_flipped ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
                   {isSVGImage(data.url) ? (
                     <Svg data={data} detached={detached} />
@@ -152,7 +154,7 @@ class View extends React.Component {
               }
             >
               <Modal.Content image className="data-figure-image">
-                {visible ? (
+                {is_flipped ? (
                   <DataTable data={data} />
                 ) : isSVGImage(data.url) ? (
                   <Svg data={data} detached={detached} />
@@ -184,11 +186,11 @@ class View extends React.Component {
               trigger={
                 <Button
                   icon
-                  disabled={!data.tabledata}
+                  disabled={!data.tabledata || isTableImage(data?.url || '')}
                   onClick={this.toggleVisibility}
                   className="data-figure-control"
                 >
-                  {visible ? (
+                  {is_flipped ? (
                     <Icon name={imageSVG} size="24px" />
                   ) : (
                     <Icon name={spreadsheetSVG} size="24px" />

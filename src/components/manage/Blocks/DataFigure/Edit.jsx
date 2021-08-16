@@ -315,9 +315,14 @@ class Edit extends Component {
       url = pngUrl;
     } else if (arr['@type'] === 'DavizVisualization') {
       const svgUrl = arr['@components']?.['charts']?.['items'] || [];
-      url = svgUrl.map((item) => {
-        return { url: item['fallback-image'], title: item['title'] };
-      });
+      url = svgUrl
+        .map((item) => {
+          const fallback = item['fallback-image'];
+          return !fallback.includes('dashboard')
+            ? { url: fallback, title: item['title'] }
+            : null;
+        })
+        .filter((item) => item);
     } else {
       url = extractSvg(arr);
     }

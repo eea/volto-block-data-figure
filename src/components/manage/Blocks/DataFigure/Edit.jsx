@@ -87,6 +87,10 @@ const messages = defineMessages({
     defaultMessage:
       'Invalid image. Image name can NOT start with image_. Please rename it first.',
   },
+  duplicateImageError: {
+    id: 'Image already exists.',
+    defaultMessage: 'Image already exists.',
+  },
 });
 
 /**
@@ -200,13 +204,21 @@ class Edit extends Component {
       this.props.subrequests[this.props.block]?.loading &&
       nextProps.subrequests[this.props.block]?.error
     ) {
+      let content =
+        nextProps.subrequests[this.props.block]?.error?.response?.statusText;
+      if (
+        this.isDuplicateImageError(
+          nextProps.subrequests[this.props.block]?.error?.response,
+        )
+      ) {
+        content = this.props.intl.formatMessage(messages.duplicateImageError);
+      }
+
       toast.error(
         <Toast
           error
           title={this.props.intl.formatMessage(messages.invalidImage)}
-          content={
-            nextProps.subrequests[this.props.block]?.error?.response?.statusText
-          }
+          content={content}
         />,
       );
       this.setState({
@@ -216,6 +228,22 @@ class Edit extends Component {
       });
     }
   }
+
+  isDuplicateImageError = (errorResponse) => {
+    if (errorResponse === undefined) {
+      return false;
+    }
+
+    try {
+      const jsonResponse = JSON.parse(errorResponse.text);
+      return (
+        jsonResponse?.message &&
+        jsonResponse?.message.includes('it is already in use')
+      );
+    } catch {
+      return false;
+    }
+  };
 
   onValidateImage = (image) => {
     // Empty image

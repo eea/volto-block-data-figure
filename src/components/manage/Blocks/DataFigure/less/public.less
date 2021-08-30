@@ -114,6 +114,12 @@
   }
 }
 
+// #136771 hide chart titles from svg derived from google charts svg
+// which  follow this exact pattern
+.data-figure svg > rect + g > text[text-anchor="start"] {
+    display: none;
+}
+
 .data-figure-block {
   padding-top: 25px;
 }

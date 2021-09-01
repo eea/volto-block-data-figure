@@ -81,6 +81,10 @@ const messages = defineMessages({
     id: 'Invalid Image',
     defaultMessage: 'Invalid Image',
   },
+  invalidResolution: {
+    id: 'This image is below minimum resolution acceptable.',
+    defaultMessage: 'This image is below minimum resolution acceptable.',
+  },
   imageNameError: {
     id:
       'Invalid image. Image name can NOT start with image_. Please rename it first.',
@@ -245,6 +249,61 @@ class Edit extends Component {
     }
   };
 
+  getImageAndValidate = async (file, data) => {
+    const fields = data.match(/^data:(.*);(.*),(.*)$/);
+    let localImageUrl = window.URL.createObjectURL(file);
+    await new Promise((resolve, reject) => {
+      let imageObject = new Image();
+      imageObject.onload = () => {
+        file.width = imageObject.naturalWidth;
+        file.height = imageObject.naturalHeight;
+        window.URL.revokeObjectURL(localImageUrl);
+        resolve();
+      };
+      imageObject.onerror = reject;
+      imageObject.src = localImageUrl;
+    });
+    if (this.isValidImage(file)) {
+      this.props.createContent(
+        getBaseUrl(this.props.pathname),
+        {
+          '@type': 'Image',
+          title: file.name,
+          image: {
+            data: fields[3],
+            encoding: fields[2],
+            'content-type': fields[1],
+            filename: file.name,
+          },
+        },
+        this.props.block,
+      );
+    } else {
+      this.setState(
+        {
+          uploading: false,
+        },
+        () =>
+          toast.error(
+            <Toast
+              error
+              title={this.props.intl.formatMessage(messages.invalidResolution)}
+              content={this.props.intl.formatMessage(
+                {
+                  id: 'Minimum resolution should be {resolution}!',
+                  defaultMessage: 'Minimum resolution should be {resolution}!',
+                },
+                {
+                  resolution:
+                    config.blocks.blocksConfig['dataFigure'].allowedResolution,
+                },
+              )}
+            />,
+          ),
+      );
+    }
+  };
+
   onValidateImage = (image) => {
     // Empty image
     if (!image?.name) {
@@ -271,7 +330,7 @@ class Edit extends Component {
    */
   onUploadImage = (e) => {
     e.stopPropagation();
-    const file = e.target.files[0];
+    let file = e.target.files[0];
     const error = this.onValidateImage(file);
     if (error) {
       return;
@@ -282,21 +341,7 @@ class Edit extends Component {
     });
 
     readAsDataURL(file).then((data) => {
-      const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      this.props.createContent(
-        getBaseUrl(this.props.pathname),
-        {
-          '@type': 'Image',
-          title: file.name,
-          image: {
-            data: fields[3],
-            encoding: fields[2],
-            'content-type': fields[1],
-            filename: file.name,
-          },
-        },
-        this.props.block,
-      );
+      this.getImageAndValidate(file, data);
     });
   };
 
@@ -321,6 +366,24 @@ class Edit extends Component {
    */
   onChangeUrl = (url) => {
     this.setState({ url: url, error: null, uploading: false });
+  };
+
+  /**
+   * @method isValidImage
+   * @param {Object} file object
+   * @memberof Edit
+   * @returns {Boolean}
+   */
+  isValidImage = (file) => {
+    const resolution =
+      config.blocks.blocksConfig['dataFigure'].allowedResolution;
+    if (
+      file.width < resolution.split('x')[0] ||
+      file.height < resolution.split('x')[1]
+    ) {
+      return false;
+    }
+    return true;
   };
 
   onClearUrl = () => {
@@ -512,21 +575,7 @@ class Edit extends Component {
     });
 
     readAsDataURL(file[0]).then((data) => {
-      const fields = data.match(/^data:(.*);(.*),(.*)$/);
-      this.props.createContent(
-        getBaseUrl(this.props.pathname),
-        {
-          '@type': 'Image',
-          title: file[0].name,
-          image: {
-            data: fields[3],
-            encoding: fields[2],
-            'content-type': fields[1],
-            filename: file[0].name,
-          },
-        },
-        this.props.block,
-      );
+      this.getImageAndValidate(file[0], data);
     });
   };
 

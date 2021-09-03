@@ -73,17 +73,17 @@ const messages = defineMessages({
     defaultMessage: 'There were some errors.',
   },
   disabledMessage: {
-    id: 'You need to save the document before beeing able to edit this area.',
+    id: 'You need to save the document before being able to edit this area.',
     defaultMessage:
-      'You need to save the document before beeing able to edit this area.',
+      'You need to save the document before being able to edit this area.',
   },
   invalidImage: {
     id: 'Invalid Image',
     defaultMessage: 'Invalid Image',
   },
   invalidResolution: {
-    id: 'This image is below minimum resolution acceptable.',
-    defaultMessage: 'This image is below minimum resolution acceptable.',
+    id: 'This image is below the minimum acceptable resolution.',
+    defaultMessage: 'This image is below the minimum acceptable resolution.',
   },
   imageNameError: {
     id:
@@ -295,7 +295,7 @@ class Edit extends Component {
                 },
                 {
                   resolution:
-                    config.blocks.blocksConfig['dataFigure'].allowedResolution,
+                    config.blocks.blocksConfig['dataFigure'].minResolution,
                 },
               )}
             />,
@@ -375,8 +375,7 @@ class Edit extends Component {
    * @returns {Boolean}
    */
   isValidImage = (file) => {
-    const resolution =
-      config.blocks.blocksConfig['dataFigure'].allowedResolution;
+    const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
     if (
       file.width < resolution.split('x')[0] ||
       file.height < resolution.split('x')[1]

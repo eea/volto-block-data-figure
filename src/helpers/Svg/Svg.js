@@ -1,5 +1,5 @@
+import config from '@plone/volto/registry';
 import { deserialize } from 'volto-slate/editor/deserialize';
-import { settings } from '@plone/volto/config';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
 export const cleanSVG = (data) => {
   // base64 decode, if needed
@@ -77,7 +77,7 @@ export const validateHostname = (url) => {
     .replace('http://', '')
     .replace('https://', '')
     .split(/[/?#]/)[0];
-  return settings.allowed_cors_destinations.includes(domain);
+  return config.settings.allowed_cors_destinations.includes(domain);
 };
 
 export const isInternalContentURL = (url) => {
@@ -88,7 +88,7 @@ export const isInternalContentURL = (url) => {
     .replace('http://', '')
     .replace('https://', '')
     .split(/[/?#]/)[0];
-  return settings.apiPath.includes(domain);
+  return config.settings.apiPath.includes(domain);
 };
 
 export const flattenToContentURL = (url) => {
@@ -103,7 +103,7 @@ export const flattenToContentURL = (url) => {
 
 export const getParsedValue = (data = []) => {
   const editor = {};
-  const { slate } = settings;
+  const { slate } = config.settings;
   const { isInline = () => {}, isVoid = () => {} } = editor;
   editor.htmlTagsToSlate = slate.htmlTagsToSlate;
   editor.isInline = (element) => {

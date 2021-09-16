@@ -18,7 +18,7 @@ const applyConfig = (config) => {
     schema: DataFigureBlockSchema,
     restricted: false,
     mostUsed: false,
-    blockHasOwnFocusManagement: false,
+    blockHasOwnFocusManagement: true,
     sidebarTab: 1,
     security: {
       addPermission: [],

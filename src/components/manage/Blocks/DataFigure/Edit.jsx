@@ -82,8 +82,8 @@ const messages = defineMessages({
     defaultMessage: 'Invalid Image',
   },
   invalidResolution: {
-    id: 'This image is below the minimum acceptable resolution.',
-    defaultMessage: 'This image is below the minimum acceptable resolution.',
+    id: 'Minimum image resolution should be {resolution}.',
+    defaultMessage: 'Minimum image resolution should be {resolution}.',
   },
   imageNameError: {
     id:
@@ -131,6 +131,7 @@ class Edit extends Component {
 
   state = {
     uploading: false,
+    dragging: false,
     url: '',
     position: 0,
     data: {
@@ -164,6 +165,7 @@ class Edit extends Component {
     ) {
       this.setState({
         uploading: false,
+        dragging: false,
       });
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
@@ -200,6 +202,7 @@ class Edit extends Component {
       this.setState({
         error: nextProps.subrequests[this.state.url].error,
         uploading: false,
+        dragging: false,
       });
     }
 
@@ -229,6 +232,7 @@ class Edit extends Component {
         error:
           nextProps.subrequests[this.props.block]?.error?.response?.statusText,
         uploading: false,
+        dragging: false,
       });
     }
   }
@@ -252,17 +256,24 @@ class Edit extends Component {
   getImageAndValidate = async (file, data) => {
     const fields = data.match(/^data:(.*);(.*),(.*)$/);
     let localImageUrl = window.URL.createObjectURL(file);
-    await new Promise((resolve, reject) => {
-      let imageObject = new Image();
-      imageObject.onload = () => {
-        file.width = imageObject.naturalWidth;
-        file.height = imageObject.naturalHeight;
-        window.URL.revokeObjectURL(localImageUrl);
-        resolve();
-      };
-      imageObject.onerror = reject;
-      imageObject.src = localImageUrl;
-    });
+    try {
+      await new Promise((resolve, reject) => {
+        let imageObject = new Image();
+        imageObject.onload = () => {
+          file.width = imageObject.naturalWidth;
+          file.height = imageObject.naturalHeight;
+          window.URL.revokeObjectURL(localImageUrl);
+          resolve();
+        };
+        imageObject.onerror = reject;
+        imageObject.src = localImageUrl;
+      });
+    } catch (e) {
+      file.width = 0;
+      file.height = 0;
+      window.URL.revokeObjectURL(localImageUrl);
+    }
+
     if (this.isValidImage(file)) {
       this.props.createContent(
         getBaseUrl(this.props.pathname),
@@ -282,17 +293,15 @@ class Edit extends Component {
       this.setState(
         {
           uploading: false,
+          dragging: false,
         },
         () =>
           toast.error(
             <Toast
               error
-              title={this.props.intl.formatMessage(messages.invalidResolution)}
+              title={this.props.intl.formatMessage(messages.invalidImage)}
               content={this.props.intl.formatMessage(
-                {
-                  id: 'Minimum resolution should be {resolution}!',
-                  defaultMessage: 'Minimum resolution should be {resolution}!',
-                },
+                messages.invalidResolution,
                 {
                   resolution:
                     config.blocks.blocksConfig['dataFigure'].minResolution,
@@ -302,6 +311,13 @@ class Edit extends Component {
           ),
       );
     }
+  };
+
+  onDragEnter = () => {
+    this.setState({ dragging: true });
+  };
+  onDragLeave = () => {
+    this.setState({ dragging: false });
   };
 
   onValidateImage = (image) => {
@@ -365,7 +381,7 @@ class Edit extends Component {
    * @returns {undefined}
    */
   onChangeUrl = (url) => {
-    this.setState({ url: url, error: null, uploading: false });
+    this.setState({ url: url, error: null, uploading: false, dragging: false });
   };
 
   /**
@@ -400,12 +416,18 @@ class Edit extends Component {
     let url;
     const metadata = extractMetadata(arr);
     if (arr['@type'] === 'EEAFigure') {
-      const result = isInternalContentURL(arr.items[0].url)
-        ? await this.internalURLContents(arr.items[0].url)
-        : await this.externalURLContents(arr.items[0].url);
-      const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
-      metadata.downloadData = result.items.map((item) => item.url);
-      url = pngUrl;
+      for (const idx in arr.items) {
+        const figureFile = arr.items[idx];
+        const result = isInternalContentURL(figureFile.url)
+          ? await this.internalURLContents(figureFile.url)
+          : await this.externalURLContents(figureFile.url);
+        const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
+        if (pngUrl.length) {
+          metadata.downloadData = result.items.map((item) => item.url);
+          url = pngUrl;
+          break;
+        }
+      }
     } else if (arr['@type'] === 'DavizVisualization') {
       const svgUrl = arr['@components']?.['charts']?.['items'] || [];
       url = svgUrl
@@ -459,8 +481,9 @@ class Edit extends Component {
       uploading: true,
     });
 
-    const isValidUrl =
-      isInternalContentURL(this.state.url) || validateHostname(this.state.url);
+    const isValidUrl = this.state.url
+      ? isInternalContentURL(this.state.url) || validateHostname(this.state.url)
+      : false;
     if (isValidUrl) {
       let tabledata,
         figureUrl = this.state.url;
@@ -478,7 +501,7 @@ class Edit extends Component {
         tabledata = await this.extractTable(arr);
       }
       if (this.state.error) {
-        this.setState({ uploading: false }, () =>
+        this.setState({ uploading: false, dragging: false }, () =>
           toast.error(
             <Toast
               error
@@ -497,6 +520,7 @@ class Edit extends Component {
           {
             url: chartUrl[0].url || chartUrl,
             uploading: false,
+            dragging: false,
           },
           () =>
             this.props.onChangeBlock(this.props.block, {
@@ -526,7 +550,7 @@ class Edit extends Component {
           url: this.state.url,
         });
       } else {
-        this.setState({ uploading: false }, () =>
+        this.setState({ uploading: false, dragging: false }, () =>
           toast.error(
             <Toast
               error
@@ -537,7 +561,7 @@ class Edit extends Component {
         );
       }
     } else {
-      this.setState({ uploading: false }, () =>
+      this.setState({ uploading: false, dragging: false }, () =>
         toast.error(
           <Toast
             error
@@ -553,6 +577,7 @@ class Edit extends Component {
     this.setState({
       url: '',
       uploading: false,
+      dragging: false,
     });
     this.onClearUrl();
   };
@@ -594,7 +619,7 @@ class Edit extends Component {
     } else if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
-      // TODO: Do something on ESC key
+      this.resetSubmitUrl();
     }
   };
 
@@ -656,10 +681,17 @@ class Edit extends Component {
           />
         ) : (
           <div>
-            <Dropzone noClick onDrop={this.onDrop} className="dropzone">
+            <Dropzone
+              noClick
+              onDrop={this.onDrop}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              className="dropzone"
+            >
               {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps()}>
                   <Message>
+                    {this.state.dragging && <Dimmer active></Dimmer>}
                     {this.state.uploading && (
                       <Dimmer active>
                         <Loader indeterminate>Uploading image</Loader>
@@ -716,9 +748,6 @@ class Edit extends Component {
                           onChange={this.onChangeTargetUrl}
                           placeholder={placeholder}
                           value={this.state.url}
-                          // Prevents propagation to the Dropzone and the opening
-                          // of the upload browser dialog
-                          onClick={(e) => e.stopPropagation()}
                         />
                         {this.state.url && (
                           <Button.Group>

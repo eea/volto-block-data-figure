@@ -20,7 +20,6 @@ const Metadata = ({ visible, data, hideSidebar }) => {
   const { value, plaintext = '' } = dataSources;
 
   let geolocation = data.geolocation || [];
-  let temporal = data.temporal || [];
 
   return (
     <Sidebar
@@ -79,12 +78,12 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             </ul>
           </Segment>
         ) : null}
-        {temporal.length ? (
+        {data?.temporal?.length ? (
           <Segment secondary>
             <Header as="h3" className={'data-figure-block-header'}>
               Temporal coverage:
             </Header>
-            <TemporalWidgetView value={temporal} />
+            <TemporalWidgetView value={data} />
           </Segment>
         ) : null}
       </Segment.Group>

@@ -52,6 +52,10 @@ const messages = defineMessages({
     id: 'Data sources ',
     defaultMessage: 'Data sources',
   },
+  institutionalMandate: {
+    id: 'Institutional mandate',
+    defaultMessage: 'Institutional mandate',
+  },
   openLinkInNewTab: {
     id: 'Open in a new tab',
     defaultMessage: 'Open in a new tab',
@@ -385,6 +389,45 @@ const ImageSidebar = ({
                   properties={data}
                   value={metadata?.dataSources?.value || getDefaultValue()}
                   placeholder="Enter Data Sources"
+                />
+              </div>
+            </Accordion.Content>
+            <Accordion.Title
+              active={activeAccIndex === 4}
+              index={4}
+              onClick={handleAccClick}
+            >
+              Institutional mandate
+              {activeAccIndex === 4 ? (
+                <Icon name={upSVG} size="20px" />
+              ) : (
+                <Icon name={downSVG} size="20px" />
+              )}
+            </Accordion.Title>
+            <Accordion.Content active={activeAccIndex === 4}>
+              <div>
+                <SlateRichTextWidget
+                  id="institutional_mandate"
+                  title={intl.formatMessage(messages.institutionalMandate)}
+                  onChange={(name, value) => {
+                    onChangeBlock(block, {
+                      ...data,
+                      metadata: {
+                        ...data.metadata,
+                        institutionalMandate: {
+                          ...(data?.metadata?.institutionalMandate || {}),
+                          value,
+                        },
+                      },
+                    });
+                  }}
+                  className="institutional-mandate-toolbar"
+                  block={block}
+                  properties={data}
+                  value={
+                    metadata?.institutionalMandate?.value || getDefaultValue()
+                  }
+                  placeholder="Enter Institutional Mandate"
                 />
               </div>
             </Accordion.Content>

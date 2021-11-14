@@ -80,7 +80,6 @@ const Metadata = ({ visible, data, hideSidebar }) => {
         ) : null}
         {data?.temporal?.length ? (
           <Segment>
-            {console.log('data', data)}
             <Header as="h3" className={'data-figure-block-header'}>
               Temporal coverage:
             </Header>

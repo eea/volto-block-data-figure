@@ -39,7 +39,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Header>
         </Segment>
         {!value ? (
-          <Segment secondary>
+          <Segment>
             <div
               dangerouslySetInnerHTML={{
                 __html: plaintext,
@@ -47,7 +47,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             />
           </Segment>
         ) : (
-          <Segment secondary>
+          <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Data Sources:
             </Header>
@@ -55,7 +55,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Segment>
         )}
         {geolocation.length ? (
-          <Segment secondary>
+          <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Geographic coverage:
             </Header>
@@ -79,7 +79,7 @@ const Metadata = ({ visible, data, hideSidebar }) => {
           </Segment>
         ) : null}
         {data?.temporal?.length ? (
-          <Segment secondary>
+          <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Temporal coverage:
             </Header>

@@ -1,7 +1,17 @@
 # volto-block-data-figure
 [![Releases](https://img.shields.io/github/v/release/eea/volto-block-data-figure)](https://github.com/eea/volto-block-data-figure/releases)
+
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-block-data-figure%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-block-data-figure/job/master/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-master)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-master)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-master)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-master)
+
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-block-data-figure%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-block-data-figure/job/develop/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure-develop)
 
 [Volto](https://github.com/plone/volto) add-on: Data Figure
 

@@ -62,17 +62,11 @@ const Metadata = ({ visible, data, hideSidebar }) => {
             <ul>
               <Grid columns={2}>
                 <Grid.Row>
-                  {geolocation?.map((item, index) =>
-                    index < geolocation.length / 2 ? (
-                      <Grid.Column key={index}>
-                        <li key={index}>{item.label}</li>
-                      </Grid.Column>
-                    ) : (
-                      <Grid.Column key={index}>
-                        <li key={index}>{item.label}</li>
-                      </Grid.Column>
-                    ),
-                  )}
+                  {geolocation?.map((item, index) => (
+                    <Grid.Column key={index}>
+                      <li key={index}>{item.label}</li>
+                    </Grid.Column>
+                  ))}
                 </Grid.Row>
               </Grid>
             </ul>

@@ -25,7 +25,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-  overflow: auto;
   background: #fff;
   text-align: left;
 
@@ -56,6 +55,13 @@
 
 .card__face--back {
   transform: rotateY(180deg);
+}
+
+// set overflow auto only when we have flipped card where we have tables
+// if auto is set directly, within Chrome you cannot scroll the body area
+// when the front card is the chart and it has no overflow
+.is-flipped .card__face--back {
+  overflow: auto;
 }
 
 .sidebar-geo-data {

@@ -30,6 +30,8 @@ import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
+import { connect } from 'react-redux';
+import config from '@plone/volto/registry';
 import DataTable from './Table';
 import './less/public.less';
 
@@ -86,6 +88,17 @@ class View extends React.Component {
     } = this.state;
     const { data, detached } = this.props;
 
+    const scale_range =
+      config.blocks.blocksConfig['dataFigure'].imageScaleRanges;
+    const imageScale = config.blocks.blocksConfig['dataFigure'].imageScale;
+    const page_width = this.props.screen?.page?.width || 1300;
+    const scale = Object.keys(scale_range).filter(
+      (value) => value > page_width,
+    )[0];
+    const scale_name = scale_range[scale];
+    const imageUrl =
+      '@@images/image' + (imageScale === 'original' ? '' : '/' + scale_name);
+
     // Block position in page
     const position = getBlockPosition(
       this.props.metadata || this.props.properties,
@@ -123,7 +136,7 @@ class View extends React.Component {
                       src={
                         isTableImage(data.url)
                           ? data.url
-                          : `${data.url}/@@images/image`
+                          : `${data.url}/${imageUrl}`
                       }
                       alt={data.title || ''}
                     ></img>
@@ -167,7 +180,7 @@ class View extends React.Component {
                     src={
                       isTableImage(data.url)
                         ? data.url
-                        : `${data.url}/@@images/image`
+                        : `${data.url}/${imageUrl}`
                     }
                     onClick={() => this.setState({ zoomed: 'true' })}
                     alt={data.alt || ''}
@@ -289,4 +302,6 @@ View.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default View;
+export default connect((state, ownProps) => ({
+  screen: state?.screen,
+}))(View);

@@ -124,6 +124,7 @@ class View extends React.Component {
                   ) : (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
+                      loading="lazy"
                       style={{
                         width: data.width ? data.width + 'px' : '100%',
                         height: data.height ? data.height + 'px' : '100%',
@@ -174,6 +175,7 @@ class View extends React.Component {
                 ) : (
                   <img
                     aria-hidden="true"
+                    loading="lazy"
                     className={cx({ 'full-width': data.align === 'full' })}
                     zoomed={zoomed}
                     style={{ maxHeight: '80vh', maxWidth: '100%' }}

@@ -18,6 +18,7 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
+  getImageScale,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
@@ -31,7 +32,6 @@ import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
 import { connect } from 'react-redux';
-import config from '@plone/volto/registry';
 import DataTable from './Table';
 import './less/public.less';
 
@@ -88,16 +88,7 @@ class View extends React.Component {
     } = this.state;
     const { data, detached } = this.props;
 
-    const scale_range =
-      config.blocks.blocksConfig['dataFigure'].imageScaleRanges;
-    const imageScale = config.blocks.blocksConfig['dataFigure'].imageScale;
-    const page_width = this.props.screen?.page?.width || 1300;
-    const scale = Object.keys(scale_range).filter(
-      (value) => value > page_width,
-    )[0];
-    const scale_name = scale_range[scale];
-    const imageUrl =
-      '@@images/image' + (imageScale === 'original' ? '' : '/' + scale_name);
+    const imageUrl = '@@images/image/' + getImageScale(this.props.screen?.page);
 
     // Block position in page
     const position = getBlockPosition(
@@ -107,7 +98,7 @@ class View extends React.Component {
 
     const is_flipped = isTableImage(data?.url || '') || visible;
 
-    return data.url ? (
+    return data.url && __CLIENT__ ? (
       <div className="data-figure-block">
         {data.title && (
           <Header>

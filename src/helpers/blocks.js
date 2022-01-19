@@ -12,7 +12,6 @@ export const getBlockPosition = (metadata, block) => {
 
 export const getImageScale = (page) => {
   const scale_range = config.blocks.blocksConfig['dataFigure'].imageScaleRanges;
-  const imageScale = config.blocks.blocksConfig['dataFigure'].imageScale;
   const page_width = page?.width || (__CLIENT__ && window.innerWidth) || 1300;
   const scale = Object.keys(scale_range).filter(
     (value) => value > page_width,

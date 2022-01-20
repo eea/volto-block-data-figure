@@ -51,6 +51,18 @@ class View extends React.Component {
     position: 0,
   };
 
+  hideMetadata = () => {
+    this.setState(() => ({
+      showMetadata: false,
+    }));
+  };
+
+  hideDownload = () => {
+    this.setState(() => ({
+      showDownload: false,
+    }));
+  };
+
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
@@ -134,8 +146,16 @@ class View extends React.Component {
               </div>
             </div>
           </Sidebar.Pusher>
-          <Metadata visible={showMetadata} data={data} />
-          <DownloadData data={data} showDownload={showDownload} />
+          <Metadata
+            data={data}
+            visible={showMetadata}
+            onHide={this.hideMetadata}
+          />
+          <DownloadData
+            data={data}
+            visible={showDownload}
+            onHide={this.hideDownload}
+          />
           <Transition visible={modalOpen} animation="scale" duration={300}>
             <Modal
               className="data-figure-zoom"

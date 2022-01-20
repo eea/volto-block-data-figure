@@ -14,7 +14,7 @@ import './less/public.less';
  * @class Metadata
  * @extends Component
  */
-const Metadata = ({ visible, data }) => {
+const Metadata = ({ visible, data, onHide }) => {
   const { metadata = {} } = data;
   const { dataSources = {} } = metadata;
   const { value, plaintext = '' } = dataSources;
@@ -28,6 +28,7 @@ const Metadata = ({ visible, data }) => {
       animation={'overlay'}
       direction={'right'}
       vertical
+      onHide={onHide}
       visible={visible}
       width="very wide"
     >
@@ -91,6 +92,7 @@ const Metadata = ({ visible, data }) => {
 Metadata.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   visible: PropTypes.bool,
+  onHide: PropTypes.func,
 };
 
 export default Metadata;

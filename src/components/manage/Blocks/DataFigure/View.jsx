@@ -47,42 +47,36 @@ class View extends React.Component {
     showMetadata: false,
     modalOpen: false,
     zoomed: 'false',
-    isLeftClicked: false,
+    showDownload: false,
     position: 0,
-  };
-
-  hideSidebar = () => {
-    const { showMetadata, isLeftClicked } = this.state;
-    if (showMetadata) {
-      this.setState((prevState) => ({
-        showMetadata: false,
-      }));
-    }
-    if (isLeftClicked) {
-      this.setState((prevState) => ({
-        isLeftClicked: false,
-      }));
-    }
   };
 
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
-  toggleMetadata = () =>
+  toggleMetadata = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState((prevState) => ({
+      showDownload: false,
       showMetadata: !prevState.showMetadata,
     }));
+  };
 
-  toggleLeftPopup = () =>
+  toggleLeftPopup = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState((prevState) => ({
-      isLeftClicked: !prevState.isLeftClicked,
+      showMetadata: false,
+      showDownload: !prevState.showDownload,
     }));
+  };
 
   render() {
     const {
       visible,
       showMetadata,
-      isLeftClicked,
+      showDownload,
       modalOpen,
       zoomed,
     } = this.state;
@@ -140,16 +134,8 @@ class View extends React.Component {
               </div>
             </div>
           </Sidebar.Pusher>
-          <Metadata
-            visible={showMetadata}
-            data={data}
-            hideSidebar={this.hideSidebar}
-          />
-          <DownloadData
-            data={data}
-            isLeftClicked={isLeftClicked}
-            hideSidebar={this.hideSidebar}
-          />
+          <Metadata visible={showMetadata} data={data} />
+          <DownloadData data={data} showDownload={showDownload} />
           <Transition visible={modalOpen} animation="scale" duration={300}>
             <Modal
               className="data-figure-zoom"

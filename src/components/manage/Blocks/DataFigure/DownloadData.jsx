@@ -4,7 +4,7 @@ import { getParentUrl } from '@plone/volto/helpers';
 import { Segment, Menu, Sidebar, Header, List } from 'semantic-ui-react';
 import './less/public.less';
 
-const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
+const DownloadData = ({ data, showDownload }) => {
   const { downloadData } = data.metadata || {};
   return (
     <Sidebar
@@ -12,9 +12,8 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
       className="metadata-sidebar"
       animation={'overlay'}
       direction={'left'}
-      onHide={() => hideSidebar()}
       vertical
-      visible={isLeftClicked}
+      visible={showDownload}
       width="very wide"
     >
       <Segment.Group>
@@ -81,7 +80,7 @@ const DownloadData = ({ data, isLeftClicked, hideSidebar }) => {
  */
 DownloadData.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
-  isLeftClicked: PropTypes.bool,
+  showDownload: PropTypes.bool,
 };
 
 export default DownloadData;

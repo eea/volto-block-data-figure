@@ -14,7 +14,7 @@ import './less/public.less';
  * @class Metadata
  * @extends Component
  */
-const Metadata = ({ visible, data, hideSidebar }) => {
+const Metadata = ({ visible, data }) => {
   const { metadata = {} } = data;
   const { dataSources = {} } = metadata;
   const { value, plaintext = '' } = dataSources;
@@ -28,7 +28,6 @@ const Metadata = ({ visible, data, hideSidebar }) => {
       animation={'overlay'}
       direction={'right'}
       vertical
-      onHide={() => hideSidebar()}
       visible={visible}
       width="very wide"
     >

@@ -18,6 +18,7 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
+  getImageScale,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
@@ -30,6 +31,7 @@ import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
+import { connect } from 'react-redux';
 import DataTable from './Table';
 import './less/public.less';
 
@@ -45,46 +47,42 @@ class View extends React.Component {
     showMetadata: false,
     modalOpen: false,
     zoomed: 'false',
-    isLeftClicked: false,
+    showDownload: false,
     position: 0,
-  };
-
-  hideSidebar = () => {
-    const { showMetadata, isLeftClicked } = this.state;
-    if (showMetadata) {
-      this.setState((prevState) => ({
-        showMetadata: false,
-      }));
-    }
-    if (isLeftClicked) {
-      this.setState((prevState) => ({
-        isLeftClicked: false,
-      }));
-    }
   };
 
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
-  toggleMetadata = () =>
+  toggleMetadata = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState((prevState) => ({
+      showDownload: false,
       showMetadata: !prevState.showMetadata,
     }));
+  };
 
-  toggleLeftPopup = () =>
+  toggleLeftPopup = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState((prevState) => ({
-      isLeftClicked: !prevState.isLeftClicked,
+      showMetadata: false,
+      showDownload: !prevState.showDownload,
     }));
+  };
 
   render() {
     const {
       visible,
       showMetadata,
-      isLeftClicked,
+      showDownload,
       modalOpen,
       zoomed,
     } = this.state;
     const { data, detached } = this.props;
+
+    const imageUrl = '@@images/image/' + getImageScale(this.props.screen?.page);
 
     // Block position in page
     const position = getBlockPosition(
@@ -94,7 +92,7 @@ class View extends React.Component {
 
     const is_flipped = isTableImage(data?.url || '') || visible;
 
-    return data.url ? (
+    return data.url && __CLIENT__ ? (
       <div className="data-figure-block">
         {data.title && (
           <Header>
@@ -111,6 +109,7 @@ class View extends React.Component {
                   ) : (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
+                      loading="lazy"
                       style={{
                         width: data.width ? data.width + 'px' : '100%',
                         height: data.height ? data.height + 'px' : '100%',
@@ -123,7 +122,7 @@ class View extends React.Component {
                       src={
                         isTableImage(data.url)
                           ? data.url
-                          : `${data.url}/@@images/image`
+                          : `${data.url}/${imageUrl}`
                       }
                       alt={data.title || ''}
                     ></img>
@@ -135,16 +134,8 @@ class View extends React.Component {
               </div>
             </div>
           </Sidebar.Pusher>
-          <Metadata
-            visible={showMetadata}
-            data={data}
-            hideSidebar={this.hideSidebar}
-          />
-          <DownloadData
-            data={data}
-            isLeftClicked={isLeftClicked}
-            hideSidebar={this.hideSidebar}
-          />
+          <Metadata visible={showMetadata} data={data} />
+          <DownloadData data={data} showDownload={showDownload} />
           <Transition visible={modalOpen} animation="scale" duration={300}>
             <Modal
               className="data-figure-zoom"
@@ -161,13 +152,14 @@ class View extends React.Component {
                 ) : (
                   <img
                     aria-hidden="true"
+                    loading="lazy"
                     className={cx({ 'full-width': data.align === 'full' })}
                     zoomed={zoomed}
                     style={{ maxHeight: '80vh', maxWidth: '100%' }}
                     src={
                       isTableImage(data.url)
                         ? data.url
-                        : `${data.url}/@@images/image`
+                        : `${data.url}/${imageUrl}`
                     }
                     onClick={() => this.setState({ zoomed: 'true' })}
                     alt={data.alt || ''}
@@ -289,4 +281,6 @@ View.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default View;
+export default connect((state, ownProps) => ({
+  screen: state?.screen,
+}))(View);

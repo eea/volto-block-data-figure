@@ -26,6 +26,13 @@ const applyConfig = (config) => {
     },
     type: ['DavizVisualization', 'EEAFigure'],
     minResolution: '1400x600',
+    imageScale: 'large',
+    imageScaleRanges: {
+      400: 'preview',
+      1023: 'large',
+      1279: 'xlarge',
+      5000: 'landscape',
+    },
   };
 
   // reducers

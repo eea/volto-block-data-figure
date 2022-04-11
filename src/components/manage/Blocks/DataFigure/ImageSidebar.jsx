@@ -387,7 +387,11 @@ const ImageSidebar = ({
                   className="data-source-toolbar"
                   block={block}
                   properties={data}
-                  value={metadata?.dataSources?.value || getDefaultValue()}
+                  value={
+                    metadata?.dataSources?.value?.length
+                      ? metadata?.dataSources?.value
+                      : getDefaultValue()
+                  }
                   placeholder="Enter Data Sources"
                 />
               </div>
@@ -425,7 +429,9 @@ const ImageSidebar = ({
                   block={block}
                   properties={data}
                   value={
-                    metadata?.institutionalMandate?.value || getDefaultValue()
+                    metadata?.institutionalMandate?.value?.length
+                      ? metadata?.institutionalMandate?.value
+                      : getDefaultValue()
                   }
                   placeholder="Enter Institutional Mandate"
                 />

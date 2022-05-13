@@ -120,8 +120,19 @@ export const getParsedValue = (data = []) => {
   editor.isVoid = (element) => {
     return element.type === 'img' ? true : isVoid(element);
   };
+  const existing = [];
   const htmlStr = data
-    .map((item) => `<p><a href=${item.link}>${item.title.trim()}</a></p>`)
+    .map((item) => {
+      const link = item.source_link || item.link;
+      if (existing.includes(link)) {
+        return false;
+      } else {
+        existing.push(link);
+        const title = item.source_title?.trim() || item.title.trim();
+        return `<p><a href=${link}>${title}</a></p>`;
+      }
+    })
+    .filter((item) => item)
     .join('\n');
   const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
   return deserialize(editor, doc.body);

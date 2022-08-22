@@ -18,7 +18,6 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
-  getImageScale,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';

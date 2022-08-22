@@ -18,7 +18,6 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
-  getImageScale,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
@@ -94,7 +93,7 @@ class View extends React.Component {
     } = this.state;
     const { data, detached } = this.props;
 
-    const imageUrl = '@@images/image/' + getImageScale(this.props.screen?.page);
+    const imageUrl = '@@images/image';
 
     // Block position in page
     const position = getBlockPosition(

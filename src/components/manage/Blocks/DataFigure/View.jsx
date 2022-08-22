@@ -94,7 +94,7 @@ class View extends React.Component {
     } = this.state;
     const { data, detached } = this.props;
 
-    const imageUrl = '@@images/image/' + getImageScale(this.props.screen?.page);
+    const imageUrl = '@@images/image';
 
     // Block position in page
     const position = getBlockPosition(

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
-import SlateRichTextWidget from 'volto-slate/widgets/RichTextWidget';
+import SlateRichTextWidget from '@plone/volto-slate/widgets/RichTextWidget';
 
 import { defineMessages, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';

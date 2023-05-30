@@ -21,14 +21,12 @@
   "addons": [
     "@eeacms/volto-corsproxy",
     "@eeacms/volto-widget-geolocation",
-    "@eeacms/volto-widget-temporal-coverage",
-    "volto-slate"
+    "@eeacms/volto-widget-temporal-coverage"
   ],
   "dependencies": {
     "@eeacms/volto-corsproxy": "*",
     "@eeacms/volto-widget-geolocation": "*",
-    "@eeacms/volto-widget-temporal-coverage": "*",
-    "volto-slate": "*"
+    "@eeacms/volto-widget-temporal-coverage": "*"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",

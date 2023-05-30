@@ -1,5 +1,5 @@
 import config from '@plone/volto/registry';
-import { deserialize } from 'volto-slate/editor/deserialize';
+import { deserialize } from '@plone/volto-slate/editor/deserialize';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
 export const cleanSVG = (data) => {
   // base64 decode, if needed

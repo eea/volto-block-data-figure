@@ -1,4 +1,4 @@
-import { getAllBlocks } from 'volto-slate/utils';
+import { getAllBlocks } from '@plone/volto-slate/utils';
 import config from '@plone/volto/registry';
 
 export const getBlockPosition = (metadata, block) => {

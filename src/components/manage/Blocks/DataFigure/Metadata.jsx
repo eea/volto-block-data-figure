@@ -5,7 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Menu, Sidebar, Grid } from 'semantic-ui-react';
-import { serializeNodes } from 'volto-slate/editor/render';
+import { serializeNodes } from '@plone/volto-slate/editor/render';
 import { TemporalWidgetView } from '@eeacms/volto-widget-temporal-coverage/components';
 import './less/public.less';
 

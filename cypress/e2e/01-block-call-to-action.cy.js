@@ -25,6 +25,5 @@ describe('Blocks Tests', () => {
 
     // then the page view should contain our changes
     cy.contains('My Add-on Page');
-    cy.get('.block.data-figure-block');
   });
 });

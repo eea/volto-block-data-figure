@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import View from './View';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';

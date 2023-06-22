@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Metadata /> renders without crashing 1`] = `
+<div
+  className="ui vertical ui overlay right very wide sidebar metadata-sidebar menu"
+>
+  <div
+    className="ui raised segments"
+  >
+    <div
+      className="ui segment"
+    >
+      <h2
+        className="ui header data-figure-block-header"
+      >
+        Metadata
+      </h2>
+    </div>
+    <div
+      className="ui segment"
+    >
+      <div
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Test Plain Text",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Metadata /> renders without crashing without dataSources 1`] = `
+<div
+  className="ui vertical ui overlay right very wide sidebar metadata-sidebar menu"
+>
+  <div
+    className="ui raised segments"
+  >
+    <div
+      className="ui segment"
+    >
+      <h2
+        className="ui header data-figure-block-header"
+      >
+        Metadata
+      </h2>
+    </div>
+    <div
+      className="ui segment"
+    >
+      <div
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Metadata /> renders without crashing without metadata 1`] = `
+<div
+  className="ui vertical ui overlay right very wide sidebar metadata-sidebar menu"
+>
+  <div
+    className="ui raised segments"
+  >
+    <div
+      className="ui segment"
+    >
+      <h2
+        className="ui header data-figure-block-header"
+      >
+        Metadata
+      </h2>
+    </div>
+    <div
+      className="ui segment"
+    >
+      <div
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Metadata /> renders without crashing without plaintext 1`] = `
+<div
+  className="ui vertical ui overlay right very wide sidebar metadata-sidebar menu"
+>
+  <div
+    className="ui raised segments"
+  >
+    <div
+      className="ui segment"
+    >
+      <h2
+        className="ui header data-figure-block-header"
+      >
+        Metadata
+      </h2>
+    </div>
+    <div
+      className="ui segment"
+    >
+      <h3
+        className="ui header data-figure-block-header"
+      >
+        Data Sources:
+      </h3>
+      Test Plain Text
+    </div>
+  </div>
+</div>
+`;

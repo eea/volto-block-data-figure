@@ -1,8 +1,5 @@
 import { getAllBlocks } from '@plone/volto-slate/utils';
-import {
-  isInternalContentURL,
-  isChartImage,
-} from '@eeacms/volto-block-data-figure/helpers';
+import { isInternalContentURL } from '@eeacms/volto-block-data-figure/helpers';
 import config from '@plone/volto/registry';
 
 export const getBlockPosition = (metadata, block) => {

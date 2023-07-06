@@ -414,13 +414,11 @@ class Edit extends Component {
    */
   isValidImage = (file) => {
     const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
-    if (
+
+    return !(
       file.width < resolution.split('x')[0] ||
       file.height < resolution.split('x')[1]
-    ) {
-      return false;
-    }
-    return true;
+    );
   };
 
   onClearUrl = () => {

@@ -24,10 +24,10 @@ export function getSVG(url) {
   };
 }
 
-export function getInternalContent(url, request = {}) {
+export function getInternalContent(blockId, url, request = {}) {
   return {
     type: GET_CONTENT,
-    subrequest: url,
+    subrequest: blockId,
     request: {
       op: 'get',
       path: url + '?expand=charts,table,provenances,rods',

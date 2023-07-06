@@ -41,7 +41,7 @@ import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent, getContent } from '@plone/volto/actions';
+import { createContent } from '@plone/volto/actions';
 import { getBaseUrl, flattenToAppURL } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
@@ -176,11 +176,7 @@ class Edit extends Component {
       });
     }
     if (this.props?.data?.url !== nextProps?.data?.url) {
-      this.props.getContent(
-        flattenToAppURL(nextProps.data.url),
-        null,
-        nextProps.block,
-      );
+      this.internalURLContents(nextProps.block, nextProps?.data?.url);
     }
 
     if (this.props?.scales !== nextProps?.scales) {
@@ -439,7 +435,7 @@ class Edit extends Component {
       for (const idx in arr.items) {
         const figureFile = arr.items[idx];
         const result = isInternalContentURL(figureFile.url)
-          ? await this.internalURLContents(figureFile.url)
+          ? await this.internalURLContents(this.props.block, figureFile.url)
           : await this.externalURLContents(figureFile.url);
         const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
         if (pngUrl.length) {
@@ -478,9 +474,9 @@ class Edit extends Component {
     return filteredGeonames;
   }
 
-  internalURLContents = async (url) => {
-    await this.props.getInternalContent(url);
-    return this.props.subrequests[url]?.data;
+  internalURLContents = async (block = this.props.block, url) => {
+    await this.props.getInternalContent(block, flattenToAppURL(url));
+    return this.props.subrequests?.[block]?.data;
   };
 
   externalURLContents = async (url) => {
@@ -492,11 +488,7 @@ class Edit extends Component {
 
   componentDidMount() {
     if (this.props?.data?.url) {
-      this.props.getContent(
-        flattenToAppURL(this.props.data.url),
-        null,
-        this.props.block,
-      );
+      this.internalURLContents(this.props.block, this.props?.data?.url);
     }
   }
 
@@ -518,7 +510,7 @@ class Edit extends Component {
       let tabledata,
         figureUrl = this.state.url;
       const arr = isInternalContentURL(this.state.url)
-        ? await this.internalURLContents(this.state.url)
+        ? await this.internalURLContents(this.props.block, this.state.url)
         : await this.externalURLContents(this.state.url);
       const [
         temporal,
@@ -839,7 +831,6 @@ export default compose(
       getInternalContent,
       createContent,
       getProxiedExternalContent,
-      getContent,
     },
   ),
 )(Edit);

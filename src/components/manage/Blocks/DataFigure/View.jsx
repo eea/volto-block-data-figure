@@ -2,6 +2,8 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
+import React from 'react';
+import { connect } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import {
@@ -14,26 +16,24 @@ import {
   Modal,
   Header,
 } from 'semantic-ui-react';
+import { flattenToAppURL } from '@plone/volto/helpers';
+import { Icon } from '@plone/volto/components';
 import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
   setImageSize,
 } from '@eeacms/volto-block-data-figure/helpers';
-import Svg from './Svg';
-import { getContent } from '@plone/volto/actions';
-import { flattenToAppURL } from '@plone/volto/helpers';
+import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
-import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
+import Svg from './Svg';
 import DownloadData from './DownloadData';
-import React from 'react';
-import { connect } from 'react-redux';
 import DataTable from './Table';
 import './less/public.less';
 
@@ -78,6 +78,10 @@ class View extends React.Component {
     }));
   };
 
+  internalURLContents = async (block = this.props.id, url) => {
+    await this.props.getInternalContent(block, flattenToAppURL(url));
+  };
+
   toggleLeftPopup = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -89,11 +93,7 @@ class View extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props?.data?.url !== nextProps?.data?.url) {
-      this.props.getContent(
-        flattenToAppURL(nextProps.data.url),
-        null,
-        nextProps.block,
-      );
+      this.internalURLContents(nextProps?.id, nextProps?.data?.url);
     }
 
     if (this.props?.scales !== nextProps?.scales) {
@@ -113,11 +113,7 @@ class View extends React.Component {
 
   componentDidMount() {
     if (this.props?.data?.url) {
-      this.props.getContent(
-        flattenToAppURL(this.props.data.url),
-        null,
-        this.props.block,
-      );
+      this.internalURLContents(this.props.id, this.props?.data?.url);
     }
   }
 
@@ -340,7 +336,7 @@ View.propTypes = {
 export default connect(
   (state, ownProps) => ({
     screen: state?.screen,
-    scales: state.content.subrequests[ownProps.block]?.data?.image,
+    scales: state.content.subrequests[ownProps.id]?.data?.image,
   }),
-  { getContent },
+  { getInternalContent },
 )(View);

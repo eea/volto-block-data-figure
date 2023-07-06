@@ -82,6 +82,7 @@ const ImageSidebar = ({
   resetSubmitUrl,
   intl,
   svgs,
+  scaledImage,
   instructions,
 }) => {
   const { metadata } = data;
@@ -120,7 +121,8 @@ const ImageSidebar = ({
             {isImageData && (
               <img
                 width="100%"
-                src={`${flattenToAppURL(data.url)}/@@images/image`}
+                src={flattenToAppURL(scaledImage?.download)}
+                height={scaledImage?.height ?? 'auto'}
                 alt={data.alt}
               />
             )}
@@ -134,7 +136,7 @@ const ImageSidebar = ({
                         src={
                           isChartImage(it.url)
                             ? it.url
-                            : `${it.url}/@@images/image`
+                            : flattenToAppURL(scaledImage?.download)
                         }
                         key={idx}
                         alt={it.alt}
@@ -159,9 +161,7 @@ const ImageSidebar = ({
                             (() => {
                               return isChartImage(data.url)
                                 ? `${flattenToContentURL(data.url)}`
-                                : `${flattenToContentURL(
-                                    data.url,
-                                  )}/@@images/image`;
+                                : flattenToContentURL(scaledImage?.download);
                             })()
                           : data.url
                       }

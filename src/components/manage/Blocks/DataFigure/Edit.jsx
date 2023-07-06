@@ -31,18 +31,18 @@ import {
   validateHostname,
   isInternalContentURL,
   flattenToContentURL,
-  isChartImage,
   isSVGImage,
   isPNGImage,
   isTableImage,
   getBlockPosition,
+  setImageSize,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent } from '@plone/volto/actions';
-import { getBaseUrl } from '@plone/volto/helpers';
+import { createContent, getContent } from '@plone/volto/actions';
+import { getBaseUrl, flattenToAppURL } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
@@ -149,6 +149,7 @@ class Edit extends Component {
       geolocation: null,
       temporal: [],
     },
+    scaledImage: '',
   };
 
   /**
@@ -172,6 +173,27 @@ class Edit extends Component {
         ...this.state.data,
         url: nextProps.content['@id'],
         title: nextProps.content.title,
+      });
+    }
+    if (this.props?.data?.url !== nextProps?.data?.url) {
+      this.props.getContent(
+        flattenToAppURL(nextProps.data.url),
+        null,
+        nextProps.block,
+      );
+    }
+
+    if (this.props?.scales !== nextProps?.scales) {
+      const scaledImage =
+        this.props?.data?.url && nextProps?.scales
+          ? setImageSize(
+              this.props?.data?.url,
+              nextProps.scales,
+              this.props?.data?.align === 'full' ? 'h' : this.props?.data?.size,
+            )
+          : '';
+      this.setState({
+        scaledImage,
       });
     }
 
@@ -470,6 +492,16 @@ class Edit extends Component {
     return this.props.subrequests[url]?.data;
   };
 
+  componentDidMount() {
+    if (this.props?.data?.url) {
+      this.props.getContent(
+        flattenToAppURL(this.props.data.url),
+        null,
+        this.props.block,
+      );
+    }
+  }
+
   /**
    * Submit url handler
    * @method onSubmitUrl
@@ -632,6 +664,7 @@ class Edit extends Component {
    */
   render() {
     const { data, detached, formDescription } = this.props;
+    const { scaledImage } = this.state;
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
@@ -649,7 +682,7 @@ class Edit extends Component {
           {
             center: !Boolean(data.align),
           },
-          data.align,
+          data.align && scaledImage ? data.align : 'center',
         )}
         data-disabled-msg={
           data.disabledMessage ||
@@ -662,22 +695,15 @@ class Edit extends Component {
           </Header>
         )}
         {data.url && isSVGImage(data.url) ? (
-          <Svg data={data} detached={detached} />
+          <Svg data={data} detached={detached} scales={scaledImage} />
         ) : data.url && isTableImage(data.url) ? (
           <DataTable data={data} />
         ) : data.url ? (
           <img
-            src={
-              isInternalContentURL(data.url)
-                ? // Backwards compat in the case that the block is storing the full server URL
-                  (() => {
-                    return isChartImage(data.url)
-                      ? `${flattenToContentURL(data.url)}`
-                      : `${flattenToContentURL(data.url)}/@@images/image`;
-                  })()
-                : data.url
-            }
+            src={flattenToAppURL(scaledImage?.download)}
             alt={data.title || ''}
+            width={scaledImage?.width}
+            height={scaledImage?.height}
           />
         ) : (
           <div>
@@ -793,6 +819,7 @@ class Edit extends Component {
             {...this.props}
             svgs={this.props.data.svgs}
             instructions={instructions}
+            scaledImage={scaledImage}
             resetSubmitUrl={this.resetSubmitUrl}
           />
         </SidebarPortal>
@@ -808,11 +835,13 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
+      scales: state.content.subrequests[ownProps.block]?.data?.image,
     }),
     {
       getInternalContent,
       createContent,
       getProxiedExternalContent,
+      getContent,
     },
   ),
 )(Edit);

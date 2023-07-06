@@ -18,8 +18,11 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
+  setImageSize,
 } from '@eeacms/volto-block-data-figure/helpers';
 import Svg from './Svg';
+import { getContent } from '@plone/volto/actions';
+import { flattenToAppURL } from '@plone/volto/helpers';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
@@ -48,6 +51,7 @@ class View extends React.Component {
     zoomed: 'false',
     showDownload: false,
     position: 0,
+    scaledImage: '',
   };
 
   hideMetadata = () => {
@@ -83,6 +87,40 @@ class View extends React.Component {
     }));
   };
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props?.data?.url !== nextProps?.data?.url) {
+      this.props.getContent(
+        flattenToAppURL(nextProps.data.url),
+        null,
+        nextProps.block,
+      );
+    }
+
+    if (this.props?.scales !== nextProps?.scales) {
+      const scaledImage =
+        this.props?.data?.url && nextProps?.scales
+          ? setImageSize(
+              this.props?.data?.url,
+              nextProps.scales,
+              this.props?.data?.align === 'full' ? 'h' : this.props?.data?.size,
+            )
+          : '';
+      this.setState({
+        scaledImage,
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.props?.data?.url) {
+      this.props.getContent(
+        flattenToAppURL(this.props.data.url),
+        null,
+        this.props.block,
+      );
+    }
+  }
+
   render() {
     const {
       visible,
@@ -92,8 +130,9 @@ class View extends React.Component {
       zoomed,
     } = this.state;
     const { data, detached } = this.props;
+    const { scaledImage } = this.state;
 
-    const imageUrl = '@@images/image';
+    const imageUrl = flattenToAppURL(scaledImage?.download);
 
     // Block position in page
     const position = getBlockPosition(
@@ -116,7 +155,7 @@ class View extends React.Component {
               <div className={`card ${is_flipped ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
                   {isSVGImage(data.url) ? (
-                    <Svg data={data} detached={detached} />
+                    <Svg data={data} detached={detached} scales={scaledImage} />
                   ) : (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
@@ -130,12 +169,10 @@ class View extends React.Component {
                             : '0',
                         marginRight: data.inLeftColumn ? '0!important' : '1rem',
                       }}
-                      src={
-                        isTableImage(data.url)
-                          ? data.url
-                          : `${data.url}/${imageUrl}`
-                      }
+                      src={isTableImage(data.url) ? data.url : imageUrl}
                       alt={data.title || ''}
+                      width={scaledImage?.width}
+                      height={scaledImage?.height}
                     ></img>
                   )}
                 </div>
@@ -300,6 +337,10 @@ View.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect((state, ownProps) => ({
-  screen: state?.screen,
-}))(View);
+export default connect(
+  (state, ownProps) => ({
+    screen: state?.screen,
+    scales: state.content.subrequests[ownProps.block]?.data?.image,
+  }),
+  { getContent },
+)(View);

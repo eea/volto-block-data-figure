@@ -17,7 +17,7 @@ import { isInternalURL } from '@plone/volto/helpers';
  * @class Svg
  * @extends Component
  */
-const Svg = ({ data, detached }) => {
+const Svg = ({ data, detached, scales }) => {
   const [svg, setSVG] = React.useState();
   const dispatch = useDispatch();
 
@@ -55,7 +55,7 @@ const Svg = ({ data, detached }) => {
           center: !Boolean(data.align),
           detached,
         },
-        data.align,
+        data.align && scales ? data.align : 'center',
       )}
       dangerouslySetInnerHTML={{
         __html: svg,

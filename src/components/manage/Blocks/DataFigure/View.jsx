@@ -336,7 +336,7 @@ View.propTypes = {
 export default connect(
   (state, ownProps) => ({
     screen: state?.screen,
-    scales: state.content.subrequests[ownProps.id]?.data?.image,
+    scales: state.content?.subrequests?.[ownProps.id]?.data?.image,
   }),
   { getInternalContent },
 )(View);

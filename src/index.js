@@ -47,6 +47,8 @@ const applyConfig = (config) => {
     'www.eea.europa.eu',
   ];
 
+  config.settings.externalDataFigureApiPath = '/api/SITE';
+
   return config;
 };
 

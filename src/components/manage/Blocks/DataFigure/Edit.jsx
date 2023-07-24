@@ -392,13 +392,11 @@ class Edit extends Component {
    */
   isValidImage = (file) => {
     const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
-    if (
+
+    return !(
       file.width < resolution.split('x')[0] ||
       file.height < resolution.split('x')[1]
-    ) {
-      return false;
-    }
-    return true;
+    );
   };
 
   onClearUrl = () => {
@@ -464,10 +462,16 @@ class Edit extends Component {
   };
 
   externalURLContents = async (url) => {
-    await this.props.getProxiedExternalContent(url, {
+    const prefix = config.settings.externalDataFigureApiPath;
+
+    const urlObject = new URL(url);
+    urlObject.pathname = prefix + urlObject.pathname;
+    urlObject.search = '?expand=charts,table,provenances,rods';
+
+    await this.props.getProxiedExternalContent(urlObject.href, {
       headers: { Accept: 'application/json' },
     });
-    return this.props.subrequests[url]?.data;
+    return this.props.subrequests[urlObject.href]?.data;
   };
 
   /**
@@ -490,6 +494,7 @@ class Edit extends Component {
       const arr = isInternalContentURL(this.state.url)
         ? await this.internalURLContents(this.state.url)
         : await this.externalURLContents(this.state.url);
+
       const [
         temporal,
         chartUrl = [],

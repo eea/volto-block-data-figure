@@ -23,6 +23,7 @@ import {
   isTableImage,
   getBlockPosition,
   setImageSize,
+  isInternalContentURL,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
@@ -92,7 +93,10 @@ class View extends React.Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props?.data?.url !== nextProps?.data?.url) {
+    if (
+      this.props?.data?.url !== nextProps?.data?.url &&
+      isInternalContentURL(nextProps?.data?.url)
+    ) {
       this.internalURLContents(nextProps?.id, nextProps?.data?.url);
     }
 
@@ -112,7 +116,7 @@ class View extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props?.data?.url) {
+    if (this.props?.data?.url && isInternalContentURL(this.props?.data?.url)) {
       this.internalURLContents(this.props.id, this.props?.data?.url);
     }
   }

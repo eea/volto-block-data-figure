@@ -11,8 +11,7 @@ import './less/public.less';
 import { cleanSVG, isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
-import { getContent } from '@plone/volto/actions';
+import { isInternalURL } from '@plone/volto/helpers';
 /**
  * Svg block class.
  * @class Svg
@@ -36,23 +35,18 @@ const Svg = ({ data, detached, id, scales }) => {
           .catch((err) => {
             setSVG(err);
           });
-      } else {
-        dispatch(getContent(flattenToAppURL(data.url), null, `${id}-svg`)).then(
-          (resp) => {
-            if (resp.image?.download) {
-              dispatch(getSVG(resp.image.download))
-                .then((svg) => {
-                  setSVG(cleanSVG(svg));
-                })
-                .catch((err) => {
-                  setSVG(err);
-                });
-            }
-          },
-        );
+      } else if (scales) {
+        //have the data, skip content dispatch and extract scaled svg
+        dispatch(getSVG(scales.download))
+          .then((svg) => {
+            setSVG(cleanSVG(svg));
+          })
+          .catch((err) => {
+            setSVG(err);
+          });
       }
     }
-  }, [dispatch, data, id]);
+  }, [dispatch, data, id, scales]);
 
   return svg ? (
     <p

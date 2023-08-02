@@ -175,7 +175,10 @@ class Edit extends Component {
         title: nextProps.content.title,
       });
     }
-    if (this.props?.data?.url !== nextProps?.data?.url) {
+    if (
+      this.props?.data?.url !== nextProps?.data?.url &&
+      isInternalContentURL(nextProps?.data?.url)
+    ) {
       this.internalURLContents(nextProps.block, nextProps?.data?.url);
     }
 
@@ -493,7 +496,7 @@ class Edit extends Component {
   };
 
   componentDidMount() {
-    if (this.props?.data?.url) {
+    if (this.props?.data?.url && isInternalContentURL(this.props?.data?.url)) {
       this.internalURLContents(this.props.block, this.props?.data?.url);
     }
   }
@@ -700,7 +703,7 @@ class Edit extends Component {
             src={flattenToAppURL(scaledImage?.download)}
             alt={data.title || ''}
             width={scaledImage?.width}
-            height={scaledImage?.height}
+            height={scaledImage?.height ?? 'auto'}
           />
         ) : (
           <div>

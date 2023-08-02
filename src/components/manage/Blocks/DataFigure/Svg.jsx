@@ -39,32 +39,38 @@ const Svg = ({ data, detached, id }) => {
       } else {
         dispatch(getContent(flattenToAppURL(data.url), null, `${id}-svg`)).then(
           (resp) => {
-            setSVG(resp);
+            if (resp.image?.download) {
+              dispatch(getSVG(resp.image.download))
+                .then((svg) => {
+                  setSVG(cleanSVG(svg));
+                })
+                .catch((err) => {
+                  setSVG(err);
+                });
+            }
           },
         );
       }
     }
   }, [dispatch, data, id]);
 
-  return !!svg && <img src={svg.image.download} alt="" />;
-
-  // return svg ? (
-  //   <p
-  //     className={cx(
-  //       'block data-figure align',
-  //       {
-  //         center: !Boolean(data.align),
-  //         detached,
-  //       },
-  //       data.align,
-  //     )}
-  //     dangerouslySetInnerHTML={{
-  //       __html: svg,
-  //     }}
-  //   ></p>
-  // ) : (
-  //   ''
-  // );
+  return svg ? (
+    <p
+      className={cx(
+        'block data-figure align',
+        {
+          center: !Boolean(data.align),
+          detached,
+        },
+        data.align,
+      )}
+      dangerouslySetInnerHTML={{
+        __html: svg,
+      }}
+    ></p>
+  ) : (
+    ''
+  );
 };
 /**
  * Property types.

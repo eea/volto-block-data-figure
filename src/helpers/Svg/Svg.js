@@ -98,6 +98,9 @@ export const isInternalContentURL = (url) => {
 };
 
 export const flattenToContentURL = (url) => {
+  if (!isInternalURL(url)) {
+    return url;
+  }
   url = url ? flattenToAppURL(url) : url;
   if (url?.startsWith('http')) {
     if (isInternalContentURL(url)) {

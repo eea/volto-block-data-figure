@@ -480,10 +480,16 @@ class Edit extends Component {
   };
 
   externalURLContents = async (url) => {
-    await this.props.getProxiedExternalContent(url, {
+    const prefix = config.settings.externalDataFigureApiPath;
+
+    const urlObject = new URL(url);
+    urlObject.pathname = prefix + urlObject.pathname;
+    urlObject.search = '?expand=charts,table,provenances,rods';
+
+    await this.props.getProxiedExternalContent(urlObject.href, {
       headers: { Accept: 'application/json' },
     });
-    return this.props.subrequests[url]?.data;
+    return this.props.subrequests[urlObject.href]?.data;
   };
 
   componentDidMount() {
@@ -512,6 +518,7 @@ class Edit extends Component {
       const arr = isInternalContentURL(this.state.url)
         ? await this.internalURLContents(this.props.block, this.state.url)
         : await this.externalURLContents(this.state.url);
+
       const [
         temporal,
         chartUrl = [],

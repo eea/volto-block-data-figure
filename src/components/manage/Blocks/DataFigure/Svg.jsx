@@ -11,13 +11,14 @@ import './less/public.less';
 import { cleanSVG, isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import { isInternalURL } from '@plone/volto/helpers';
+import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
+import { getContent } from '@plone/volto/actions';
 /**
  * Svg block class.
  * @class Svg
  * @extends Component
  */
-const Svg = ({ data, detached, scales }) => {
+const Svg = ({ data, detached, id, scales }) => {
   const [svg, setSVG] = React.useState();
   const dispatch = useDispatch();
 
@@ -36,16 +37,22 @@ const Svg = ({ data, detached, scales }) => {
             setSVG(err);
           });
       } else {
-        dispatch(getSVG(data.url))
-          .then((resp) => {
-            setSVG(cleanSVG(resp));
-          })
-          .catch((err) => {
-            setSVG(err);
-          });
+        dispatch(getContent(flattenToAppURL(data.url), null, `${id}-svg`)).then(
+          (resp) => {
+            if (resp.image?.download) {
+              dispatch(getSVG(resp.image.download))
+                .then((svg) => {
+                  setSVG(cleanSVG(svg));
+                })
+                .catch((err) => {
+                  setSVG(err);
+                });
+            }
+          },
+        );
       }
     }
-  }, [dispatch, data]);
+  }, [dispatch, data, id]);
 
   return svg ? (
     <p

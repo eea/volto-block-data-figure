@@ -116,7 +116,7 @@ class View extends React.Component {
               <div className={`card ${is_flipped ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
                   {isSVGImage(data.url) ? (
-                    <Svg data={data} detached={detached} />
+                    <Svg data={data} detached={detached} id={this.props.id} />
                   ) : (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}

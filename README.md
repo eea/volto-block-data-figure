@@ -16,6 +16,12 @@
 
 [Volto](https://github.com/plone/volto) add-on: Data Figure
 
+## Features
+
+![Data Figure](./docs/volto-block-data-figure.gif)
+
+## Getting started
+
 ### Try volto-block-data-figure with Docker
 
 1. Get the latest Docker images
@@ -26,6 +32,7 @@
    ```
 
 1. Start Plone backend
+
    ```
    docker run -d --name plone -p 8080:8080 -e SITE=Plone -e PROFILES="profile-plone.restapi:blocks" plone
    ```
@@ -42,27 +49,31 @@
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
 
+   ```Bash
+   docker compose up backend
+   ```
+
 1. Start Volto frontend
 
-* If you already have a volto project, just update `package.json`:
+- If you already have a volto project, just update `package.json`:
 
-   ```JSON
-   "addons": [
-       "@eeacms/volto-block-data-figure"
-   ],
+  ```JSON
+  "addons": [
+      "@eeacms/volto-block-data-figure"
+  ],
 
-   "dependencies": {
-       "@eeacms/volto-block-data-figure": "*"
-   }
-   ```
+  "dependencies": {
+      "@eeacms/volto-block-data-figure": "*"
+  }
+  ```
 
-* If not, create one:
+- If not, create one:
 
-   ```
-   npm install -g yo @plone/generator-volto
-   yo @plone/volto my-volto-project --addon @eeacms/volto-block-data-figure
-   cd my-volto-project
-   ```
+  ```
+  npm install -g yo @plone/generator-volto
+  yo @plone/volto my-volto-project --addon @eeacms/volto-block-data-figure
+  cd my-volto-project
+  ```
 
 1. Install new add-ons and restart Volto:
 

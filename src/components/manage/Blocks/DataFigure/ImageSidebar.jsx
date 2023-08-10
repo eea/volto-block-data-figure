@@ -392,18 +392,6 @@ const ImageSidebar = ({
                 />
               </div>
             </Accordion.Content>
-            <Accordion.Title
-              active={activeAccIndex === 4}
-              index={4}
-              onClick={handleAccClick}
-            >
-              Institutional mandate
-              {activeAccIndex === 4 ? (
-                <Icon name={upSVG} size="20px" />
-              ) : (
-                <Icon name={downSVG} size="20px" />
-              )}
-            </Accordion.Title>
           </Accordion>
         </>
       )}

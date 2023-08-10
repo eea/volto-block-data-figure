@@ -466,7 +466,7 @@ class Edit extends Component {
 
     const urlObject = new URL(url);
     urlObject.pathname = prefix + urlObject.pathname;
-    urlObject.search = '?expand=charts,table,provenances,rods';
+    urlObject.search = '?expand=charts,table,provenances';
 
     await this.props.getProxiedExternalContent(urlObject.href, {
       headers: { Accept: 'application/json' },

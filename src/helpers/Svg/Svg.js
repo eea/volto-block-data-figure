@@ -51,16 +51,10 @@ export const extractMetadata = (data = {}) => {
     data?.['@components']?.['provenances']?.['items'] ||
     data?.['provenances'] ||
     [];
-  const rods =
-    data?.['@components']?.['rods']?.['items'] || data?.['rods'] || [];
   return {
     dataSources: {
       provenances,
       value: getParsedValue(provenances),
-    },
-    institutionalMandate: {
-      rods,
-      value: getParsedValue(rods),
     },
     geoCoverage: location,
     downloadData:

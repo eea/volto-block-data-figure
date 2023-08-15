@@ -42,7 +42,7 @@ const Metadata = ({ visible, data = {}, onHide }) => {
             <DataProvenanceWidgetView value={data_provenance} />
           </Segment>
         ) : null}
-        {geolocation.length ? (
+        {geolocation?.length ? (
           <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Geographic coverage:

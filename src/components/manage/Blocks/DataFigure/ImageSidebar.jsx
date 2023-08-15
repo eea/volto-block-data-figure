@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
-import SlateRichTextWidget from '@plone/volto-slate/widgets/RichTextWidget';
+import { DataProvenance } from '@eeacms/volto-widget-dataprovenance/components';
 
 import { defineMessages, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
@@ -49,7 +49,7 @@ const messages = defineMessages({
     defaultMessage: 'Label',
   },
   dataSources: {
-    id: 'Data sources ',
+    id: 'Data sources',
     defaultMessage: 'Data sources',
   },
   openLinkInNewTab: {
@@ -80,15 +80,6 @@ const ImageSidebar = ({
   svgs,
   instructions,
 }) => {
-  const { metadata } = data;
-  const getDefaultValue = () => {
-    return [
-      {
-        type: 'p',
-        children: [{ text: '' }],
-      },
-    ];
-  };
   const isImageData = data['@type'] === 'Image';
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -356,7 +347,7 @@ const ImageSidebar = ({
               index={3}
               onClick={handleAccClick}
             >
-              Data sources
+              {intl.formatMessage(messages.dataSources)}
               {activeAccIndex === 3 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
@@ -365,30 +356,22 @@ const ImageSidebar = ({
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 3}>
               <div>
-                <SlateRichTextWidget
-                  id="data_sources"
+                <DataProvenance
+                  id="data_provenance"
                   title={intl.formatMessage(messages.dataSources)}
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      metadata: {
-                        ...data.metadata,
-                        dataSources: {
-                          ...(data?.metadata?.dataSources || {}),
-                          value,
-                        },
+                      data_provenance: {
+                        data: [...(value?.data || [])],
                       },
                     });
                   }}
                   className="data-source-toolbar"
                   block={block}
                   properties={data}
-                  value={
-                    metadata?.dataSources?.value?.length
-                      ? metadata?.dataSources?.value
-                      : getDefaultValue()
-                  }
                   placeholder="Enter Data Sources"
+                  value={data?.data_provenance || {}}
                 />
               </div>
             </Accordion.Content>

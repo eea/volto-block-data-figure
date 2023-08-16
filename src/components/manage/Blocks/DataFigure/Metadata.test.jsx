@@ -1,51 +1,80 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import renderer from 'react-test-renderer';
+import { Provider } from 'react-intl-redux';
+import configureStore from 'redux-mock-store';
 import Metadata from './Metadata';
 import '@testing-library/jest-dom/extend-expect';
-
-jest.mock('@plone/volto-slate/editor/render', () => ({
-  serializeNodes: jest.fn(() => 'Test Plain Text'),
-}));
 
 jest.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
   TemporalWidgetView: () => <div>TemporalWidgetView</div>,
 }));
 
+const mockStore = configureStore([]);
+
+const store = mockStore({
+  screen: {
+    page: {
+      width: 768,
+    },
+  },
+  intl: {
+    locale: 'en',
+    messages: {},
+    formatMessage: jest.fn(),
+  },
+});
+
 describe('<Metadata />', () => {
   it('renders without crashing', () => {
     const data = {
-      metadata: {
-        dataSources: {
-          value: null,
-          plaintext: 'Test Plain Text',
-        },
+      data_provenance: {
+        data: [
+          {
+            '@id': '1',
+            link: 'https://www.example.com',
+            title: 'Data source',
+            organization: 'Example Organization',
+          },
+        ],
       },
       geolocation: [],
       temporal: [],
     };
-    const tree = renderer
-      .create(<Metadata data={data} visible={false} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Provider store={store}>
+        <Metadata data={data} visible={true} />
+      </Provider>,
+    );
+    expect(container).toMatchSnapshot();
   });
 
   it('renders data sources correctly', () => {
     const data = {
-      metadata: {
-        dataSources: {
-          value: '<p>Test Data Sources</p>',
-          plaintext: 'Test Plain Text',
-        },
+      data_provenance: {
+        data: [
+          {
+            '@id': '1',
+            link: 'https://www.example.com/1',
+            title: 'Data source 1',
+            organization: 'Example Organization',
+          },
+          {
+            '@id': '2',
+            link: 'https://www.example.com/2',
+            title: 'Data source 2',
+            organization: 'Example Organization',
+          },
+        ],
       },
       geolocation: [{ label: 'Location 1' }, { label: 'Location 2' }],
       temporal: ['2023-01-01', '2023-12-31'],
     };
-    const { getByText } = render(<Metadata data={data} visible={true} />);
-    expect(getByText('Test Plain Text')).toBeInTheDocument();
-    expect(getByText('Geographic coverage:')).toBeInTheDocument();
-    expect(getByText('Temporal coverage:')).toBeInTheDocument();
-    expect(getByText('TemporalWidgetView')).toBeInTheDocument();
+    const { container } = render(
+      <Provider store={store}>
+        <Metadata data={data} visible={true} />
+      </Provider>,
+    );
+    expect(container).toMatchSnapshot();
   });
 
   it('renders without crashing without metadata', () => {
@@ -54,40 +83,47 @@ describe('<Metadata />', () => {
       geolocation: [],
       temporal: [],
     };
-    const tree = renderer
-      .create(<Metadata data={data} visible={false} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Provider store={store}>
+        <Metadata data={data} visible={true} />
+      </Provider>,
+    );
+    expect(container).toMatchSnapshot();
   });
 
-  it('renders without crashing without dataSources', () => {
+  it('renders without crashing without data_provenance', () => {
     const data = {
-      metadata: {
-        dataSources: undefined,
-      },
+      data_provenance: undefined,
       geolocation: [],
       temporal: [],
     };
-    const tree = renderer
-      .create(<Metadata data={data} visible={false} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Provider store={store}>
+        <Metadata data={data} visible={true} />
+      </Provider>,
+    );
+    expect(container).toMatchSnapshot();
   });
 
-  it('renders without crashing without plaintext', () => {
+  it('renders without crashing without links', () => {
     const data = {
-      metadata: {
-        dataSources: {
-          value: '<p>Test Data Sources</p>',
-          plaintext: undefined,
-        },
+      data_provenance: {
+        data: [
+          {
+            '@id': '1',
+            title: 'Test Data Sources',
+            link: undefined,
+          },
+        ],
       },
       geolocation: undefined,
       temporal: [],
     };
-    const tree = renderer
-      .create(<Metadata data={data} visible={false} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Provider store={store}>
+        <Metadata data={data} visible={true} />
+      </Provider>,
+    );
+    expect(container).toMatchSnapshot();
   });
 });

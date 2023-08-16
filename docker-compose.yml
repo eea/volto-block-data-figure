@@ -23,7 +23,7 @@ services:
     volumes:
       - ./:/app/src/addons/${ADDON_PATH}
     environment:
-      NODE_ENV: "test"
+      NODE_ENV: "development"
       CI: "true"
       RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone"
       RAZZLE_DEV_PROXY_API_PATH: "http://backend:8080/Plone"

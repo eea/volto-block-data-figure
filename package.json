@@ -26,9 +26,9 @@
   ],
   "dependencies": {
     "@eeacms/volto-corsproxy": "*",
+    "@eeacms/volto-widget-dataprovenance": "*",
     "@eeacms/volto-widget-geolocation": "*",
-    "@eeacms/volto-widget-temporal-coverage": "*",
-    "@eeacms/volto-widget-dataprovenance": "*"
+    "@eeacms/volto-widget-temporal-coverage": "*"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",

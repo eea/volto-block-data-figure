@@ -27,6 +27,7 @@ import Svg from './Svg';
 import {
   extractSvg,
   extractTemporal,
+  extractDataProvenance,
   extractMetadata,
   validateHostname,
   isInternalContentURL,
@@ -413,6 +414,7 @@ class Edit extends Component {
   extractAssets = async (arr) => {
     let url;
     const metadata = extractMetadata(arr);
+    const data_provenance = extractDataProvenance(arr);
     if (arr['@type'] === 'EEAFigure') {
       for (const idx in arr.items) {
         const figureFile = arr.items[idx];
@@ -442,7 +444,7 @@ class Edit extends Component {
     const temporal = extractTemporal(arr);
     const title = arr.title;
     const figureType = arr['@type'];
-    return [temporal, url, title, figureType, metadata];
+    return [temporal, url, title, figureType, data_provenance, metadata];
   };
 
   getGeoNameWithIds(metadata) {
@@ -466,7 +468,7 @@ class Edit extends Component {
 
     const urlObject = new URL(url);
     urlObject.pathname = prefix + urlObject.pathname;
-    urlObject.search = '?expand=charts,table,provenances,rods';
+    urlObject.search = '?expand=charts,table,provenances';
 
     await this.props.getProxiedExternalContent(urlObject.href, {
       headers: { Accept: 'application/json' },
@@ -500,6 +502,7 @@ class Edit extends Component {
         chartUrl = [],
         title,
         figureType,
+        data_provenance,
         metadata = {},
       ] = await this.extractAssets(arr);
       if (arr['@type'] === 'DavizVisualization') {
@@ -540,12 +543,13 @@ class Edit extends Component {
               title,
               svgs: chartUrl,
               tabledata: tabledata,
-              metadata,
+              data_provenance: data_provenance,
               geolocation: this.getGeoNameWithIds(metadata),
               temporal: temporal?.map((item) => ({
                 value: item,
                 label: item,
               })),
+              metadata,
             }),
         );
       } else if (this.state.url.match(/\.(jpeg|jpg|gif|png|svg)$/) != null) {

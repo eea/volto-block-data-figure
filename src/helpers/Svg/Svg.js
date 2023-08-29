@@ -96,25 +96,12 @@ export const validateHostname = (url) => {
 };
 
 export const isInternalContentURL = (url) => {
-  if (isInternalURL(url)) {
-    return true;
-  }
-  const domain = url
-    .replace('http://', '')
-    .replace('https://', '')
-    .split(/[/?#]/)[0];
-  return config.settings.apiPath.includes(domain);
+  return isInternalURL(url);
 };
 
 export const flattenToContentURL = (url) => {
   if (!isInternalURL(url)) {
-    return url;
+    return cleanUrl(url);
   }
-  url = url ? flattenToAppURL(url) : url;
-  if (url?.startsWith('http')) {
-    if (isInternalContentURL(url)) {
-      return cleanUrl(url).replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
-    }
-  }
-  return cleanUrl(url);
+  return cleanUrl(flattenToAppURL(url));
 };

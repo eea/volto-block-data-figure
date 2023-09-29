@@ -50,7 +50,7 @@ Before starting make sure your development environment is properly set. See [Vol
 
 1.  Install
 
-        yarn develop
+        make develop
         yarn
 
 1.  Start backend

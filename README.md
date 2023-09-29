@@ -41,25 +41,25 @@ Go to http://localhost:3000
 
 1. Start Volto frontend
 
-- If you already have a volto project, just update `package.json`:
+* If you already have a volto project, just update `package.json`:
 
-  ```JSON
-  "addons": [
-      "@eeacms/volto-block-data-figure"
-  ],
+   ```JSON
+   "addons": [
+       "@eeacms/volto-block-data-figure"
+   ],
 
-  "dependencies": {
-      "@eeacms/volto-block-data-figure": "*"
-  }
-  ```
+   "dependencies": {
+       "@eeacms/volto-block-data-figure": "*"
+   }
+   ```
 
-- If not, create one:
+* If not, create one:
 
-  ```
-  npm install -g yo @plone/generator-volto
-  yo @plone/volto my-volto-project --addon @eeacms/volto-block-data-figure
-  cd my-volto-project
-  ```
+   ```
+   npm install -g yo @plone/generator-volto
+   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-block-data-figure
+   cd my-volto-project
+   ```
 
 1. Install new add-ons and restart Volto:
 

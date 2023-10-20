@@ -418,9 +418,7 @@ class Edit extends Component {
     if (arr['@type'] === 'EEAFigure') {
       for (const idx in arr.items) {
         const figureFile = arr.items[idx];
-        const result = isInternalContentURL(figureFile.url)
-          ? await this.internalURLContents(figureFile.url)
-          : await this.externalURLContents(figureFile.url);
+        const result = await this.externalURLContents(figureFile['@id']);
         const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
         if (pngUrl.length) {
           metadata.downloadData = result.items.map((item) => item.url);

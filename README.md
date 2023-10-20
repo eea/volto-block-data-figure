@@ -18,7 +18,7 @@
 
 ## Features
 
-![Data Figure](https://github.com/eea/volto-block-data-figure/raw/master/docs/volto-block-data-figure.gif)
+![Data Figure](https://raw.githubusercontent.com/eea/volto-block-data-figure/master/docs/volto-block-data-figure.gif)
 
 ## Getting started
 

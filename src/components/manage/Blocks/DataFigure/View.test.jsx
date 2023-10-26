@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import View from './View';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
@@ -179,7 +179,7 @@ describe('View component', () => {
         />
       </Provider>,
     );
-    screen.debug();
+
     const tabledataButton = container.querySelector('.data-figure-control');
     fireEvent.click(tabledataButton);
     expect(getAllByText('test_values').length).toBe(3);

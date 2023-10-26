@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import View from './View';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
@@ -132,5 +132,58 @@ describe('View component', () => {
 
     const metadata = getByText('Metadata');
     expect(metadata).toBeInTheDocument();
+  });
+
+  test('renders without crashing', () => {
+    helpers.isTableImage.mockReturnValue(false);
+    helpers.isSVGImage.mockReturnValue(true);
+    const { container, getAllByText } = render(
+      <Provider store={store}>
+        <View
+          data={{
+            url: 'testUrl',
+            tabledata: {
+              properties: {
+                test_header: {
+                  test1: 'test1',
+                  test2: 'test2',
+                },
+                test1_header: {
+                  test1: 'test1',
+                  test2: 'test2',
+                },
+                test2_header: {
+                  test1: 'test1',
+                  test2: 'test2',
+                },
+              },
+              items: [
+                {
+                  test_header: 'test_values',
+                  test1_header: 'test1_values',
+                  test2_header: 'test2_values',
+                },
+                {
+                  test_header: 'test_values',
+                  test1_header: 'test1_values',
+                  test2_header: 'test2_values',
+                },
+                {
+                  test_header: 'test_values',
+                  test1_header: null,
+                  test2_header: undefined,
+                },
+              ],
+            },
+          }}
+        />
+      </Provider>,
+    );
+    screen.debug();
+    const tabledataButton = container.querySelector('.data-figure-control');
+    fireEvent.click(tabledataButton);
+    expect(getAllByText('test_values').length).toBe(3);
+    expect(getAllByText('test1_values').length).toBe(2);
+    expect(getAllByText('test2_values').length).toBe(2);
   });
 });

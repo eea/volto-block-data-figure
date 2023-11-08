@@ -1,5 +1,5 @@
+import { v4 as uuid } from 'uuid';
 import config from '@plone/volto/registry';
-import { deserialize } from '@plone/volto-slate/editor/deserialize';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
 export const cleanSVG = (data, scales = {}) => {
   // base64 decode, if needed
@@ -45,23 +45,31 @@ export const extractTemporal = (data = {}) => {
   return data.temporalCoverage || [];
 };
 
-export const extractMetadata = (data = {}) => {
-  const { location } = data;
+export const organisations = {
+  'http://www.eea.europa.eu': 'European Environment Agency (EEA)',
+  'https://www.eea.europa.eu': 'European Environment Agency (EEA)',
+  'http://www.eea.europa.eu/': 'European Environment Agency (EEA)',
+  'https://www.eea.europa.eu/': 'European Environment Agency (EEA)',
+};
+
+export const extractDataProvenance = (data = {}) => {
   const provenances =
     data?.['@components']?.['provenances']?.['items'] ||
     data?.['provenances'] ||
     [];
-  const rods =
-    data?.['@components']?.['rods']?.['items'] || data?.['rods'] || [];
   return {
-    dataSources: {
-      provenances,
-      value: getParsedValue(provenances),
-    },
-    institutionalMandate: {
-      rods,
-      value: getParsedValue(rods),
-    },
+    data: provenances.map((item) => ({
+      '@id': uuid(),
+      link: item.link,
+      title: item.title,
+      organisation: item.organisation || organisations[item.owner] || '',
+    })),
+  };
+};
+
+export const extractMetadata = (data = {}) => {
+  const { location } = data;
+  return {
     geoCoverage: location,
     downloadData:
       data['@type'] === 'DavizVisualization'
@@ -87,56 +95,12 @@ export const validateHostname = (url) => {
 };
 
 export const isInternalContentURL = (url) => {
-  if (isInternalURL(url)) {
-    return true;
-  }
-  const domain = url
-    ?.replace('http://', '')
-    ?.replace('https://', '')
-    ?.split(/[/?#]/)[0];
-  return config.settings.apiPath.includes(domain);
+  return isInternalURL(url);
 };
 
 export const flattenToContentURL = (url) => {
   if (!isInternalURL(url)) {
-    return url;
+    return cleanUrl(url);
   }
-  url = url ? flattenToAppURL(url) : url;
-  if (url?.startsWith('http')) {
-    if (isInternalContentURL(url)) {
-      return cleanUrl(url).replace(/^http.*?\/\/[a-zA-Z0-9.]+/, '');
-    }
-  }
-  return cleanUrl(url);
-};
-
-export const getParsedValue = (data = []) => {
-  const editor = {};
-  const { slate } = config.settings;
-  const { isInline = () => {}, isVoid = () => {} } = editor;
-  editor.htmlTagsToSlate = slate.htmlTagsToSlate;
-  editor.isInline = (element) => {
-    return slate.inlineElements.includes(element.type)
-      ? true
-      : isInline(element);
-  };
-  editor.isVoid = (element) => {
-    return element.type === 'img' ? true : isVoid(element);
-  };
-  const existing = [];
-  const htmlStr = data
-    .map((item) => {
-      const link = item.source_link || item.link;
-      if (existing.includes(link)) {
-        return false;
-      } else {
-        existing.push(link);
-        const title = item.source_title?.trim() || item.title.trim();
-        return `<p><a href=${link}>${title}</a></p>`;
-      }
-    })
-    .filter((item) => item)
-    .join('\n');
-  const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
-  return deserialize(editor, doc.body);
+  return cleanUrl(flattenToAppURL(url));
 };

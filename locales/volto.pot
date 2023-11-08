@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2023-06-28T10:48:22.678Z\n"
+"POT-Creation-Date: 2023-08-15T14:35:45.777Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -13,4 +13,102 @@ msgstr ""
 "Preferred-Encodings: utf-8\n"
 "Domain: volto\n"
 
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Alignment
+msgid "Alignment"
+msgstr ""
 
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Data Visualization URL or SVG/PNG image
+msgid "Data Visualization URL or SVG/PNG image"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Data sources
+msgid "Data sources"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Image
+msgid "Image"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Image already exists.
+msgid "Image already exists."
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Image(s) not found.
+msgid "Image(s) not found"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Interactive link
+msgid "Interactive link "
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Invalid Image
+msgid "Invalid Image"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Invalid image. Image name can NOT start with image_. Please rename it first.
+msgid "Invalid image. Image name can NOT start with image_. Please rename it first."
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Label
+msgid "Label "
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Minimum image resolution should be {resolution}.
+msgid "Minimum image resolution should be {resolution}."
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: No image selected
+msgid "No image selected"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Open in a new tab
+msgid "Open in a new tab"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Origin
+msgid "Origin"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: Please use valid daviz url.
+msgid "Please use valid daviz url."
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Size
+msgid "Size"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: There were some errors.
+msgid "There were some errors."
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: Title
+msgid "Title"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/ImageSidebar
+# defaultMessage: URL
+msgid "URL"
+msgstr ""
+
+#: components/manage/Blocks/DataFigure/Edit
+# defaultMessage: You need to save the document before being able to edit this area.
+msgid "You need to save the document before being able to edit this area."
+msgstr ""

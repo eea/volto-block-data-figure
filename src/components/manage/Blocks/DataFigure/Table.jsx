@@ -33,7 +33,11 @@ const DataTable = ({ data }) => {
           {rows.map((row, idx) => (
             <Table.Row key={`tabledata-${idx}`}>
               {headers.map((header) => (
-                <Table.Cell>{row[header.key] || ''}</Table.Cell>
+                <Table.Cell>
+                  {row[header.key] !== null && row[header.key] !== undefined
+                    ? row[header.key]
+                    : ''}
+                </Table.Cell>
               ))}
             </Table.Row>
           ))}

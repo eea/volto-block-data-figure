@@ -5,8 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Segment, Menu, Sidebar, Grid } from 'semantic-ui-react';
-import { serializeNodes } from '@plone/volto-slate/editor/render';
 import { TemporalWidgetView } from '@eeacms/volto-widget-temporal-coverage/components';
+import { DataProvenanceWidgetView } from '@eeacms/volto-widget-dataprovenance/components';
 import './less/public.less';
 
 /**
@@ -14,12 +14,8 @@ import './less/public.less';
  * @class Metadata
  * @extends Component
  */
-const Metadata = ({ visible, data, onHide }) => {
-  const { metadata = {} } = data;
-  const { dataSources = {} } = metadata;
-  const { value, plaintext = '' } = dataSources;
-
-  let geolocation = data.geolocation || [];
+const Metadata = ({ visible, data = {}, onHide }) => {
+  const { data_provenance = {}, geolocation = [], temporal = [] } = data;
 
   return (
     <Sidebar
@@ -38,23 +34,15 @@ const Metadata = ({ visible, data, onHide }) => {
             Metadata
           </Header>
         </Segment>
-        {!value ? (
-          <Segment>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: plaintext,
-              }}
-            />
-          </Segment>
-        ) : (
+        {data_provenance?.data?.length ? (
           <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Data Sources:
             </Header>
-            {serializeNodes(value || [])}
+            <DataProvenanceWidgetView value={data_provenance} />
           </Segment>
-        )}
-        {geolocation.length ? (
+        ) : null}
+        {geolocation?.length ? (
           <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Geographic coverage:
@@ -72,7 +60,7 @@ const Metadata = ({ visible, data, onHide }) => {
             </ul>
           </Segment>
         ) : null}
-        {data?.temporal?.length ? (
+        {temporal?.length ? (
           <Segment>
             <Header as="h3" className={'data-figure-block-header'}>
               Temporal coverage:

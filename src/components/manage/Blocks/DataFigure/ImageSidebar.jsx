@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
-import SlateRichTextWidget from '@plone/volto-slate/widgets/RichTextWidget';
+import { DataProvenance } from '@eeacms/volto-widget-dataprovenance/components';
 
 import { defineMessages, injectIntl } from 'react-intl';
 import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
@@ -49,12 +49,8 @@ const messages = defineMessages({
     defaultMessage: 'Label',
   },
   dataSources: {
-    id: 'Data sources ',
+    id: 'Data sources',
     defaultMessage: 'Data sources',
-  },
-  institutionalMandate: {
-    id: 'Institutional mandate',
-    defaultMessage: 'Institutional mandate',
   },
   openLinkInNewTab: {
     id: 'Open in a new tab',
@@ -85,15 +81,6 @@ const ImageSidebar = ({
   scaledImage,
   instructions,
 }) => {
-  const { metadata } = data;
-  const getDefaultValue = () => {
-    return [
-      {
-        type: 'p',
-        children: [{ text: '' }],
-      },
-    ];
-  };
   const isImageData = data['@type'] === 'Image';
 
   const [activeAccIndex, setActiveAccIndex] = useState(0);
@@ -360,7 +347,7 @@ const ImageSidebar = ({
               index={3}
               onClick={handleAccClick}
             >
-              Data sources
+              {intl.formatMessage(messages.dataSources)}
               {activeAccIndex === 3 ? (
                 <Icon name={upSVG} size="20px" />
               ) : (
@@ -369,71 +356,22 @@ const ImageSidebar = ({
             </Accordion.Title>
             <Accordion.Content active={activeAccIndex === 3}>
               <div>
-                <SlateRichTextWidget
-                  id="data_sources"
+                <DataProvenance
+                  id="data_provenance"
                   title={intl.formatMessage(messages.dataSources)}
                   onChange={(name, value) => {
                     onChangeBlock(block, {
                       ...data,
-                      metadata: {
-                        ...data.metadata,
-                        dataSources: {
-                          ...(data?.metadata?.dataSources || {}),
-                          value,
-                        },
+                      data_provenance: {
+                        data: [...(value?.data || [])],
                       },
                     });
                   }}
                   className="data-source-toolbar"
                   block={block}
                   properties={data}
-                  value={
-                    metadata?.dataSources?.value?.length
-                      ? metadata?.dataSources?.value
-                      : getDefaultValue()
-                  }
                   placeholder="Enter Data Sources"
-                />
-              </div>
-            </Accordion.Content>
-            <Accordion.Title
-              active={activeAccIndex === 4}
-              index={4}
-              onClick={handleAccClick}
-            >
-              Institutional mandate
-              {activeAccIndex === 4 ? (
-                <Icon name={upSVG} size="20px" />
-              ) : (
-                <Icon name={downSVG} size="20px" />
-              )}
-            </Accordion.Title>
-            <Accordion.Content active={activeAccIndex === 4}>
-              <div>
-                <SlateRichTextWidget
-                  id="institutional_mandate"
-                  title={intl.formatMessage(messages.institutionalMandate)}
-                  onChange={(name, value) => {
-                    onChangeBlock(block, {
-                      ...data,
-                      metadata: {
-                        ...data.metadata,
-                        institutionalMandate: {
-                          ...(data?.metadata?.institutionalMandate || {}),
-                          value,
-                        },
-                      },
-                    });
-                  }}
-                  className="institutional-mandate-toolbar"
-                  block={block}
-                  properties={data}
-                  value={
-                    metadata?.institutionalMandate?.value?.length
-                      ? metadata?.institutionalMandate?.value
-                      : getDefaultValue()
-                  }
-                  placeholder="Enter Institutional Mandate"
+                  value={data?.data_provenance || {}}
                 />
               </div>
             </Accordion.Content>

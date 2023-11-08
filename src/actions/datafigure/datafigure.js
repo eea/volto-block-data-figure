@@ -30,7 +30,7 @@ export function getInternalContent(blockId, url, request = {}) {
     subrequest: blockId,
     request: {
       op: 'get',
-      path: url + '?expand=charts,table,provenances,rods',
+      path: url + '?expand=charts,table,provenances',
       ...request,
     },
   };

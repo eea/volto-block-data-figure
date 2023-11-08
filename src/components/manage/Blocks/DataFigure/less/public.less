@@ -64,6 +64,43 @@
   overflow: auto;
 }
 
+@media print {
+  .card__face--front {
+    page-break-inside: avoid !important;
+  }
+
+  .card__face--back {
+    page-break-inside: avoid !important;
+  }
+
+  .card {
+    page-break-inside: unset !important;
+  }
+
+  .scene {
+    perspective: none !important;
+  }
+
+  .card {
+    transform-origin: unset !important;
+    transform-style: unset !important;
+    transition: unset !important;
+  }
+
+  .card.is-flipped {
+    transform: none !important;
+  }
+
+  .card__face {
+    backface-visibility: unset !important;
+  }
+
+  .card__face--back {
+    position: unset !important;
+    transform: unset !important;
+  }
+}
+
 .sidebar-geo-data {
   padding: 20px 0 20px 0;
 }
@@ -128,7 +165,6 @@
 
 .data-figure-block {
   padding-top: 25px;
-  page-break-inside: avoid;
 }
 
 .ui.header.data-figure-block-header {

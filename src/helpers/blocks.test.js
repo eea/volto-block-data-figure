@@ -27,7 +27,6 @@ describe('setImageSize', () => {
       height: 400,
     };
 
-    const expectedUrl = '@@images/image-400.png';
     expect(setImageSize(image, image.image, 'm')).toEqual(expectedUrlObj);
   });
 });

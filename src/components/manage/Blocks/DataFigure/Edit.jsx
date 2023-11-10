@@ -87,7 +87,8 @@ const messages = defineMessages({
     defaultMessage: 'Minimum image resolution should be {resolution}.',
   },
   imageNameError: {
-    id: 'Invalid image. Image name can NOT start with image_. Please rename it first.',
+    id:
+      'Invalid image. Image name can NOT start with image_. Please rename it first.',
     defaultMessage:
       'Invalid image. Image name can NOT start with image_. Please rename it first.',
   },
@@ -701,7 +702,7 @@ class Edit extends Component {
           <DataTable data={data} />
         ) : data.url ? (
           <img
-            src={flattenToAppURL(scaledImage?.download)}
+            src={flattenToAppURL(scaledImage?.download) ?? data.url}
             alt={data.title || ''}
             width={scaledImage?.width}
             height={scaledImage?.height ?? 'auto'}

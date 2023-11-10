@@ -122,12 +122,17 @@ class View extends React.Component {
   }
 
   render() {
-    const { visible, showMetadata, showDownload, modalOpen, zoomed } =
-      this.state;
+    const {
+      visible,
+      showMetadata,
+      showDownload,
+      modalOpen,
+      zoomed,
+    } = this.state;
     const { data, detached } = this.props;
     const { scaledImage } = this.state;
 
-    const imageUrl = flattenToAppURL(scaledImage?.download);
+    const imageUrl = flattenToAppURL(scaledImage?.download) ?? data.url;
 
     // Block position in page
     const position = getBlockPosition(

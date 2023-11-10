@@ -108,7 +108,7 @@ const ImageSidebar = ({
             {isImageData && (
               <img
                 width="100%"
-                src={flattenToAppURL(scaledImage?.download)}
+                src={flattenToAppURL(scaledImage?.download) ?? data.url}
                 height={scaledImage?.height ?? 'auto'}
                 alt={data.alt}
               />
@@ -123,7 +123,7 @@ const ImageSidebar = ({
                         src={
                           isChartImage(it.url)
                             ? it.url
-                            : flattenToAppURL(scaledImage?.download)
+                            : flattenToAppURL(scaledImage?.download) ?? it.url
                         }
                         key={idx}
                         alt={it.alt}

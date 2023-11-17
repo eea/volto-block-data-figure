@@ -32,18 +32,18 @@ import {
   validateHostname,
   isInternalContentURL,
   flattenToContentURL,
-  isChartImage,
   isSVGImage,
   isPNGImage,
   isTableImage,
   getBlockPosition,
+  setImageSize,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
 import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
 import { createContent } from '@plone/volto/actions';
-import { getBaseUrl } from '@plone/volto/helpers';
+import { getBaseUrl, flattenToAppURL } from '@plone/volto/helpers';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
@@ -150,6 +150,7 @@ class Edit extends Component {
       geolocation: null,
       temporal: [],
     },
+    scaledImage: '',
   };
 
   /**
@@ -173,6 +174,26 @@ class Edit extends Component {
         ...this.state.data,
         url: nextProps.content['@id'],
         title: nextProps.content.title,
+      });
+    }
+    if (
+      this.props?.data?.url !== nextProps?.data?.url &&
+      isInternalContentURL(nextProps?.data?.url)
+    ) {
+      this.internalURLContents(nextProps.block, nextProps?.data?.url);
+    }
+
+    if (this.props?.scales !== nextProps?.scales) {
+      const scaledImage =
+        this.props?.data?.url && nextProps?.scales
+          ? setImageSize(
+              this.props?.data?.url,
+              nextProps.scales,
+              this.props?.data?.align === 'full' ? 'h' : this.props?.data?.size,
+            )
+          : '';
+      this.setState({
+        scaledImage,
       });
     }
 
@@ -456,9 +477,9 @@ class Edit extends Component {
     return filteredGeonames;
   }
 
-  internalURLContents = async (url) => {
-    await this.props.getInternalContent(url);
-    return this.props.subrequests[url]?.data;
+  internalURLContents = async (block = this.props.block, url) => {
+    await this.props.getInternalContent(block, flattenToAppURL(url));
+    return this.props.subrequests?.[block]?.data;
   };
 
   externalURLContents = async (url) => {
@@ -473,6 +494,12 @@ class Edit extends Component {
     });
     return this.props.subrequests[urlObject.href]?.data;
   };
+
+  componentDidMount() {
+    if (this.props?.data?.url && isInternalContentURL(this.props?.data?.url)) {
+      this.internalURLContents(this.props.block, this.props?.data?.url);
+    }
+  }
 
   /**
    * Submit url handler
@@ -492,7 +519,7 @@ class Edit extends Component {
       let tabledata,
         figureUrl = this.state.url;
       const arr = isInternalContentURL(this.state.url)
-        ? await this.internalURLContents(this.state.url)
+        ? await this.internalURLContents(this.props.block, this.state.url)
         : await this.externalURLContents(this.state.url);
 
       const [
@@ -639,6 +666,7 @@ class Edit extends Component {
    */
   render() {
     const { data, detached, formDescription } = this.props;
+    const { scaledImage } = this.state;
     const placeholder =
       this.props.data.placeholder ||
       this.props.intl.formatMessage(messages.ImageBlockInputPlaceholder);
@@ -656,7 +684,7 @@ class Edit extends Component {
           {
             center: !Boolean(data.align),
           },
-          data.align,
+          data.align && scaledImage ? data.align : 'center',
         )}
         data-disabled-msg={
           data.disabledMessage ||
@@ -669,22 +697,15 @@ class Edit extends Component {
           </Header>
         )}
         {data.url && isSVGImage(data.url) ? (
-          <Svg data={data} detached={detached} />
+          <Svg data={data} detached={detached} scales={scaledImage} />
         ) : data.url && isTableImage(data.url) ? (
           <DataTable data={data} />
         ) : data.url ? (
           <img
-            src={
-              isInternalContentURL(data.url)
-                ? // Backwards compat in the case that the block is storing the full server URL
-                  (() => {
-                    return isChartImage(data.url)
-                      ? `${flattenToContentURL(data.url)}`
-                      : `${flattenToContentURL(data.url)}/@@images/image`;
-                  })()
-                : data.url
-            }
+            src={flattenToAppURL(scaledImage?.download) ?? data.url}
             alt={data.title || ''}
+            width={scaledImage?.width}
+            height={scaledImage?.height ?? 'auto'}
           />
         ) : (
           <div>
@@ -800,6 +821,7 @@ class Edit extends Component {
             {...this.props}
             svgs={this.props.data.svgs}
             instructions={instructions}
+            scaledImage={scaledImage}
             resetSubmitUrl={this.resetSubmitUrl}
           />
         </SidebarPortal>
@@ -815,6 +837,7 @@ export default compose(
       request: state.content.subrequests[ownProps.block] || {},
       content: state.content.subrequests[ownProps.block]?.data,
       subrequests: state.content.subrequests,
+      scales: state.content.subrequests[ownProps.block]?.data?.image,
     }),
     {
       getInternalContent,

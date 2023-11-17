@@ -2,6 +2,8 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
+import React from 'react';
+import { connect } from 'react-redux';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import {
@@ -14,23 +16,25 @@ import {
   Modal,
   Header,
 } from 'semantic-ui-react';
+import { flattenToAppURL } from '@plone/volto/helpers';
+import { Icon } from '@plone/volto/components';
 import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
+  setImageSize,
+  isInternalContentURL,
 } from '@eeacms/volto-block-data-figure/helpers';
-import Svg from './Svg';
+import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
 import imageSVG from '@plone/volto/icons/image.svg';
 import zoomSVG from '@plone/volto/icons/zoom-in.svg';
 import infoSVG from '@plone/volto/icons/info.svg';
 import applicationSVG from '@plone/volto/icons/application.svg';
 import downloadSVG from '@plone/volto/icons/download.svg';
-import { Icon } from '@plone/volto/components';
 import Metadata from './Metadata';
+import Svg from './Svg';
 import DownloadData from './DownloadData';
-import React from 'react';
-import { connect } from 'react-redux';
 import DataTable from './Table';
 import './less/public.less';
 
@@ -48,6 +52,7 @@ class View extends React.Component {
     zoomed: 'false',
     showDownload: false,
     position: 0,
+    scaledImage: '',
   };
 
   hideMetadata = () => {
@@ -74,6 +79,10 @@ class View extends React.Component {
     }));
   };
 
+  internalURLContents = async (block = this.props.id, url) => {
+    await this.props.getInternalContent(block, flattenToAppURL(url));
+  };
+
   toggleLeftPopup = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -82,6 +91,35 @@ class View extends React.Component {
       showDownload: !prevState.showDownload,
     }));
   };
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (
+      this.props?.data?.url !== nextProps?.data?.url &&
+      isInternalContentURL(nextProps?.data?.url)
+    ) {
+      this.internalURLContents(nextProps?.id, nextProps?.data?.url);
+    }
+
+    if (this.props?.scales !== nextProps?.scales) {
+      const scaledImage =
+        this.props?.data?.url && nextProps?.scales
+          ? setImageSize(
+              this.props?.data?.url,
+              nextProps.scales,
+              this.props?.data?.align === 'full' ? 'h' : this.props?.data?.size,
+            )
+          : '';
+      this.setState({
+        scaledImage,
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.props?.data?.url && isInternalContentURL(this.props?.data?.url)) {
+      this.internalURLContents(this.props.id, this.props?.data?.url);
+    }
+  }
 
   render() {
     const {
@@ -92,8 +130,9 @@ class View extends React.Component {
       zoomed,
     } = this.state;
     const { data, detached } = this.props;
+    const { scaledImage } = this.state;
 
-    const imageUrl = '@@images/image';
+    const imageUrl = flattenToAppURL(scaledImage?.download) ?? data.url;
 
     // Block position in page
     const position = getBlockPosition(
@@ -116,7 +155,12 @@ class View extends React.Component {
               <div className={`card ${is_flipped ? ' is-flipped' : ''}`}>
                 <div className="card__face card__face--front">
                   {isSVGImage(data.url) ? (
-                    <Svg data={data} detached={detached} id={this.props.id} />
+                    <Svg
+                      data={data}
+                      detached={detached}
+                      id={this.props.id}
+                      scales={scaledImage}
+                    />
                   ) : (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
@@ -130,12 +174,10 @@ class View extends React.Component {
                             : '0',
                         marginRight: data.inLeftColumn ? '0!important' : '1rem',
                       }}
-                      src={
-                        isTableImage(data.url)
-                          ? data.url
-                          : `${data.url}/${imageUrl}`
-                      }
+                      src={isTableImage(data.url) ? data.url : imageUrl}
                       alt={data.title || ''}
+                      width={scaledImage?.width}
+                      height={scaledImage?.height}
                     ></img>
                   )}
                 </div>
@@ -300,6 +342,10 @@ View.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect((state, ownProps) => ({
-  screen: state?.screen,
-}))(View);
+export default connect(
+  (state, ownProps) => ({
+    screen: state?.screen,
+    scales: state.content?.subrequests?.[ownProps.id]?.data?.image,
+  }),
+  { getInternalContent },
+)(View);

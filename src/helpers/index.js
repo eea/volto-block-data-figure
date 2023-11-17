@@ -13,4 +13,4 @@ export {
   flattenToContentURL,
 } from '@eeacms/volto-block-data-figure/helpers/Svg/Svg';
 
-export { getBlockPosition, getImageScale } from './blocks';
+export { getBlockPosition, getImageScale, setImageSize } from './blocks';

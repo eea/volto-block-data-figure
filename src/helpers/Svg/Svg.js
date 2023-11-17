@@ -1,8 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import config from '@plone/volto/registry';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
-
-export const cleanSVG = (data) => {
+export const cleanSVG = (data, scales = {}) => {
   // base64 decode, if needed
   let text, svg;
   try {
@@ -15,10 +14,10 @@ export const cleanSVG = (data) => {
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, 'image/svg+xml');
     svg = xml.getElementsByTagName('svg')[0];
-    const width = svg.getAttribute('width');
-    const height = svg.getAttribute('height');
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '100%');
+    const width = scales?.width ?? svg.getAttribute('width');
+    const height = scales?.height ?? svg.getAttribute('height');
+    svg.setAttribute('width', scales?.width ?? '100%');
+    svg.setAttribute('height', scales?.height ?? '100%');
     svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
     svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
   } catch {

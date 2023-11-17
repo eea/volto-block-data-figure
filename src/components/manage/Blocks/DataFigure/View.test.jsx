@@ -25,6 +25,8 @@ jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
   getBlockPosition: jest.fn(),
   isTableImage: jest.fn(),
   isSVGImage: jest.fn(),
+  setImageSize: jest.fn(),
+  isInternalContentURL: jest.fn(),
 }));
 
 jest.mock('./Svg', () => jest.fn(() => <div>Svg</div>));
@@ -49,6 +51,7 @@ describe('View component', () => {
   test('renders without crashing', () => {
     helpers.isTableImage.mockReturnValue(true);
     helpers.isSVGImage.mockReturnValue(true);
+    helpers.isInternalContentURL.mockReturnValue(true);
     render(
       <Provider store={store}>
         <View data={{ url: 'testUrl' }} />
@@ -59,6 +62,7 @@ describe('View component', () => {
   test('renders without crashing', () => {
     helpers.isTableImage.mockReturnValue(false);
     helpers.isSVGImage.mockReturnValue(true);
+    helpers.isInternalContentURL.mockReturnValue(false);
     render(
       <Provider store={store}>
         <View data={{ url: 'testUrl' }} />

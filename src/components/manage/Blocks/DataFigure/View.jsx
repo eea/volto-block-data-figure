@@ -185,12 +185,26 @@ class View extends React.Component {
         </Sidebar.Pushable>
 
         <div
-          className={cx('visualization-toolbar', { mobile: this.state.mobile })}
+          className={cx('visualization-toolbar data-figure-toolbar', {
+            mobile: this.state.mobile,
+          })}
         >
           <div className="left-col">
             {data.figure_note && <FigureNote notes={data.figure_note || []} />}
             {data.data_provenance && (
               <Sources sources={data.data_provenance?.data} />
+            )}
+            {data.metadata && (
+              <div className="show-metadata">
+                <button
+                  className={cx('trigger-button')}
+                  onClick={() => {
+                    this.setState({ showMetadata: !this.props.showMetadata });
+                  }}
+                >
+                  <span>Metadata</span>
+                </button>
+              </div>
             )}
             {data.href && <MoreInfo href={data.href} />}
           </div>

@@ -16,7 +16,7 @@ const store = mockStore({
   },
   intl: {
     locale: 'en',
-    messages: {},
+    messages: {}, 
     formatMessage: jest.fn(),
   },
 });
@@ -97,9 +97,7 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButtons = container.querySelectorAll(
-      '.metadata-btn-group button.data-figure-control',
-    );
+    const metadataButtons = container.querySelectorAll('.show-metadata button');
     fireEvent.click(metadataButtons[1]);
 
     const metadata = getByText('Metadata');

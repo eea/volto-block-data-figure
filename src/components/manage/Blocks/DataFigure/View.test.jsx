@@ -104,7 +104,7 @@ describe('View component', () => {
     expect(metadata).toBeInTheDocument();
   });
 
-  test('shows metadata when button is clicked', async () => {
+  test('shows table when button is clicked', async () => {
     helpers.isSVGImage.mockReturnValue(false);
     const { container } = render(
       <Provider store={store}>
@@ -128,4 +128,25 @@ describe('View component', () => {
     const table = container.querySelector('table');
     expect(table).toBeInTheDocument();
   });
+});
+test('shows download when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: 'test' },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const metadataButton = container.querySelector('.download button');
+  fireEvent.click(metadataButton);
 });

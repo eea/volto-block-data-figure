@@ -125,8 +125,7 @@ describe('View component', () => {
     const metadataButtons = container.querySelectorAll(
       '.metadata-btn-group button.data-figure-control',
     );
-    fireEvent.click(metadataButtons[3]);
-    fireEvent.click(metadataButtons[4]);
+    fireEvent.click(metadataButtons[0]);
 
     const metadata = getByText('Metadata');
     expect(metadata).toBeInTheDocument();

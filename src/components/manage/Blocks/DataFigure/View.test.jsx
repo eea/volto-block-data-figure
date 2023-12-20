@@ -210,6 +210,10 @@ test('shows figure note  when button is clicked', async () => {
           url: 'testUrl',
           metadata: { downloadData: ['google.com/zoomed'] },
           width: '768',
+          tabledata: {
+            properties: { test: 'test', mega: 'test' },
+            items: [{ test: 'test' }],
+          },
           height: '800',
           inLeftColumn: true,
           figureType: 'EEAFigure',

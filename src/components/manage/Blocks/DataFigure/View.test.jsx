@@ -16,7 +16,7 @@ const store = mockStore({
   },
   intl: {
     locale: 'en',
-    messages: {}, 
+    messages: {},
     formatMessage: jest.fn(),
   },
 });

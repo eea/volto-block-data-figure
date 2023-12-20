@@ -4,29 +4,27 @@
  */
 import cx from 'classnames';
 import PropTypes from 'prop-types';
+
 import {
-  Button,
-  Divider,
-  Popup,
   Sidebar,
   Container,
   Transition,
   Modal,
   Header,
 } from 'semantic-ui-react';
+
 import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
 } from '@eeacms/volto-block-data-figure/helpers';
+
+import MoreInfo from './MoreInfo';
+import Share from './Share';
+import Sources from './Sources';
+import FigureNote from './FigureNote';
 import Svg from './Svg';
-import spreadsheetSVG from '@plone/volto/icons/spreadsheet.svg';
-import imageSVG from '@plone/volto/icons/image.svg';
-import zoomSVG from '@plone/volto/icons/zoom-in.svg';
-import infoSVG from '@plone/volto/icons/info.svg';
-import applicationSVG from '@plone/volto/icons/application.svg';
-import downloadSVG from '@plone/volto/icons/download.svg';
-import { Icon } from '@plone/volto/components';
+
 import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
@@ -48,6 +46,8 @@ class View extends React.Component {
     zoomed: 'false',
     showDownload: false,
     position: 0,
+    mobile: false,
+    showTable: false,
   };
 
   hideMetadata = () => {
@@ -84,13 +84,7 @@ class View extends React.Component {
   };
 
   render() {
-    const {
-      visible,
-      showMetadata,
-      showDownload,
-      modalOpen,
-      zoomed,
-    } = this.state;
+    const { showMetadata, showDownload, modalOpen, zoomed } = this.state;
     const { data, detached } = this.props;
 
     const imageUrl = '@@images/image';
@@ -101,8 +95,6 @@ class View extends React.Component {
       this.props.id,
     );
 
-    const is_flipped = isTableImage(data?.url || '') || visible;
-
     return data.url && __CLIENT__ ? (
       <div className="data-figure-block">
         {data.title && (
@@ -112,9 +104,9 @@ class View extends React.Component {
         )}
         <Sidebar.Pushable as={Container}>
           <Sidebar.Pusher style={{ height: '100%' }}>
-            <div className="scene scene--card">
-              <div className={`card ${is_flipped ? ' is-flipped' : ''}`}>
-                <div className="card__face card__face--front">
+            <div>
+              <div>
+                <div>
                   {isSVGImage(data.url) ? (
                     <Svg data={data} detached={detached} id={this.props.id} />
                   ) : (
@@ -139,7 +131,11 @@ class View extends React.Component {
                     ></img>
                   )}
                 </div>
-                <div className="card__face card__face--back">
+                <div
+                  className={cx('data-table-animation', {
+                    open: this.state.showTable,
+                  })}
+                >
                   <DataTable data={data} />
                 </div>
               </div>
@@ -164,9 +160,7 @@ class View extends React.Component {
               }
             >
               <Modal.Content image className="data-figure-image">
-                {is_flipped ? (
-                  <DataTable data={data} />
-                ) : isSVGImage(data.url) ? (
+                {isSVGImage(data.url) ? (
                   <Svg data={data} detached={detached} />
                 ) : (
                   <img
@@ -184,108 +178,64 @@ class View extends React.Component {
                     alt={data.alt || ''}
                   ></img>
                 )}
+                {this.state.showTable === true && <DataTable data={data} />}
               </Modal.Content>
             </Modal>
           </Transition>
         </Sidebar.Pushable>
-        <Divider hidden />
-        <div className="metadata-btn-group">
-          <Button.Group basic>
-            <Popup
-              className="popup-wrap"
-              inverted
-              trigger={
-                <Button
-                  icon
-                  disabled={!data.tabledata || isTableImage(data?.url || '')}
-                  onClick={this.toggleVisibility}
-                  className="data-figure-control"
-                >
-                  {is_flipped ? (
-                    <Icon name={imageSVG} size="24px" />
-                  ) : (
-                    <Icon name={spreadsheetSVG} size="24px" />
-                  )}
-                </Button>
-              }
-              position="top center"
+
+        <div
+          className={cx('visualization-toolbar', { mobile: this.state.mobile })}
+        >
+          <div className="left-col">
+            {data.figure_note && <FigureNote notes={data.figure_note || []} />}
+            {data.data_provenance && (
+              <Sources sources={data.data_provenance?.data} />
+            )}
+            {data.href && <MoreInfo href={data.href} />}
+          </div>
+          <div className="show-table">
+            <button
+              className={cx('trigger-button')}
+              onClick={() => {
+                this.setState({ showTable: !this.state.showTable });
+              }}
             >
-              {visible ? 'data figure' : 'data table'}
-            </Popup>
-            <Popup
-              className="popup-wrap"
-              inverted
-              trigger={
-                <Button
-                  icon
-                  disabled={!Object.keys(data?.metadata || {}).length}
-                  onClick={this.toggleMetadata}
-                  className="data-figure-control"
-                >
-                  <Icon name={infoSVG} size="24px" />
-                </Button>
-              }
-              position="top center"
-            >
-              metadata
-            </Popup>
-            <Popup
-              className="popup-wrap"
-              inverted
-              trigger={
-                <a
-                  href={data?.href ? data.href : null}
-                  target={data.openLinkInNewTab ? '_blank' : '_self'}
-                >
-                  <Button
-                    icon
-                    className="data-figure-control"
-                    disabled={!data.href}
-                  >
-                    <Icon name={applicationSVG} size="24px" />
-                  </Button>
-                </a>
-              }
-              position="top center"
-            >
-              {data.label || <p>Interactive link</p>}
-            </Popup>
-            <Popup
-              className="popup-wrap"
-              inverted
-              trigger={
-                <Button
-                  icon
-                  disabled={!data?.metadata?.downloadData}
+              <i
+                className={
+                  this.state.showTable === false
+                    ? 'ri-arrow-down-line'
+                    : 'ri-arrow-up-line'
+                }
+              />
+              <span>Table</span>
+            </button>
+          </div>
+          <div className="right-col">
+            {data?.metadata?.downloadData && (
+              <div className="download">
+                <button
+                  className={cx('trigger-button')}
                   onClick={this.toggleLeftPopup}
-                  className="data-figure-control"
                 >
-                  <Icon name={downloadSVG} size="24px" />
-                </Button>
-              }
-              position="top center"
-            >
-              download
-            </Popup>
-            <Popup
-              className="popup-wrap"
-              inverted
-              trigger={
-                <Button
-                  icon
-                  className="data-figure-control"
-                  onClick={() =>
-                    this.setState({ modalOpen: true, zoomed: 'true' })
-                  }
-                >
-                  <Icon name={zoomSVG} size="24px" />
-                </Button>
-              }
-              position="top center"
-            >
-              enlarge
-            </Popup>
-          </Button.Group>
+                  <i className="ri-download-fill" />
+                  <span>Download</span>
+                </button>
+              </div>
+            )}
+            {data.href && <Share href={data.href} />}
+            <div className="enlarge">
+              <button
+                className="trigger-button"
+                onClick={() => {
+                  this.setState({ modalOpen: true, zoomed: 'true' });
+                }}
+              >
+                <i className="ri-fullscreen-line" />
+                Enlarge
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     ) : null;

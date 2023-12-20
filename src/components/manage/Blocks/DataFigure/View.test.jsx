@@ -150,3 +150,26 @@ test('shows download when button is clicked', async () => {
   const metadataButton = container.querySelector('.download button');
   fireEvent.click(metadataButton);
 });
+
+test('shows download eea figure when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const metadataButton = container.querySelector('.download button');
+  fireEvent.click(metadataButton);
+});

@@ -122,8 +122,8 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButton = container.querySelector('.show-table button');
-    fireEvent.click(metadataButton);
+    const tableButton = container.querySelector('.show-table button');
+    fireEvent.click(tableButton);
 
     const table = container.querySelector('table');
     expect(table).toBeInTheDocument();
@@ -170,6 +170,58 @@ test('shows download eea figure when button is clicked', async () => {
     </Provider>,
   );
 
-  const metadataButton = container.querySelector('.download button');
-  fireEvent.click(metadataButton);
+  const downloadButton = container.querySelector('.download button');
+  fireEvent.click(downloadButton);
+});
+
+test('shows share  when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const shareButton = container.querySelector('.trigger-button');
+
+  fireEvent.click(shareButton);
+  // const copyButton = container.querySelector('.copy-button');
+  // console.log(copyButton);
+  // fireEvent.click(copyButton);
+});
+
+test('shows figure note  when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container, getByText } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          figure_note: 'FIGURE NOTE',
+        }}
+      />
+    </Provider>,
+  );
+
+  const figureNote = container.querySelector('.trigger-button');
+
+  fireEvent.click(figureNote);
+  expect(getByText('FIGURE NOTE')).toBeInTheDocument();
 });

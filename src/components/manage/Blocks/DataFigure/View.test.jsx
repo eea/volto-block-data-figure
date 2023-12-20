@@ -81,7 +81,7 @@ describe('View component', () => {
 
   test('shows metadata when button is clicked', async () => {
     helpers.isSVGImage.mockReturnValue(false);
-    const { container, getByText } = render(
+    const { container } = render(
       <Provider store={store}>
         <View
           data={{

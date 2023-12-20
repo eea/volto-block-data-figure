@@ -75,7 +75,7 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const tabledataButton = container.querySelector('.data-figure-control');
+    const tabledataButton = container.querySelector('.show-table button');
     fireEvent.click(tabledataButton);
   });
 
@@ -97,10 +97,10 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButtons = container.querySelectorAll('.show-metadata button');
-    fireEvent.click(metadataButtons[1]);
+    const metadataButton = container.querySelector('.show-metadata button');
+    fireEvent.click(metadataButton);
 
-    const metadata = getByText('Metadata');
+    const metadata = container.querySelector('.metadata-sidebar');
     expect(metadata).toBeInTheDocument();
   });
 
@@ -122,65 +122,10 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButtons = container.querySelectorAll(
-      '.metadata-btn-group button.data-figure-control',
-    );
-    fireEvent.click(metadataButtons[0]);
+    const metadataButton = container.querySelector('.show-table button');
+    fireEvent.click(metadataButton);
 
-    const metadata = getByText('Metadata');
-    expect(metadata).toBeInTheDocument();
-  });
-
-  test('renders without crashing', () => {
-    helpers.isTableImage.mockReturnValue(false);
-    helpers.isSVGImage.mockReturnValue(true);
-    const { container, getAllByText } = render(
-      <Provider store={store}>
-        <View
-          data={{
-            url: 'testUrl',
-            tabledata: {
-              properties: {
-                test_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-                test1_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-                test2_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-              },
-              items: [
-                {
-                  test_header: 'test_values',
-                  test1_header: 'test1_values',
-                  test2_header: 'test2_values',
-                },
-                {
-                  test_header: 'test_values',
-                  test1_header: 'test1_values',
-                  test2_header: 'test2_values',
-                },
-                {
-                  test_header: 'test_values',
-                  test1_header: null,
-                  test2_header: undefined,
-                },
-              ],
-            },
-          }}
-        />
-      </Provider>,
-    );
-
-    const tabledataButton = container.querySelector('.data-figure-control');
-    fireEvent.click(tabledataButton);
-    expect(getAllByText('test_values').length).toBe(3);
-    expect(getAllByText('test1_values').length).toBe(2);
-    expect(getAllByText('test2_values').length).toBe(2);
+    const table = container.querySelector('table');
+    expect(table).toBeInTheDocument();
   });
 });

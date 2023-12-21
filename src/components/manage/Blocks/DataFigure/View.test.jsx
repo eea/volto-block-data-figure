@@ -178,6 +178,62 @@ test('shows download eea figure when button is clicked', async () => {
   fireEvent.click(downloadButton);
 });
 
+test('test sources when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          data_provenance: {
+            data: [{ chart_source_link: 'test.com', chart_source: 'TEST' }],
+          },
+
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const sourcesButton = container.querySelector('.sources button');
+
+  fireEvent.click(sourcesButton);
+});
+
+test('test sources when button is clicked v2', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          data_provenance: {
+            data: [{ chart_source: 'TEST' }],
+          },
+
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const sourcesButton = container.querySelector('.sources button');
+
+  fireEvent.click(sourcesButton);
+});
+
 test('shows share  when button is clicked', async () => {
   helpers.isSVGImage.mockReturnValue(false);
   const { container } = render(
@@ -200,9 +256,6 @@ test('shows share  when button is clicked', async () => {
   const shareButton = container.querySelector('.trigger-button');
 
   fireEvent.click(shareButton);
-  // const copyButton = container.querySelector('.copy-button');
-  // console.log(copyButton);
-  // fireEvent.click(copyButton);
 });
 
 test('shows figure note  when button is clicked', async () => {

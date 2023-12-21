@@ -48,6 +48,19 @@ class View extends React.Component {
     position: 0,
     mobile: false,
     showTable: false,
+    ref: React.createRef(),
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.screen !== this.props.screen) {
+      const visWidth = this.state.ref.current.parentElement.offsetWidth;
+
+      if (visWidth < 600 && !this.state.mobile) {
+        this.setState({ mobile: true });
+      } else if (visWidth >= 600 && this.state.mobile) {
+        this.setState({ mobile: false });
+      }
+    }
   };
 
   hideMetadata = () => {
@@ -188,6 +201,7 @@ class View extends React.Component {
           className={cx('visualization-toolbar data-figure-toolbar', {
             mobile: this.state.mobile,
           })}
+          ref={this.state.ref}
         >
           <div className="left-col">
             {data.figure_note && <FigureNote notes={data.figure_note || []} />}

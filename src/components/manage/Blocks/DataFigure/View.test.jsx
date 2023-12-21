@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import View from './View';
+import Edit from './Edit';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';
@@ -9,6 +10,9 @@ import '@testing-library/jest-dom/extend-expect';
 const mockStore = configureStore([]);
 
 const store = mockStore({
+  content: {
+    subrequests: {},
+  },
   screen: {
     page: {
       width: 768,
@@ -25,6 +29,7 @@ jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
   getBlockPosition: jest.fn(),
   isTableImage: jest.fn(),
   isSVGImage: jest.fn(),
+  isInternalContentURL: jest.fn(),
 }));
 
 jest.mock('./Svg', () => jest.fn(() => <div>Svg</div>));

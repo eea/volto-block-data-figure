@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import View from './View';
-import Edit from './Edit';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';

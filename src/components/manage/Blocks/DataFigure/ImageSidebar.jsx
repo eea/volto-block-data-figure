@@ -9,6 +9,7 @@ import { isArray } from 'lodash';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
+import RichTextWidget from '@plone/volto-slate/widgets/RichTextWidget';
 import {
   isChartImage,
   isInternalContentURL,
@@ -47,6 +48,10 @@ const messages = defineMessages({
   LinkLabel: {
     id: 'Label ',
     defaultMessage: 'Label',
+  },
+  FigureNote: {
+    id: 'FigureNote',
+    defaultMessage: 'Figure Note',
   },
   dataSources: {
     id: 'Data sources',
@@ -208,6 +213,18 @@ const ImageSidebar = ({
                 onChangeBlock(block, {
                   ...data,
                   title: value,
+                });
+              }}
+            />
+            <RichTextWidget
+              id="figure-note"
+              title={intl.formatMessage(messages.FigureNote)}
+              required={false}
+              value={data.figure_note}
+              onChange={(name, value) => {
+                onChangeBlock(block, {
+                  ...data,
+                  figure_note: value,
                 });
               }}
             />

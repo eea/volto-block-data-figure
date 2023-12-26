@@ -9,6 +9,9 @@ import '@testing-library/jest-dom/extend-expect';
 const mockStore = configureStore([]);
 
 const store = mockStore({
+  content: {
+    subrequests: {},
+  },
   screen: {
     page: {
       width: 768,
@@ -25,6 +28,7 @@ jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
   getBlockPosition: jest.fn(),
   isTableImage: jest.fn(),
   isSVGImage: jest.fn(),
+  isInternalContentURL: jest.fn(),
 }));
 
 jest.mock('./Svg', () => jest.fn(() => <div>Svg</div>));
@@ -75,13 +79,13 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const tabledataButton = container.querySelector('.data-figure-control');
+    const tabledataButton = container.querySelector('.show-table button');
     fireEvent.click(tabledataButton);
   });
 
   test('shows metadata when button is clicked', async () => {
     helpers.isSVGImage.mockReturnValue(false);
-    const { container, getByText } = render(
+    const { container } = render(
       <Provider store={store}>
         <View
           data={{
@@ -97,18 +101,16 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButtons = container.querySelectorAll(
-      '.metadata-btn-group button.data-figure-control',
-    );
-    fireEvent.click(metadataButtons[1]);
+    const metadataButton = container.querySelector('.show-metadata button');
+    fireEvent.click(metadataButton);
 
-    const metadata = getByText('Metadata');
+    const metadata = container.querySelector('.metadata-sidebar');
     expect(metadata).toBeInTheDocument();
   });
 
-  test('shows metadata when button is clicked', async () => {
+  test('shows table when button is clicked', async () => {
     helpers.isSVGImage.mockReturnValue(false);
-    const { container, getByText } = render(
+    const { container } = render(
       <Provider store={store}>
         <View
           data={{
@@ -124,66 +126,163 @@ describe('View component', () => {
       </Provider>,
     );
 
-    const metadataButtons = container.querySelectorAll(
-      '.metadata-btn-group button.data-figure-control',
-    );
-    fireEvent.click(metadataButtons[3]);
-    fireEvent.click(metadataButtons[4]);
+    const tableButton = container.querySelector('.show-table button');
+    fireEvent.click(tableButton);
 
-    const metadata = getByText('Metadata');
-    expect(metadata).toBeInTheDocument();
+    const table = container.querySelector('table');
+    expect(table).toBeInTheDocument();
   });
+});
+test('shows download when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: 'test' },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
 
-  test('renders without crashing', () => {
-    helpers.isTableImage.mockReturnValue(false);
-    helpers.isSVGImage.mockReturnValue(true);
-    const { container, getAllByText } = render(
-      <Provider store={store}>
-        <View
-          data={{
-            url: 'testUrl',
-            tabledata: {
-              properties: {
-                test_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-                test1_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-                test2_header: {
-                  test1: 'test1',
-                  test2: 'test2',
-                },
-              },
-              items: [
-                {
-                  test_header: 'test_values',
-                  test1_header: 'test1_values',
-                  test2_header: 'test2_values',
-                },
-                {
-                  test_header: 'test_values',
-                  test1_header: 'test1_values',
-                  test2_header: 'test2_values',
-                },
-                {
-                  test_header: 'test_values',
-                  test1_header: null,
-                  test2_header: undefined,
-                },
-              ],
-            },
-          }}
-        />
-      </Provider>,
-    );
+  const metadataButton = container.querySelector('.download button');
+  fireEvent.click(metadataButton);
+});
 
-    const tabledataButton = container.querySelector('.data-figure-control');
-    fireEvent.click(tabledataButton);
-    expect(getAllByText('test_values').length).toBe(3);
-    expect(getAllByText('test1_values').length).toBe(2);
-    expect(getAllByText('test2_values').length).toBe(2);
-  });
+test('shows download eea figure when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const downloadButton = container.querySelector('.download button');
+  fireEvent.click(downloadButton);
+});
+
+test('test sources when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          data_provenance: {
+            data: [{ chart_source_link: 'test.com', chart_source: 'TEST' }],
+          },
+
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const sourcesButton = container.querySelector('.sources button');
+
+  fireEvent.click(sourcesButton);
+});
+
+test('test sources when button is clicked v2', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          data_provenance: {
+            data: [{ chart_source: 'TEST' }],
+          },
+
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const sourcesButton = container.querySelector('.sources button');
+
+  fireEvent.click(sourcesButton);
+});
+
+test('shows share  when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          openLinkInNewTab: true,
+        }}
+      />
+    </Provider>,
+  );
+
+  const shareButton = container.querySelector('.trigger-button');
+
+  fireEvent.click(shareButton);
+});
+
+test('shows figure note  when button is clicked', async () => {
+  helpers.isSVGImage.mockReturnValue(false);
+  const { container, getByText } = render(
+    <Provider store={store}>
+      <View
+        data={{
+          url: 'testUrl',
+          metadata: { downloadData: ['google.com/zoomed'] },
+          width: '768',
+          tabledata: {
+            properties: { test: 'test', mega: 'test' },
+            items: [{ test: 'test' }],
+          },
+          height: '800',
+          inLeftColumn: true,
+          figureType: 'EEAFigure',
+          href: 'https://localhost:3000',
+          figure_note: 'FIGURE NOTE',
+        }}
+      />
+    </Provider>,
+  );
+
+  const figureNote = container.querySelector('.trigger-button');
+
+  fireEvent.click(figureNote);
+  expect(getByText('FIGURE NOTE')).toBeInTheDocument();
 });

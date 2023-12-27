@@ -25,7 +25,6 @@ import Sources from './Sources';
 import FigureNote from './FigureNote';
 import Svg from './Svg';
 
-import Metadata from './Metadata';
 import DownloadData from './DownloadData';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -41,7 +40,6 @@ import './less/public.less';
 class View extends React.Component {
   state = {
     visible: false,
-    showMetadata: false,
     modalOpen: false,
     zoomed: 'false',
     showDownload: false,
@@ -63,12 +61,6 @@ class View extends React.Component {
     }
   };
 
-  hideMetadata = () => {
-    this.setState(() => ({
-      showMetadata: false,
-    }));
-  };
-
   hideDownload = () => {
     this.setState(() => ({
       showDownload: false,
@@ -78,26 +70,16 @@ class View extends React.Component {
   toggleVisibility = () =>
     this.setState((prevState) => ({ visible: !prevState.visible }));
 
-  toggleMetadata = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    this.setState((prevState) => ({
-      showDownload: false,
-      showMetadata: !prevState.showMetadata,
-    }));
-  };
-
   toggleLeftPopup = (e) => {
     e.stopPropagation();
     e.preventDefault();
     this.setState((prevState) => ({
-      showMetadata: false,
       showDownload: !prevState.showDownload,
     }));
   };
 
   render() {
-    const { showMetadata, showDownload, modalOpen, zoomed } = this.state;
+    const { showDownload, modalOpen, zoomed } = this.state;
     const { data, detached } = this.props;
 
     const imageUrl = '@@images/image';
@@ -154,11 +136,7 @@ class View extends React.Component {
               </div>
             </div>
           </Sidebar.Pusher>
-          <Metadata
-            data={data}
-            visible={showMetadata}
-            onHide={this.hideMetadata}
-          />
+
           <DownloadData
             data={data}
             visible={showDownload}
@@ -207,18 +185,6 @@ class View extends React.Component {
             {data.figure_note && <FigureNote notes={data.figure_note || []} />}
             {data.data_provenance && (
               <Sources sources={data.data_provenance?.data} />
-            )}
-            {data.metadata && (
-              <div className="show-metadata">
-                <button
-                  className={cx('trigger-button')}
-                  onClick={() => {
-                    this.setState({ showMetadata: !this.props.showMetadata });
-                  }}
-                >
-                  <span>Metadata</span>
-                </button>
-              </div>
             )}
             {data.href && <MoreInfo href={data.href} />}
           </div>

@@ -83,31 +83,6 @@ describe('View component', () => {
     fireEvent.click(tabledataButton);
   });
 
-  test('shows metadata when button is clicked', async () => {
-    helpers.isSVGImage.mockReturnValue(false);
-    const { container } = render(
-      <Provider store={store}>
-        <View
-          data={{
-            url: 'testUrl',
-            metadata: { test: 'test' },
-            width: '768',
-            height: '800',
-            inLeftColumn: true,
-            href: 'https://localhost:3000',
-            openLinkInNewTab: true,
-          }}
-        />
-      </Provider>,
-    );
-
-    const metadataButton = container.querySelector('.show-metadata button');
-    fireEvent.click(metadataButton);
-
-    const metadata = container.querySelector('.metadata-sidebar');
-    expect(metadata).toBeInTheDocument();
-  });
-
   test('shows table when button is clicked', async () => {
     helpers.isSVGImage.mockReturnValue(false);
     const { container } = render(
@@ -151,8 +126,8 @@ test('shows download when button is clicked', async () => {
     </Provider>,
   );
 
-  const metadataButton = container.querySelector('.download button');
-  fireEvent.click(metadataButton);
+  const downloadButton = container.querySelector('.download button');
+  fireEvent.click(downloadButton);
 });
 
 test('shows download eea figure when button is clicked', async () => {

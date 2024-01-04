@@ -2,27 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import Edit from './Edit';
 import { Provider } from 'react-intl-redux';
-import configureStore from 'redux-mock-store';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';
 import '@testing-library/jest-dom/extend-expect';
-
-const mockStore = configureStore([]);
-
-const store = mockStore({
-  content: {
-    subrequests: {},
-  },
-  screen: {
-    page: {
-      width: 768,
-    },
-  },
-  intl: {
-    locale: 'en',
-    messages: {},
-    formatMessage: jest.fn(),
-  },
-});
 
 jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
   getBlockPosition: jest.fn(),
@@ -34,7 +15,7 @@ jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
 test('test edit mode', async () => {
   helpers.isSVGImage.mockReturnValue(false);
   render(
-    <Provider store={store}>
+    <Provider store={global.store}>
       <Edit
         data={{
           url: 'testUrl',

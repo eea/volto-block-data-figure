@@ -96,6 +96,7 @@ describe('View component', () => {
             inLeftColumn: true,
             href: 'https://localhost:3000',
             openLinkInNewTab: true,
+            tabledata: 'Table Data',
           }}
         />
       </Provider>,

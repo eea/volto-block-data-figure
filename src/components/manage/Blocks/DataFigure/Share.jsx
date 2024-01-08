@@ -26,6 +26,7 @@ const useCopyToClipboard = (text) => {
 
 const Share = ({ href = '' }) => {
   const [open, setOpen] = React.useState(false);
+  const ref = React.useRef();
 
   const CopyUrlButton = ({ className, url, buttonText }) => {
     const [copyUrlStatus, copyUrl] = useCopyToClipboard(url);
@@ -48,41 +49,44 @@ const Share = ({ href = '' }) => {
   };
 
   return (
-    <Popup
-      popper={{ id: 'vis-toolbar-popup', className: 'share-popup' }}
-      position="bottom left"
-      on="click"
-      open={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      trigger={
-        <div className="share">
-          <button className={cx('trigger-button', { open })}>
-            <i className="ri-share-fill"></i>
-            <span>Share</span>
-          </button>
-        </div>
-      }
-      content={
-        <>
-          <div className="item">
-            <span className="label">Copy link</span>
-            <div className="control">
-              <Input className="share-link" value={href} />
-              <CopyUrlButton
-                className="copy-button"
-                url={href}
-                buttonText="Copy"
-              />
-            </div>
+    <span ref={ref}>
+      <Popup
+        popper={{ id: 'vis-toolbar-popup', className: 'share-popup' }}
+        position="bottom left"
+        on="click"
+        open={open}
+        mountNode={ref.current}
+        onClose={() => {
+          setOpen(false);
+        }}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        trigger={
+          <div className="share">
+            <button className={cx('trigger-button', { open })}>
+              <i className="ri-share-fill"></i>
+              <span>Share</span>
+            </button>
           </div>
-        </>
-      }
-    />
+        }
+        content={
+          <>
+            <div className="item">
+              <span className="label">Copy link</span>
+              <div className="control">
+                <Input className="share-link" value={href} />
+                <CopyUrlButton
+                  className="copy-button"
+                  url={href}
+                  buttonText="Copy"
+                />
+              </div>
+            </div>
+          </>
+        }
+      />
+    </span>
   );
 };
 

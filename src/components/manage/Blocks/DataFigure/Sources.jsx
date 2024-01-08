@@ -36,26 +36,29 @@ const Source = ({ source }) => {
 
 export default function Sources({ sources }) {
   const [open, setOpen] = React.useState(false);
+  const ref = React.useRef();
 
   return (
-    <Popup
-      popper={{ id: 'vis-toolbar-popup', className: 'sources-popup' }}
-      position="bottom left"
-      on="click"
-      open={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      trigger={
-        <div className="sources">
-          <button className={cx('trigger-button', { open })}>Sources</button>
-        </div>
-      }
-      content={
-        sources?.length ? (
+    <span ref={ref}>
+      <Popup
+        popper={{ id: 'vis-toolbar-popup', className: 'sources-popup' }}
+        position="bottom left"
+        on="click"
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        mountNode={ref.current}
+        trigger={
+          <div className="sources">
+            <button className={cx('trigger-button', { open })}>Sources</button>
+          </div>
+        }
+      >
+        {sources?.length ? (
           <ol className="sources-list">
             {sources?.map((source, index) => {
               return (
@@ -67,8 +70,8 @@ export default function Sources({ sources }) {
           </ol>
         ) : (
           <p>Data provenance is not set for this visualization.</p>
-        )
-      }
-    />
+        )}
+      </Popup>
+    </span>
   );
 }

@@ -188,23 +188,25 @@ class View extends React.Component {
             )}
             {data.href && <MoreInfo href={data.href} />}
           </div>
-          <div className="show-table">
-            <button
-              className={cx('trigger-button')}
-              onClick={() => {
-                this.setState({ showTable: !this.state.showTable });
-              }}
-            >
-              <i
-                className={
-                  this.state.showTable === false
-                    ? 'ri-arrow-down-line'
-                    : 'ri-arrow-up-line'
-                }
-              />
-              <span>Table</span>
-            </button>
-          </div>
+          {data?.tabledata && (
+            <div className="show-table">
+              <button
+                className={cx('trigger-button')}
+                onClick={() => {
+                  this.setState({ showTable: !this.state.showTable });
+                }}
+              >
+                <i
+                  className={
+                    this.state.showTable === false
+                      ? 'ri-arrow-down-line'
+                      : 'ri-arrow-up-line'
+                  }
+                />
+                <span>Table</span>
+              </button>
+            </div>
+          )}
           <div className="right-col">
             {data?.metadata?.downloadData && (
               <div className="download">

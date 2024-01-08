@@ -1,41 +1,20 @@
 import { jest } from '@jest/globals';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import config from '@plone/volto/registry';
 import { blocksConfig } from '@plone/volto/config/Blocks';
 import installSlate from '@plone/volto-slate/index';
+
+var mockSemanticComponents = jest.requireActual('semantic-ui-react');
+var mockComponents = jest.requireActual('@plone/volto/components');
+var config = jest.requireActual('@plone/volto/registry').default;
 
 config.blocks.blocksConfig = {
   ...blocksConfig,
   ...config.blocks.blocksConfig,
 };
 
-[installSlate].reduce((acc, apply) => apply(acc), config);
-
-const mockStore = configureStore([thunk]);
-
-global.store = mockStore({
-  intl: {
-    locale: 'en',
-    messages: {},
-    formatMessage: jest.fn(),
-  },
-  content: {
-    create: {},
-    subrequests: [],
-  },
-  connected_data_parameters: {},
-  screen: {
-    page: {
-      width: 768,
-    },
-  },
-});
-
-const mockSemanticComponents = jest.requireActual('semantic-ui-react');
-const mockComponents = jest.requireActual('@plone/volto/components');
-
-jest.mock('semantic-ui-react', () => ({
+jest.doMock('semantic-ui-react', () => ({
+  __esModule: true,
   ...mockSemanticComponents,
   Popup: ({ content, trigger }) => {
     return (
@@ -55,8 +34,32 @@ jest.doMock('@plone/volto/components', () => {
   };
 });
 
+jest.doMock('@plone/volto/registry', () =>
+  [installSlate].reduce((acc, apply) => apply(acc), config),
+);
+
+const mockStore = configureStore([thunk]);
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve({}),
   }),
 );
+
+global.store = mockStore({
+  intl: {
+    locale: 'en',
+    messages: {},
+    formatMessage: jest.fn(),
+  },
+  content: {
+    create: {},
+    subrequests: [],
+  },
+  connected_data_parameters: {},
+  screen: {
+    page: {
+      width: 768,
+    },
+  },
+});

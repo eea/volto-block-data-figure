@@ -51,7 +51,7 @@ class View extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.screen !== this.props.screen) {
-      const visWidth = this.state.ref.current.parentElement.offsetWidth;
+      const visWidth = this.state.ref?.current?.parentElement?.offsetWidth;
 
       if (visWidth < 600 && !this.state.mobile) {
         this.setState({ mobile: true });

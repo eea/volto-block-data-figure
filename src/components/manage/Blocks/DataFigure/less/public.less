@@ -1,103 +1,32 @@
-.scene {
-  perspective: 600px;
+.data-table-animation {
+  display: none;
 }
 
-.card {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-origin: center right;
-  transform-style: preserve-3d;
-  transition: transform 1s;
+.data-table-animation.open {
+  display: block;
+  -webkit-animation: slide-down 0.3s ease-out;
+  -moz-animation: slide-down 0.3s ease-out;
+  animation: slide-down 0.3s ease-out;
 }
 
-.card.is-flipped {
-  transform: translateX(-100%) rotateY(-180deg);
-}
-
-.card__face {
-  backface-visibility: hidden;
-}
-
-.card__face--back {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: #fff;
-  text-align: left;
-
-  h2 {
-    display: none;
-  }
-
-  table {
-    width: 100%;
-    background-color: #fff;
-    border-collapse: collapse;
-    border-spacing: 0px;
-
-    th {
-      background-color: #787878;
-      color: #fff;
-      text-align: center;
-    }
-
-    tr,
-    td {
-      padding: 8px;
-      border: 1px solid #787878;
-      color: #787878;
-    }
-  }
-}
-
-.card__face--back {
-  transform: rotateY(180deg);
-}
-
-// set overflow auto only when we have flipped card where we have tables
-// if auto is set directly, within Chrome you cannot scroll the body area
-// when the front card is the chart and it has no overflow
-.is-flipped .card__face--back {
-  overflow: auto;
+.data-figure-toolbar {
+  margin-top: 1rem;
 }
 
 @media print {
-  .card__face--front {
-    page-break-inside: avoid !important;
+  .data-table-animation {
+    display: block;
+
+    page-break-inside: avoid;
   }
 
-  .card__face--back {
-    page-break-inside: avoid !important;
+  table {
+    page-break-inside: auto;
   }
 
-  .card {
-    page-break-inside: unset !important;
-  }
-
-  .scene {
-    perspective: none !important;
-  }
-
-  .card {
-    transform-origin: unset !important;
-    transform-style: unset !important;
-    transition: unset !important;
-  }
-
-  .card.is-flipped {
-    transform: none !important;
-  }
-
-  .card__face {
-    backface-visibility: unset !important;
-  }
-
-  .card__face--back {
-    position: unset !important;
-    transform: unset !important;
+  tr,
+  th {
+    page-break-inside: avoid;
   }
 }
 
@@ -112,12 +41,6 @@
 .popup-wrap {
   border-radius: 0;
   opacity: 0.9;
-}
-
-.metadata-btn-group {
-  width: 100%;
-  margin: auto !important;
-  text-align: center;
 }
 
 .scale-image {

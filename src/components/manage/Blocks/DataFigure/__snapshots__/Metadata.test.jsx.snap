@@ -36,7 +36,7 @@ exports[`<Metadata /> renders data sources correctly 1`] = `
             <div>
               <a
                 href="https://www.example.com/1"
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 Data source 1
@@ -50,7 +50,7 @@ exports[`<Metadata /> renders data sources correctly 1`] = `
             <div>
               <a
                 href="https://www.example.com/2"
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 Data source 2
@@ -145,7 +145,7 @@ exports[`<Metadata /> renders without crashing 1`] = `
             <div>
               <a
                 href="https://www.example.com"
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 Data source

@@ -89,8 +89,7 @@ class View extends React.Component {
       this.props.metadata || this.props.properties,
       this.props.id,
     );
-
-    return data.url && __CLIENT__ ? (
+    return data.url ? (
       <div className="data-figure-block">
         {data.title && (
           <Header>

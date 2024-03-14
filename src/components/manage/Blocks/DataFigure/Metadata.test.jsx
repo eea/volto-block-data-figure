@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
 import Metadata from './Metadata';
+import voltoPackageJson from '@plone/volto/../package.json';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
@@ -24,8 +25,11 @@ const store = mockStore({
   },
 });
 
+const voltoVersion = voltoPackageJson.version;
+const volto17 = voltoVersion.startsWith('17');
+
 describe('<Metadata />', () => {
-  it('renders without crashing', () => {
+  it(`renders without crashing ${volto17 ? 'Volto17' : 'Volto16'}`, () => {
     const data = {
       data_provenance: {
         data: [
@@ -48,7 +52,9 @@ describe('<Metadata />', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders data sources correctly', () => {
+  it(`renders data sources correctly ${
+    volto17 ? 'Volto17' : 'Volto16'
+  }`, () => {
     const data = {
       data_provenance: {
         data: [

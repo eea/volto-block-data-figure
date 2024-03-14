@@ -1,6 +1,115 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Metadata /> renders data sources correctly 1`] = `
+exports[`<Metadata /> renders data sources correctly Volto16 1`] = `
+<div>
+  <div
+    class="ui vertical ui overlay right very wide visible sidebar metadata-sidebar menu"
+  >
+    <div
+      class="ui raised segments"
+    >
+      <div
+        class="ui segment"
+      >
+        <h2
+          class="ui header data-figure-block-header"
+        >
+          Metadata
+        </h2>
+      </div>
+      <div
+        class="ui segment"
+      >
+        <h3
+          class="ui header data-figure-block-header"
+        >
+          Data Sources:
+        </h3>
+        <ul
+          class="ui bulleted list widget"
+          role="list"
+        >
+          <li
+            class="horizontal"
+            role="listitem"
+          >
+            <div>
+              <a
+                href="https://www.example.com/1"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Data source 1
+              </a>
+            </div>
+          </li>
+          <li
+            class="horizontal"
+            role="listitem"
+          >
+            <div>
+              <a
+                href="https://www.example.com/2"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Data source 2
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="ui segment"
+      >
+        <h3
+          class="ui header data-figure-block-header"
+        >
+          Geographic coverage:
+        </h3>
+        <ul>
+          <div
+            class="ui two column grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="column"
+              >
+                <li>
+                  Location 1
+                </li>
+              </div>
+              <div
+                class="column"
+              >
+                <li>
+                  Location 2
+                </li>
+              </div>
+            </div>
+          </div>
+        </ul>
+      </div>
+      <div
+        class="ui segment"
+      >
+        <h3
+          class="ui header data-figure-block-header"
+        >
+          Temporal coverage:
+        </h3>
+        <div>
+          TemporalWidgetView
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Metadata /> renders data sources correctly Volto17 1`] = `
 <div>
   <div
     class="ui vertical ui overlay right very wide visible sidebar metadata-sidebar menu"
@@ -111,7 +220,57 @@ exports[`<Metadata /> renders data sources correctly 1`] = `
 </div>
 `;
 
-exports[`<Metadata /> renders without crashing 1`] = `
+exports[`<Metadata /> renders without crashing Volto16 1`] = `
+<div>
+  <div
+    class="ui vertical ui overlay right very wide visible sidebar metadata-sidebar menu"
+  >
+    <div
+      class="ui raised segments"
+    >
+      <div
+        class="ui segment"
+      >
+        <h2
+          class="ui header data-figure-block-header"
+        >
+          Metadata
+        </h2>
+      </div>
+      <div
+        class="ui segment"
+      >
+        <h3
+          class="ui header data-figure-block-header"
+        >
+          Data Sources:
+        </h3>
+        <ul
+          class="ui bulleted list widget"
+          role="list"
+        >
+          <li
+            class="horizontal"
+            role="listitem"
+          >
+            <div>
+              <a
+                href="https://www.example.com"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Data source
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Metadata /> renders without crashing Volto17 1`] = `
 <div>
   <div
     class="ui vertical ui overlay right very wide visible sidebar metadata-sidebar menu"
@@ -249,3 +408,4 @@ exports[`<Metadata /> renders without crashing without metadata 1`] = `
   </div>
 </div>
 `;
+

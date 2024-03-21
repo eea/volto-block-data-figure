@@ -87,7 +87,8 @@ const messages = defineMessages({
     defaultMessage: 'Minimum image resolution should be {resolution}.',
   },
   imageNameError: {
-    id: 'Invalid image. Image name can NOT start with image_. Please rename it first.',
+    id:
+      'Invalid image. Image name can NOT start with image_. Please rename it first.',
     defaultMessage:
       'Invalid image. Image name can NOT start with image_. Please rename it first.',
   },

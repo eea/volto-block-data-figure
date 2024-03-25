@@ -32,13 +32,13 @@ const DownloadData = ({ data, visible, onHide }) => {
           <div ref={ref} tabIndex={0}>
             {downloadData && data.figureType === 'DavizVisualization' ? (
               <Segment secondary attached>
-                <Header as="h4">Formats suitable for human consumption</Header>
+                <Header as="h5">Formats suitable for human consumption</Header>
                 <List horizontal className="download-data">
                   <List.Item href={downloadData.html}>HTML</List.Item>
                   <List.Item href={downloadData.csv}>CSV</List.Item>
                   <List.Item href={downloadData.tsv}>TSV</List.Item>
                 </List>
-                <Header as="h4">
+                <Header as="h5">
                   Formats suitable for machine-to-machine communication
                 </Header>
                 <List horizontal className="download-data">
@@ -54,7 +54,7 @@ const DownloadData = ({ data, visible, onHide }) => {
               </Segment>
             ) : data.figureType === 'EEAFigure' ? (
               <Segment secondary attached>
-                <Header as="h4">Image formats</Header>
+                <Header as="h5">Image formats</Header>
                 <List horizontal relaxed className="download-data">
                   {downloadData.map((item) => {
                     let title, url;
@@ -75,7 +75,7 @@ const DownloadData = ({ data, visible, onHide }) => {
               </Segment>
             ) : (
               <Segment>
-                <Header as="h4">Data not available</Header>
+                <Header as="h5">Data not available</Header>
               </Segment>
             )}
           </div>

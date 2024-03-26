@@ -92,7 +92,7 @@ class View extends React.Component {
     return data.url ? (
       <div className="data-figure-block">
         {data.title && (
-          <Header>
+          <Header as="h3" className="subtitle-light">
             Figure {position}. {data.title}
           </Header>
         )}

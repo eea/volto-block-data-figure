@@ -663,7 +663,7 @@ class Edit extends Component {
         }
       >
         {data.title && (
-          <Header>
+          <Header as={'h3'} className="subtitle-light">
             Figure {this.state.position}. {data.title}
           </Header>
         )}

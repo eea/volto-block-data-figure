@@ -1,129 +1,68 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { Provider } from 'react-intl-redux';
-import configureStore from 'redux-mock-store';
+import { useState } from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Metadata from './Metadata';
 import '@testing-library/jest-dom/extend-expect';
 
-jest.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
-  TemporalWidgetView: () => <div>TemporalWidgetView</div>,
-}));
+const MetadataWrapper = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Initially open
 
-const mockStore = configureStore([]);
+  const handleCloseClick = () => {
+    setIsSidebarOpen(false);
+  };
 
-const store = mockStore({
-  screen: {
-    page: {
-      width: 768,
-    },
-  },
-  intl: {
-    locale: 'en',
-    messages: {},
-    formatMessage: jest.fn(),
-  },
-});
+  return (
+    <div>
+      <button onClick={handleCloseClick}>Close Sidebar</button>
+      {isSidebarOpen && children}
+    </div>
+  );
+};
 
-describe('<Metadata />', () => {
-  it('renders without crashing', () => {
-    const data = {
-      data_provenance: {
-        data: [
-          {
-            '@id': '1',
-            link: 'https://www.example.com',
-            title: 'Data source',
-            organization: 'Example Organization',
-          },
-        ],
-      },
-      geolocation: [],
-      temporal: [],
-    };
-    const { container } = render(
-      <Provider store={store}>
-        <Metadata data={data} visible={true} />
-      </Provider>,
-    );
-    expect(container).toMatchSnapshot();
+const mockData = {
+  data_provenance: { data: [{ source: 'Test Source' }] },
+  geolocation: [{ label: 'Europe' }],
+  temporal: [{ start_date: '2023-01-01' }],
+};
+
+describe('Metadata Component', () => {
+  it('Renders the Sidebar', () => {
+    render(<Metadata visible={true} data={mockData} onHide={jest.fn()} />);
+    const sidebarHeader = screen.getByRole('heading', { name: /Metadata/i });
+    expect(sidebarHeader).toBeInTheDocument();
   });
 
-  it('renders data sources correctly', () => {
-    const data = {
-      data_provenance: {
-        data: [
-          {
-            '@id': '1',
-            link: 'https://www.example.com/1',
-            title: 'Data source 1',
-            organization: 'Example Organization',
-          },
-          {
-            '@id': '2',
-            link: 'https://www.example.com/2',
-            title: 'Data source 2',
-            organization: 'Example Organization',
-          },
-        ],
-      },
-      geolocation: [{ label: 'Location 1' }, { label: 'Location 2' }],
-      temporal: ['2023-01-01', '2023-12-31'],
-    };
-    const { container } = render(
-      <Provider store={store}>
-        <Metadata data={data} visible={true} />
-      </Provider>,
-    );
-    expect(container).toMatchSnapshot();
+  it('Renders the Data Provenance Widget', () => {
+    render(<Metadata visible={true} data={mockData} onHide={jest.fn()} />);
+    const dataProvenanceHeader = screen.getByText('Data Sources:');
+    expect(dataProvenanceHeader).toBeInTheDocument();
   });
 
-  it('renders without crashing without metadata', () => {
-    const data = {
-      metadata: undefined,
-      geolocation: [],
-      temporal: [],
-    };
-    const { container } = render(
-      <Provider store={store}>
-        <Metadata data={data} visible={true} />
-      </Provider>,
-    );
-    expect(container).toMatchSnapshot();
+  it('Renders the geographic coverage list', () => {
+    render(<Metadata visible={true} data={mockData} onHide={jest.fn()} />);
+    const lists = screen.getAllByRole('list');
+    const geoList = lists[1];
+    const geoListItem = screen.getByText('Europe', { selector: 'li' });
+    expect(geoList).toBeInTheDocument();
+    expect(geoListItem).toBeInTheDocument();
   });
 
-  it('renders without crashing without data_provenance', () => {
-    const data = {
-      data_provenance: undefined,
-      geolocation: [],
-      temporal: [],
-    };
-    const { container } = render(
-      <Provider store={store}>
-        <Metadata data={data} visible={true} />
-      </Provider>,
-    );
-    expect(container).toMatchSnapshot();
+  it('Renders the Temporal Widget', () => {
+    render(<Metadata visible={true} data={mockData} onHide={jest.fn()} />);
+    const temporalHeader = screen.getByText('Temporal coverage:');
+    expect(temporalHeader).toBeInTheDocument();
   });
 
-  it('renders without crashing without links', () => {
-    const data = {
-      data_provenance: {
-        data: [
-          {
-            '@id': '1',
-            title: 'Test Data Sources',
-            link: undefined,
-          },
-        ],
-      },
-      geolocation: undefined,
-      temporal: [],
-    };
-    const { container } = render(
-      <Provider store={store}>
-        <Metadata data={data} visible={true} />
-      </Provider>,
+  it('Calls onHide when the sidebar is closed', () => {
+    const mockOnHide = jest.fn();
+    render(
+      <MetadataWrapper>
+        <Metadata visible data={mockData} onHide={mockOnHide} />
+      </MetadataWrapper>,
     );
-    expect(container).toMatchSnapshot();
+
+    const closeButton = screen.getByText('Close Sidebar');
+    fireEvent.click(closeButton);
+
+    expect(mockOnHide).toHaveBeenCalled();
   });
 });

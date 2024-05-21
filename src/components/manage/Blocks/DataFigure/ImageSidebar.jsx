@@ -14,6 +14,7 @@ import {
   isChartImage,
   isInternalContentURL,
   flattenToContentURL,
+  isTableImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
@@ -86,7 +87,6 @@ const ImageSidebar = ({
   instructions,
 }) => {
   const isImageData = data['@type'] === 'Image';
-
   const [activeAccIndex, setActiveAccIndex] = useState(0);
 
   function handleAccClick(e, titleProps) {
@@ -121,7 +121,11 @@ const ImageSidebar = ({
                 {isArray(svgs) && svgs.length > 0 ? (
                   svgs.map((it, idx) => (
                     <div key={idx}>
-                      <p>{it.title}</p>
+                      <p>
+                        {isTableImage(it.url) && it.title === 'Chart'
+                          ? 'Table'
+                          : it.title}
+                      </p>
                       <img
                         src={
                           isChartImage(it.url)

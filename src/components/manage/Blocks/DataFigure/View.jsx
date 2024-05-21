@@ -109,6 +109,17 @@ class View extends React.Component {
                     <DataTable data={data} />
                   ) : data.url ? (
                     <img
+                      className={cx({ 'full-width': data.align === 'full' })}
+                      loading="lazy"
+                      style={{
+                        width: data.width ? data.width + 'px' : '100%',
+                        height: data.height ? data.height + 'px' : '100%',
+                        marginLeft:
+                          data.inLeftColumn && data.width
+                            ? `-${parseInt(data.width) + 10}px`
+                            : '0',
+                        marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                      }}
                       src={
                         isInternalContentURL(data.url)
                           ? // Backwards compat in the case that the block is storing the full server URL

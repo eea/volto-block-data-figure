@@ -84,8 +84,6 @@ class View extends React.Component {
   render() {
     const { showDownload, modalOpen, zoomed } = this.state;
     const { data, detached } = this.props;
-
-    const imageUrl = '@@images/image';
     // Block position in page
     const position = getBlockPosition(
       this.props.metadata || this.props.properties,
@@ -111,6 +109,7 @@ class View extends React.Component {
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
                       loading="lazy"
+                      zoomed={zoomed}
                       style={{
                         width: data.width ? data.width + 'px' : '100%',
                         height: data.height ? data.height + 'px' : '100%',

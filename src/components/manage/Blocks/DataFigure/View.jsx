@@ -165,21 +165,37 @@ class View extends React.Component {
               <Modal.Content image className="data-figure-image">
                 {isSVGImage(data.url) ? (
                   <Svg data={data} detached={detached} />
-                ) : (
+                ) : data.url && isTableImage(data.url) ? (
+                  <DataTable data={data} />
+                ) : data.url ? (
                   <img
-                    aria-hidden="true"
-                    loading="lazy"
                     className={cx({ 'full-width': data.align === 'full' })}
-                    zoomed={zoomed}
-                    style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                    loading="lazy"
+                    style={{
+                      width: data.width ? data.width + 'px' : '100%',
+                      height: data.height ? data.height + 'px' : '100%',
+                      marginLeft:
+                        data.inLeftColumn && data.width
+                          ? `-${parseInt(data.width) + 10}px`
+                          : '0',
+                      marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                    }}
                     src={
-                      isTableImage(data.url)
-                        ? data.url
-                        : `${data.url}/${imageUrl}`
+                      isInternalContentURL(data.url)
+                        ? // Backwards compat in the case that the block is storing the full server URL
+                          (() => {
+                            return isChartImage(data.url)
+                              ? `${flattenToContentURL(data.url)}`
+                              : `${flattenToContentURL(
+                                  data.url,
+                                )}/@@images/image`;
+                          })()
+                        : data.url
                     }
-                    onClick={() => this.setState({ zoomed: 'true' })}
-                    alt={data.alt || ''}
-                  ></img>
+                    alt={data.title || ''}
+                  />
+                ) : (
+                  <></>
                 )}
                 {this.state.showTable === true && <DataTable data={data} />}
               </Modal.Content>

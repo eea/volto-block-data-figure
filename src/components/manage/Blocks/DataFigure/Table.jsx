@@ -11,6 +11,7 @@ import { Table } from 'semantic-ui-react';
  * @extends Component
  */
 const DataTable = ({ data }) => {
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   let headers = data?.tabledata?.properties || {};
 

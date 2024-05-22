@@ -11,20 +11,31 @@ import { Table } from 'semantic-ui-react';
  * @extends Component
  */
 const DataTable = ({ data }) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   let headers = data?.tabledata?.properties || {};
-  headers = Object.keys(headers)
-    .map((key) => ({
-      key: key,
-      ...headers[key],
-    }))
-    .sort((a, b) => a.order - b.order);
+
+  const [headersSorted, setHeadersSorted] = React.useState([]);
+
+  React.useEffect(() => {
+    setHeadersSorted(
+      Object.keys(headers)
+        .map((key) => ({
+          key: key,
+          ...headers[key],
+        }))
+
+        .sort((a, b) => a.order - b.order),
+    );
+  }, [headers]);
+
   const rows = data?.tabledata?.items || [];
+
   return headers ? (
     <>
-      <Table compact striped>
+      <Table compact striped className="responsive">
         <Table.Header>
           <Table.Row>
-            {headers.map((item) => (
+            {headersSorted.map((item) => (
               <Table.HeaderCell>{item.label || item.key}</Table.HeaderCell>
             ))}
           </Table.Row>
@@ -32,8 +43,8 @@ const DataTable = ({ data }) => {
         <Table.Body>
           {rows.map((row, idx) => (
             <Table.Row key={`tabledata-${idx}`}>
-              {headers.map((header) => (
-                <Table.Cell>
+              {headersSorted.map((header) => (
+                <Table.Cell data-label={header.label}>
                   {row[header.key] !== null && row[header.key] !== undefined
                     ? row[header.key]
                     : ''}

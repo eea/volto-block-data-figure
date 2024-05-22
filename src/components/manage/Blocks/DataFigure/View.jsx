@@ -17,6 +17,9 @@ import {
   isSVGImage,
   isTableImage,
   getBlockPosition,
+  isInternalContentURL,
+  flattenToContentURL,
+  isChartImage,
 } from '@eeacms/volto-block-data-figure/helpers';
 
 import MoreInfo from './MoreInfo';
@@ -81,9 +84,6 @@ class View extends React.Component {
   render() {
     const { showDownload, modalOpen, zoomed } = this.state;
     const { data, detached } = this.props;
-
-    const imageUrl = '@@images/image';
-
     // Block position in page
     const position = getBlockPosition(
       this.props.metadata || this.props.properties,
@@ -103,10 +103,13 @@ class View extends React.Component {
                 <div>
                   {isSVGImage(data.url) ? (
                     <Svg data={data} detached={detached} id={this.props.id} />
-                  ) : (
+                  ) : data.url && isTableImage(data.url) ? (
+                    <DataTable data={data} />
+                  ) : data.url ? (
                     <img
                       className={cx({ 'full-width': data.align === 'full' })}
                       loading="lazy"
+                      zoomed={zoomed}
                       style={{
                         width: data.width ? data.width + 'px' : '100%',
                         height: data.height ? data.height + 'px' : '100%',
@@ -117,12 +120,21 @@ class View extends React.Component {
                         marginRight: data.inLeftColumn ? '0!important' : '1rem',
                       }}
                       src={
-                        isTableImage(data.url)
-                          ? data.url
-                          : `${data.url}/${imageUrl}`
+                        isInternalContentURL(data.url)
+                          ? // Backwards compat in the case that the block is storing the full server URL
+                            (() => {
+                              return isChartImage(data.url)
+                                ? `${flattenToContentURL(data.url)}`
+                                : `${flattenToContentURL(
+                                    data.url,
+                                  )}/@@images/image`;
+                            })()
+                          : data.url
                       }
                       alt={data.title || ''}
-                    ></img>
+                    />
+                  ) : (
+                    <></>
                   )}
                 </div>
                 <div
@@ -152,21 +164,37 @@ class View extends React.Component {
               <Modal.Content image className="data-figure-image">
                 {isSVGImage(data.url) ? (
                   <Svg data={data} detached={detached} />
-                ) : (
+                ) : data.url && isTableImage(data.url) ? (
+                  <DataTable data={data} />
+                ) : data.url ? (
                   <img
-                    aria-hidden="true"
-                    loading="lazy"
                     className={cx({ 'full-width': data.align === 'full' })}
-                    zoomed={zoomed}
-                    style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                    loading="lazy"
+                    style={{
+                      width: data.width ? data.width + 'px' : '100%',
+                      height: data.height ? data.height + 'px' : '100%',
+                      marginLeft:
+                        data.inLeftColumn && data.width
+                          ? `-${parseInt(data.width) + 10}px`
+                          : '0',
+                      marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                    }}
                     src={
-                      isTableImage(data.url)
-                        ? data.url
-                        : `${data.url}/${imageUrl}`
+                      isInternalContentURL(data.url)
+                        ? // Backwards compat in the case that the block is storing the full server URL
+                          (() => {
+                            return isChartImage(data.url)
+                              ? `${flattenToContentURL(data.url)}`
+                              : `${flattenToContentURL(
+                                  data.url,
+                                )}/@@images/image`;
+                          })()
+                        : data.url
                     }
-                    onClick={() => this.setState({ zoomed: 'true' })}
-                    alt={data.alt || ''}
-                  ></img>
+                    alt={data.title || ''}
+                  />
+                ) : (
+                  <></>
                 )}
                 {this.state.showTable === true && <DataTable data={data} />}
               </Modal.Content>
@@ -189,21 +217,23 @@ class View extends React.Component {
           </div>
           {data?.tabledata && (
             <div className="show-table">
-              <button
-                className={cx('trigger-button')}
-                onClick={() => {
-                  this.setState({ showTable: !this.state.showTable });
-                }}
-              >
-                <i
-                  className={
-                    this.state.showTable === false
-                      ? 'ri-arrow-down-line'
-                      : 'ri-arrow-up-line'
-                  }
-                />
-                <span>Table</span>
-              </button>
+              {!isTableImage(data.url) && (
+                <button
+                  className={cx('trigger-button')}
+                  onClick={() => {
+                    this.setState({ showTable: !this.state.showTable });
+                  }}
+                >
+                  <i
+                    className={
+                      this.state.showTable === false
+                        ? 'ri-arrow-down-line'
+                        : 'ri-arrow-up-line'
+                    }
+                  />
+                  <span>Table</span>
+                </button>
+              )}
             </div>
           )}
           <div className="right-col">

@@ -17,15 +17,16 @@ const DataTable = ({ data }) => {
   const [headersSorted, setHeadersSorted] = React.useState([]);
 
   React.useEffect(() => {
-    setHeadersSorted(
-      Object.keys(headers)
-        .map((key) => ({
-          key: key,
-          ...headers[key],
-        }))
+    if (Object.keys(headers).length > 0)
+      setHeadersSorted(
+        Object.keys(headers)
+          .map((key) => ({
+            key: key,
+            ...headers[key],
+          }))
 
-        .sort((a, b) => a.order - b.order),
-    );
+          .sort((a, b) => a.order - b.order),
+      );
   }, [headers]);
 
   const rows = data?.tabledata?.items || [];

@@ -5,13 +5,7 @@
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-import {
-  Sidebar,
-  Container,
-  Transition,
-  Modal,
-  Header,
-} from 'semantic-ui-react';
+import { Transition, Modal, Header } from 'semantic-ui-react';
 
 import {
   isSVGImage,
@@ -64,25 +58,8 @@ class View extends React.Component {
     }
   };
 
-  hideDownload = () => {
-    this.setState(() => ({
-      showDownload: false,
-    }));
-  };
-
-  toggleVisibility = () =>
-    this.setState((prevState) => ({ visible: !prevState.visible }));
-
-  toggleLeftPopup = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    this.setState((prevState) => ({
-      showDownload: !prevState.showDownload,
-    }));
-  };
-
   render() {
-    const { showDownload, modalOpen, zoomed } = this.state;
+    const { modalOpen, zoomed } = this.state;
     const { data, detached } = this.props;
     // Block position in page
     const position = getBlockPosition(
@@ -96,111 +73,97 @@ class View extends React.Component {
             Figure {position}. {data.title}
           </Header>
         )}
-        <Sidebar.Pushable as={Container}>
-          <Sidebar.Pusher style={{ height: '100%' }}>
-            <div>
-              <div>
-                <div>
-                  {isSVGImage(data.url) ? (
-                    <Svg data={data} detached={detached} id={this.props.id} />
-                  ) : data.url && isTableImage(data.url) ? (
-                    <DataTable data={data} />
-                  ) : data.url ? (
-                    <img
-                      className={cx({ 'full-width': data.align === 'full' })}
-                      loading="lazy"
-                      zoomed={zoomed}
-                      style={{
-                        width: data.width ? data.width + 'px' : '100%',
-                        height: data.height ? data.height + 'px' : '100%',
-                        marginLeft:
-                          data.inLeftColumn && data.width
-                            ? `-${parseInt(data.width) + 10}px`
-                            : '0',
-                        marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                      }}
-                      src={
-                        isInternalContentURL(data.url)
-                          ? // Backwards compat in the case that the block is storing the full server URL
-                            (() => {
-                              return isChartImage(data.url)
-                                ? `${flattenToContentURL(data.url)}`
-                                : `${flattenToContentURL(
-                                    data.url,
-                                  )}/@@images/image`;
-                            })()
-                          : data.url
-                      }
-                      alt={data.title || ''}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-                <div
-                  className={cx('data-table-animation', {
-                    open: this.state.showTable,
-                  })}
-                >
-                  <DataTable data={data} />
-                </div>
-              </div>
-            </div>
-          </Sidebar.Pusher>
 
-          <DownloadData
-            data={data}
-            visible={showDownload}
-            onHide={this.hideDownload}
-          />
-          <Transition visible={modalOpen} animation="scale" duration={300}>
-            <Modal
-              className="data-figure-zoom"
-              open={modalOpen}
-              onClose={() =>
-                this.setState({ modalOpen: false, zoomed: 'false' })
-              }
+        <div>
+          <div>
+            <div>
+              {isSVGImage(data.url) ? (
+                <Svg data={data} detached={detached} id={this.props.id} />
+              ) : data.url && isTableImage(data.url) ? (
+                <DataTable data={data} />
+              ) : data.url ? (
+                <img
+                  className={cx({ 'full-width': data.align === 'full' })}
+                  loading="lazy"
+                  zoomed={zoomed}
+                  style={{
+                    width: data.width ? data.width + 'px' : '100%',
+                    height: data.height ? data.height + 'px' : '100%',
+                    marginLeft:
+                      data.inLeftColumn && data.width
+                        ? `-${parseInt(data.width) + 10}px`
+                        : '0',
+                    marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                  }}
+                  src={
+                    isInternalContentURL(data.url)
+                      ? // Backwards compat in the case that the block is storing the full server URL
+                        (() => {
+                          return isChartImage(data.url)
+                            ? `${flattenToContentURL(data.url)}`
+                            : `${flattenToContentURL(data.url)}/@@images/image`;
+                        })()
+                      : data.url
+                  }
+                  alt={data.title || ''}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div
+              className={cx('data-table-animation', {
+                open: this.state.showTable,
+              })}
             >
-              <Modal.Content image className="data-figure-image">
-                {isSVGImage(data.url) ? (
-                  <Svg data={data} detached={detached} />
-                ) : data.url && isTableImage(data.url) ? (
-                  <DataTable data={data} />
-                ) : data.url ? (
-                  <img
-                    className={cx({ 'full-width': data.align === 'full' })}
-                    loading="lazy"
-                    style={{
-                      width: data.width ? data.width + 'px' : '100%',
-                      height: data.height ? data.height + 'px' : '100%',
-                      marginLeft:
-                        data.inLeftColumn && data.width
-                          ? `-${parseInt(data.width) + 10}px`
-                          : '0',
-                      marginRight: data.inLeftColumn ? '0!important' : '1rem',
-                    }}
-                    src={
-                      isInternalContentURL(data.url)
-                        ? // Backwards compat in the case that the block is storing the full server URL
-                          (() => {
-                            return isChartImage(data.url)
-                              ? `${flattenToContentURL(data.url)}`
-                              : `${flattenToContentURL(
-                                  data.url,
-                                )}/@@images/image`;
-                          })()
-                        : data.url
-                    }
-                    alt={data.title || ''}
-                  />
-                ) : (
-                  <></>
-                )}
-                {this.state.showTable === true && <DataTable data={data} />}
-              </Modal.Content>
-            </Modal>
-          </Transition>
-        </Sidebar.Pushable>
+              <DataTable data={data} />
+            </div>
+          </div>
+        </div>
+
+        <Transition visible={modalOpen} animation="scale" duration={300}>
+          <Modal
+            className="data-figure-zoom"
+            open={modalOpen}
+            onClose={() => this.setState({ modalOpen: false, zoomed: 'false' })}
+          >
+            <Modal.Content image className="data-figure-image">
+              {isSVGImage(data.url) ? (
+                <Svg data={data} detached={detached} />
+              ) : data.url && isTableImage(data.url) ? (
+                <DataTable data={data} />
+              ) : data.url ? (
+                <img
+                  className={cx({ 'full-width': data.align === 'full' })}
+                  loading="lazy"
+                  style={{
+                    width: data.width ? data.width + 'px' : '100%',
+                    height: data.height ? data.height + 'px' : '100%',
+                    marginLeft:
+                      data.inLeftColumn && data.width
+                        ? `-${parseInt(data.width) + 10}px`
+                        : '0',
+                    marginRight: data.inLeftColumn ? '0!important' : '1rem',
+                  }}
+                  src={
+                    isInternalContentURL(data.url)
+                      ? // Backwards compat in the case that the block is storing the full server URL
+                        (() => {
+                          return isChartImage(data.url)
+                            ? `${flattenToContentURL(data.url)}`
+                            : `${flattenToContentURL(data.url)}/@@images/image`;
+                        })()
+                      : data.url
+                  }
+                  alt={data.title || ''}
+                />
+              ) : (
+                <></>
+              )}
+              {this.state.showTable === true && <DataTable data={data} />}
+            </Modal.Content>
+          </Modal>
+        </Transition>
 
         <div
           className={cx('visualization-toolbar data-figure-toolbar', {
@@ -237,17 +200,7 @@ class View extends React.Component {
             </div>
           )}
           <div className="right-col">
-            {data?.metadata?.downloadData && (
-              <div className="download">
-                <button
-                  className={cx('trigger-button')}
-                  onClick={this.toggleLeftPopup}
-                >
-                  <i className="ri-download-fill" />
-                  <span>Download</span>
-                </button>
-              </div>
-            )}
+            {data?.metadata?.downloadData && <DownloadData data={data} />}
             {data.href && <Share href={data.href} />}
             <div className="enlarge">
               <button

@@ -184,7 +184,9 @@ class View extends React.Component {
                 <button
                   className={cx('trigger-button')}
                   onClick={() => {
-                    this.setState({ showTable: !this.state.showTable });
+                    this.setState((prevState) => ({
+                      showTable: !prevState.showTable,
+                    }));
                   }}
                 >
                   <i

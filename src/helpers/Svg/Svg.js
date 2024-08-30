@@ -19,7 +19,7 @@ export const cleanSVG = (data) => {
     let width = svg.getAttribute('width');
     let height = svg.getAttribute('height');
     const viewBox = svg.getAttribute('viewBox');
-    
+
     if ((!width || !height) && viewBox) {
       const viewBoxValues = viewBox.split(' ').map(Number);
       if (viewBoxValues.length === 4) {

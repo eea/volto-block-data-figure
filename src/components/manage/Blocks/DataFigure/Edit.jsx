@@ -390,13 +390,39 @@ class Edit extends Component {
    * @memberof Edit
    * @returns {Boolean}
    */
-  isValidImage = (file) => {
-    const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
+  isValidImage = async (file) => {
+    if (file.type === 'image/svg+xml') {
+      const text = await file.text();
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(text, 'image/svg+xml');
+      const svgElement = svgDoc.querySelector('svg');
 
-    return !(
-      file.width < resolution.split('x')[0] ||
-      file.height < resolution.split('x')[1]
-    );
+      if (svgElement) {
+        let width = file.width;
+        let height = file.height;
+
+        if (!width || !height) {
+          const viewBox = svgElement.getAttribute('viewBox');
+          const viewBoxValues = viewBox ? viewBox.split(' ').map(Number) : [];
+
+          width = width || viewBoxValues[2];
+          height = height || viewBoxValues[3];
+        }
+
+        const resolution =
+          config.blocks.blocksConfig['dataFigure'].minResolution;
+        const [minWidth, minHeight] = resolution.split('x').map(Number);
+
+        return !(width < minWidth || height < minHeight);
+      } else {
+        return false;
+      }
+    } else {
+      const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
+      const [minWidth, minHeight] = resolution.split('x').map(Number);
+
+      return !(file.width < minWidth || file.height < minHeight);
+    }
   };
 
   onClearUrl = () => {

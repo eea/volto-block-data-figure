@@ -18,6 +18,7 @@ import { getContent } from '@plone/volto/actions';
  * @class Svg
  * @extends Component
  */
+
 const Svg = ({ data, detached, id }) => {
   const [svg, setSVG] = React.useState();
   const dispatch = useDispatch();

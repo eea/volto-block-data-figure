@@ -19,8 +19,7 @@ export const cleanSVG = (data) => {
     let width = svg.getAttribute('width');
     let height = svg.getAttribute('height');
     const viewBox = svg.getAttribute('viewBox');
-
-    // Dacă width și height lipsesc, extrage-le din viewBox
+    
     if ((!width || !height) && viewBox) {
       const viewBoxValues = viewBox.split(' ').map(Number);
       if (viewBoxValues.length === 4) {
@@ -29,7 +28,6 @@ export const cleanSVG = (data) => {
       }
     }
 
-    // Setează atributele width, height și viewBox
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
     svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');

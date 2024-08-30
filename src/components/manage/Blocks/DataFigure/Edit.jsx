@@ -199,11 +199,11 @@ class Edit extends Component {
           }
         />,
       );
-      this.setState({
-        error: nextProps.subrequests[this.state.url].error,
+      this.setState((prevState) => ({
+        error: nextProps.subrequests[prevState.url].error,
         uploading: false,
         dragging: false,
-      });
+      }));
     }
 
     // Invalid Image Upload

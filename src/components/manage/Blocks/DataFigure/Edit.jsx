@@ -257,7 +257,7 @@ class Edit extends Component {
     const fields = data.match(/^data:(.*);(.*),(.*)$/);
     let localImageUrl = window.URL.createObjectURL(file);
     try {
-      await new Promise(async (resolve, reject) => {
+      await new Promise((resolve, reject) => {
         let imageObject = new Image();
         imageObject.onload = () => {
           file.width = imageObject.naturalWidth;

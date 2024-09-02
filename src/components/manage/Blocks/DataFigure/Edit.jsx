@@ -257,7 +257,7 @@ class Edit extends Component {
     const fields = data.match(/^data:(.*);(.*),(.*)$/);
     let localImageUrl = window.URL.createObjectURL(file);
     try {
-      await new Promise((resolve, reject) => {
+      await new Promise(async (resolve, reject) => {
         let imageObject = new Image();
         imageObject.onload = () => {
           file.width = imageObject.naturalWidth;
@@ -274,7 +274,8 @@ class Edit extends Component {
       window.URL.revokeObjectURL(localImageUrl);
     }
 
-    if (this.isValidImage(file)) {
+    let isImageValid = await this.isValidImage(file);
+    if (isImageValid) {
       this.props.createContent(
         getBaseUrl(this.props.pathname),
         {
@@ -391,6 +392,8 @@ class Edit extends Component {
    * @returns {Boolean}
    */
   isValidImage = async (file) => {
+    const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
+    const [minWidth, minHeight] = resolution.split('x').map(Number);
     if (file.type === 'image/svg+xml') {
       const text = await file.text();
       const parser = new DOMParser();
@@ -404,25 +407,17 @@ class Edit extends Component {
         if (!width || !height) {
           const viewBox = svgElement.getAttribute('viewBox');
           const viewBoxValues = viewBox ? viewBox.split(' ').map(Number) : [];
-
           width = width || viewBoxValues[2];
           height = height || viewBoxValues[3];
         }
 
-        const resolution =
-          config.blocks.blocksConfig['dataFigure'].minResolution;
-        const [minWidth, minHeight] = resolution.split('x').map(Number);
-
         return !(width < minWidth || height < minHeight);
-      } else {
-        return false;
       }
-    } else {
-      const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
-      const [minWidth, minHeight] = resolution.split('x').map(Number);
-
-      return !(file.width < minWidth || file.height < minHeight);
     }
+    return !(
+      file.width < resolution.split('x')[0] ||
+      file.height < resolution.split('x')[1]
+    );
   };
 
   onClearUrl = () => {

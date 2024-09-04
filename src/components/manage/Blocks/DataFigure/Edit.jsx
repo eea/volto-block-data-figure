@@ -56,6 +56,9 @@ import DataTable from './Table';
 
 const Dropzone = loadable(() => import('react-dropzone'));
 
+const extractWidthAndHeight = async (arr) => {
+  let data = arr.image;
+};
 const messages = defineMessages({
   ImageBlockInputPlaceholder: {
     id: 'Data Visualization URL or SVG/PNG image',
@@ -459,8 +462,10 @@ class Edit extends Component {
       url = extractSvg(arr);
     }
     const temporal = extractTemporal(arr);
+
     const title = arr.title;
     const figureType = arr['@type'];
+
     return [temporal, url, title, figureType, data_provenance, metadata];
   };
 
@@ -514,6 +519,35 @@ class Edit extends Component {
         ? await this.internalURLContents(this.state.url)
         : await this.externalURLContents(this.state.url);
 
+      const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
+
+      if (
+        arr.image &&
+        (arr.image.width < resolution.split('x')[0] ||
+          arr.image.height < resolution.split('x')[1])
+      ) {
+        this.setState(
+          {
+            uploading: false,
+            dragging: false,
+          },
+          () =>
+            toast.error(
+              <Toast
+                error
+                title={this.props.intl.formatMessage(messages.invalidImage)}
+                content={this.props.intl.formatMessage(
+                  messages.invalidResolution,
+                  {
+                    resolution:
+                      config.blocks.blocksConfig['dataFigure'].minResolution,
+                  },
+                )}
+              />,
+            ),
+        );
+        return;
+      }
       const [
         temporal,
         chartUrl = [],
@@ -522,6 +556,7 @@ class Edit extends Component {
         data_provenance,
         metadata = {},
       ] = await this.extractAssets(arr);
+
       if (arr['@type'] === 'DavizVisualization') {
         tabledata = await this.extractTable(arr);
       }

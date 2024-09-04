@@ -275,6 +275,7 @@ class Edit extends Component {
     }
 
     const isImageValid = await this.isValidImage(file);
+
     if (isImageValid) {
       this.props.createContent(
         getBaseUrl(this.props.pathname),
@@ -401,16 +402,14 @@ class Edit extends Component {
       const svgElement = svgDoc.querySelector('svg');
 
       if (svgElement) {
-        let width = file.width;
-        let height = file.height;
-
+        let width = svgElement.getAttribute('width');
+        let height = svgElement.getAttribute('height');
         if (!width || !height) {
           const viewBox = svgElement.getAttribute('viewBox');
           const viewBoxValues = viewBox ? viewBox.split(' ').map(Number) : [];
           width = width || viewBoxValues[2];
           height = height || viewBoxValues[3];
         }
-
         return !(width < minWidth || height < minHeight);
       }
     }

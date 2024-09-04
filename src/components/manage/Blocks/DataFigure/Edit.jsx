@@ -56,9 +56,6 @@ import DataTable from './Table';
 
 const Dropzone = loadable(() => import('react-dropzone'));
 
-const extractWidthAndHeight = async (arr) => {
-  let data = arr.image;
-};
 const messages = defineMessages({
   ImageBlockInputPlaceholder: {
     id: 'Data Visualization URL or SVG/PNG image',

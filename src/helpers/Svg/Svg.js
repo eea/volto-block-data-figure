@@ -31,7 +31,10 @@ export const cleanSVG = (data) => {
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
     svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
-    svg.setAttribute('viewBox', `0 0 ${parseFloat(width)} ${parseFloat(height)}`);
+    svg.setAttribute(
+      'viewBox',
+      `0 0 ${parseFloat(width)} ${parseFloat(height)}`,
+    );
   } catch {
     return text;
   }

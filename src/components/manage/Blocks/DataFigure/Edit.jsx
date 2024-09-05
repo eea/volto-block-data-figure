@@ -501,35 +501,6 @@ class Edit extends Component {
         ? await this.internalURLContents(this.state.url)
         : await this.externalURLContents(this.state.url);
 
-      const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
-
-      if (
-        arr.image &&
-        (arr.image.width < resolution.split('x')[0] ||
-          arr.image.height < resolution.split('x')[1])
-      ) {
-        this.setState(
-          {
-            uploading: false,
-            dragging: false,
-          },
-          () =>
-            toast.error(
-              <Toast
-                error
-                title={this.props.intl.formatMessage(messages.invalidImage)}
-                content={this.props.intl.formatMessage(
-                  messages.invalidResolution,
-                  {
-                    resolution:
-                      config.blocks.blocksConfig['dataFigure'].minResolution,
-                  },
-                )}
-              />,
-            ),
-        );
-        return;
-      }
       const [
         temporal,
         chartUrl = [],

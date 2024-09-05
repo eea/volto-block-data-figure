@@ -15,12 +15,26 @@ export const cleanSVG = (data) => {
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, 'image/svg+xml');
     svg = xml.getElementsByTagName('svg')[0];
-    const width = svg.getAttribute('width');
-    const height = svg.getAttribute('height');
+
+    let width = svg.getAttribute('width');
+    let height = svg.getAttribute('height');
+    const viewBox = svg.getAttribute('viewBox');
+
+    if ((!width || !height) && viewBox) {
+      const viewBoxValues = viewBox.split(' ').map(Number);
+      if (viewBoxValues.length === 4) {
+        width = viewBoxValues[2].toString();
+        height = viewBoxValues[3].toString();
+      }
+    }
+
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
     svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
-    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.setAttribute(
+      'viewBox',
+      `0 0 ${parseFloat(width)} ${parseFloat(height)}`,
+    );
   } catch {
     return text;
   }

@@ -199,11 +199,11 @@ class Edit extends Component {
           }
         />,
       );
-      this.setState({
-        error: nextProps.subrequests[this.state.url].error,
+      this.setState((prevState) => ({
+        error: nextProps.subrequests[prevState.url].error,
         uploading: false,
         dragging: false,
-      });
+      }));
     }
 
     // Invalid Image Upload
@@ -393,6 +393,9 @@ class Edit extends Component {
   isValidImage = (file) => {
     const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
 
+    if (file.type === 'image/svg+xml') {
+      return true;
+    }
     return !(
       file.width < resolution.split('x')[0] ||
       file.height < resolution.split('x')[1]
@@ -439,8 +442,10 @@ class Edit extends Component {
       url = extractSvg(arr);
     }
     const temporal = extractTemporal(arr);
+
     const title = arr.title;
     const figureType = arr['@type'];
+
     return [temporal, url, title, figureType, data_provenance, metadata];
   };
 
@@ -502,6 +507,7 @@ class Edit extends Component {
         data_provenance,
         metadata = {},
       ] = await this.extractAssets(arr);
+
       if (arr['@type'] === 'DavizVisualization') {
         tabledata = await this.extractTable(arr);
       }

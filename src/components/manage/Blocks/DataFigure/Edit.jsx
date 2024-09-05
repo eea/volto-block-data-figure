@@ -274,9 +274,7 @@ class Edit extends Component {
       window.URL.revokeObjectURL(localImageUrl);
     }
 
-    const isImageValid = await this.isValidImage(file);
-
-    if (isImageValid) {
+    if (this.isValidImage(file)) {
       this.props.createContent(
         getBaseUrl(this.props.pathname),
         {

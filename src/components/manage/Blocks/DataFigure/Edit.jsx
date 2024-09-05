@@ -392,26 +392,11 @@ class Edit extends Component {
    * @memberof Edit
    * @returns {Boolean}
    */
-  isValidImage = async (file) => {
+  isValidImage = (file) => {
     const resolution = config.blocks.blocksConfig['dataFigure'].minResolution;
-    const [minWidth, minHeight] = resolution.split('x').map(Number);
-    if (file.type === 'image/svg+xml') {
-      const text = await file.text();
-      const parser = new DOMParser();
-      const svgDoc = parser.parseFromString(text, 'image/svg+xml');
-      const svgElement = svgDoc.querySelector('svg');
 
-      if (svgElement) {
-        let width = svgElement.getAttribute('width');
-        let height = svgElement.getAttribute('height');
-        if (!width || !height) {
-          const viewBox = svgElement.getAttribute('viewBox');
-          const viewBoxValues = viewBox ? viewBox.split(' ').map(Number) : [];
-          width = width || viewBoxValues[2];
-          height = height || viewBoxValues[3];
-        }
-        return !(width < minWidth || height < minHeight);
-      }
+    if (file.type === 'image/svg+xml') {
+      return true;
     }
     return !(
       file.width < resolution.split('x')[0] ||

@@ -77,9 +77,7 @@ class View extends React.Component {
         <div>
           <div>
             <div>
-              {isSVGImage(data.url) ? (
-                <Svg data={data} detached={detached} id={this.props.id} />
-              ) : data.url && isTableImage(data.url) ? (
+              {data.url && isTableImage(data.url) ? (
                 <DataTable data={data} />
               ) : data.url ? (
                 <img
@@ -128,9 +126,7 @@ class View extends React.Component {
             onClose={() => this.setState({ modalOpen: false, zoomed: 'false' })}
           >
             <Modal.Content image className="data-figure-image">
-              {isSVGImage(data.url) ? (
-                <Svg data={data} detached={detached} />
-              ) : data.url && isTableImage(data.url) ? (
+              {data.url && isTableImage(data.url) ? (
                 <DataTable data={data} />
               ) : data.url ? (
                 <img

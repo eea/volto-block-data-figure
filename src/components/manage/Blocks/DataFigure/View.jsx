@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { Transition, Modal, Header } from 'semantic-ui-react';
 
 import {
-  isSVGImage,
   isTableImage,
   getBlockPosition,
   isInternalContentURL,
@@ -20,7 +19,6 @@ import MoreInfo from './MoreInfo';
 import Share from './Share';
 import Sources from './Sources';
 import FigureNote from './FigureNote';
-import Svg from './Svg';
 
 import DownloadData from './DownloadData';
 import React from 'react';
@@ -60,7 +58,7 @@ class View extends React.Component {
 
   render() {
     const { modalOpen, zoomed } = this.state;
-    const { data, detached } = this.props;
+    const { data } = this.props;
     // Block position in page
     const position = getBlockPosition(
       this.props.metadata || this.props.properties,

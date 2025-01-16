@@ -66,6 +66,8 @@ class View extends React.Component {
       if ('children' in node) {
         return this.hasValidText(node.children);
       }
+    } else if (typeof node === 'string') {
+      return node.trim() !== '';
     }
     return false;
   }

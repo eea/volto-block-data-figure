@@ -55,6 +55,20 @@ class View extends React.Component {
       }
     }
   };
+  hasValidText(node) {
+    if (Array.isArray(node)) {
+      return node.some((item) => this.hasValidText(item));
+    } else if (typeof node === 'object' && node !== null) {
+      if ('text' in node) {
+        return node.text && node.text.trim() !== '';
+      }
+
+      if ('children' in node) {
+        return this.hasValidText(node.children);
+      }
+    }
+    return false;
+  }
 
   render() {
     const { modalOpen, zoomed } = this.state;
@@ -166,7 +180,9 @@ class View extends React.Component {
           ref={this.state.ref}
         >
           <div className="left-col">
-            {data.figure_note && <FigureNote notes={data.figure_note || []} />}
+            {this.hasValidText(data.figure_note) && (
+              <FigureNote notes={data.figure_note || []} />
+            )}
             {data.data_provenance && (
               <Sources sources={data.data_provenance?.data} />
             )}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Metadata from './Metadata';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 const MetadataWrapper = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Initially open

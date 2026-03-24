@@ -12,10 +12,6 @@ import {
   extractMetadata,
 } from './Svg.js'; // replace with your actual file name
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mock-uuid'),
-}));
-
 describe('cleanSVG', () => {
   it('should clean and adjust SVG attributes', () => {
     const svgData = '<svg width="500" height="300"></svg>';
@@ -155,7 +151,7 @@ describe('extractDataProvenance', () => {
     };
     const result = extractDataProvenance(data);
     expect(result.data).toHaveLength(2);
-    expect(result.data[0]['@id']).toBe('mock-uuid');
+    expect(result.data[0]['@id']).toEqual(expect.any(String));
     expect(result.data[1].organisation).toBe(
       'European Environment Agency (EEA)',
     );

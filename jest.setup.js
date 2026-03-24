@@ -1,30 +1,17 @@
 import { jest } from '@jest/globals';
-import fs from 'fs';
-import path from 'path';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { blocksConfig } from '@plone/volto/config/Blocks';
 import installSlate from '@plone/volto-slate/index';
-import applyConfig from './src';
 
 var mockSemanticComponents = jest.requireActual('semantic-ui-react');
 var mockComponents = jest.requireActual('@plone/volto/components');
 var config = jest.requireActual('@plone/volto/registry').default;
-var hasStandaloneVoltoSlate = fs.existsSync(
-  path.join(process.cwd(), 'node_modules', '@plone', 'volto-slate', 'src'),
-);
-var blocksConfig = hasStandaloneVoltoSlate
-  ? {}
-  : jest.requireActual('@plone/volto/config/Blocks').blocksConfig;
 
 config.blocks.blocksConfig = {
   ...blocksConfig,
   ...config.blocks.blocksConfig,
 };
-
-var testConfig = [installSlate, applyConfig].reduce(
-  (acc, apply) => apply(acc),
-  config,
-);
 
 jest.doMock('semantic-ui-react', () => ({
   __esModule: true,
@@ -48,7 +35,7 @@ jest.doMock('@plone/volto/components', () => {
 });
 
 jest.doMock('@plone/volto/registry', () =>
-  testConfig,
+  [installSlate].reduce((acc, apply) => apply(acc), config),
 );
 
 const mockStore = configureStore([thunk]);

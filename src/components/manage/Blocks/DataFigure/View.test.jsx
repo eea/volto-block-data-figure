@@ -4,7 +4,7 @@ import View from './View';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 const mockStore = configureStore([]);
 

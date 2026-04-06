@@ -2,6 +2,7 @@
  * Edit image block.
  * @module components/manage/Blocks/Image/Edit
  */
+/* eslint-disable no-restricted-syntax */
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -41,9 +42,11 @@ import {
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
-import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent } from '@plone/volto/actions';
-import { getBaseUrl } from '@plone/volto/helpers';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import SidebarPortal from '@plone/volto/components/manage/Sidebar/SidebarPortal';
+import Toast from '@plone/volto/components/manage/Toast/Toast';
+import { createContent } from '@plone/volto/actions/content/content';
+import { getBaseUrl } from '@plone/volto/helpers/Url/Url';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';

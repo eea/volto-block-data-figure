@@ -1,11 +1,16 @@
+/* eslint-disable no-restricted-syntax */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';
 import { DataProvenance } from '@eeacms/volto-widget-dataprovenance/components';
 
 import { defineMessages, injectIntl } from 'react-intl';
-import { CheckboxWidget, Icon, TextWidget } from '@plone/volto/components';
-import { isArray } from 'lodash';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import {
+  CheckboxWidget,
+  TextWidget,
+} from '@plone/volto/components/manage/Widgets';
+import isArray from 'lodash/isArray';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';
 import { TemporalWidget } from '@eeacms/volto-widget-temporal-coverage/components';
@@ -16,7 +21,7 @@ import {
   flattenToContentURL,
   isTableImage,
 } from '@eeacms/volto-block-data-figure/helpers';
-import { flattenToAppURL } from '@plone/volto/helpers';
+import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 
 import './less/public.less';
 

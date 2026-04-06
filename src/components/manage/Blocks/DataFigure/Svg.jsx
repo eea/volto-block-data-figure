@@ -11,8 +11,8 @@ import './less/public.less';
 import { cleanSVG, isSVGImage } from '@eeacms/volto-block-data-figure/helpers';
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getSVG } from '@eeacms/volto-block-data-figure/actions';
-import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
-import { getContent } from '@plone/volto/actions';
+import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers/Url/Url';
+import { getContent } from '@plone/volto/actions/content/content';
 /**
  * Svg block class.
  * @class Svg

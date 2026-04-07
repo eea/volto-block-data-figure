@@ -6,10 +6,8 @@ import { DataProvenance } from '@eeacms/volto-widget-dataprovenance/components';
 
 import { defineMessages, injectIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
-import {
-  CheckboxWidget,
-  TextWidget,
-} from '@plone/volto/components/manage/Widgets';
+import CheckboxWidget from '@plone/volto/components/manage/Widgets/CheckboxWidget';
+import TextWidget from '@plone/volto/components/manage/Widgets/TextWidget';
 import isArray from 'lodash/isArray';
 
 import { GeolocationWidget } from '@eeacms/volto-widget-geolocation/components';

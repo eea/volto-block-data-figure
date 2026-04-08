@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getParentUrl } from '@plone/volto/helpers';
+import { getParentUrl } from '@plone/volto/helpers/Url/Url';
 import { Popup } from 'semantic-ui-react';
 import cx from 'classnames';
 import { Header, List } from 'semantic-ui-react';

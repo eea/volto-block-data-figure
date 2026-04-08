@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import config from '@plone/volto/registry';
-import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
+import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 
 export const cleanSVG = (data) => {
   // base64 decode, if needed

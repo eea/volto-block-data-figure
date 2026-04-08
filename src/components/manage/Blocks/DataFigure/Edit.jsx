@@ -2,7 +2,6 @@
  * Edit image block.
  * @module components/manage/Blocks/Image/Edit
  */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -41,9 +40,12 @@ import {
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
-import { Icon, SidebarPortal, Toast } from '@plone/volto/components';
-import { createContent } from '@plone/volto/actions';
-import { getBaseUrl } from '@plone/volto/helpers';
+import Image from '@plone/volto/components/theme/Image/Image';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import SidebarPortal from '@plone/volto/components/manage/Sidebar/SidebarPortal';
+import Toast from '@plone/volto/components/manage/Toast/Toast';
+import { createContent } from '@plone/volto/actions/content/content';
+import { getBaseUrl } from '@plone/volto/helpers/Url/Url';
 import { eeaCountries } from '@eeacms/volto-widget-geolocation/components';
 
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
@@ -418,8 +420,9 @@ class Edit extends Component {
     const metadata = extractMetadata(arr);
     const data_provenance = extractDataProvenance(arr);
     if (arr['@type'] === 'EEAFigure') {
-      for (const idx in arr.items) {
-        const figureFile = arr.items[idx];
+      const figureItems = Array.isArray(arr.items) ? arr.items : [];
+      for (let idx = 0; idx < figureItems.length; idx += 1) {
+        const figureFile = figureItems[idx];
         const result = await this.externalURLContents(figureFile['@id']);
         const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
         if (pngUrl.length) {
@@ -678,7 +681,7 @@ class Edit extends Component {
         ) : data.url && isTableImage(data.url) ? (
           <DataTable data={data} />
         ) : data.url ? (
-          <img
+          <Image
             src={
               isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
@@ -710,7 +713,7 @@ class Edit extends Component {
                       </Dimmer>
                     )}
                     <div className="no-image-wrapper">
-                      <img src={imageBlockSVG} alt="" />
+                      <Image src={imageBlockSVG} alt="" />
                       <div className="toolbar-inner">
                         <Button.Group>
                           <Button

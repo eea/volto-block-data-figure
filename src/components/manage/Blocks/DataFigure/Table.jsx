@@ -37,7 +37,9 @@ const DataTable = ({ data }) => {
         <Table.Header>
           <Table.Row>
             {headersSorted.map((item) => (
-              <Table.HeaderCell>{item.label || item.key}</Table.HeaderCell>
+              <Table.HeaderCell key={item.key}>
+                {item.label || item.key}
+              </Table.HeaderCell>
             ))}
           </Table.Row>
         </Table.Header>
@@ -45,7 +47,10 @@ const DataTable = ({ data }) => {
           {rows.map((row, idx) => (
             <Table.Row key={`tabledata-${idx}`}>
               {headersSorted.map((header) => (
-                <Table.Cell data-label={header.label}>
+                <Table.Cell
+                  key={`${idx}-${header.key}`}
+                  data-label={header.label}
+                >
                   {row[header.key] !== null && row[header.key] !== undefined
                     ? row[header.key]
                     : ''}

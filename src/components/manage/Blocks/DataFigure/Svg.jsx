@@ -68,9 +68,7 @@ const Svg = ({ data, detached, id }) => {
         __html: svg,
       }}
     ></p>
-  ) : (
-    ''
-  );
+  ) : null;
 };
 /**
  * Property types.

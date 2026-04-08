@@ -2,7 +2,6 @@
  * View block.
  * @module components/manage/Blocks/DataFigure/View
  */
-/* eslint-disable no-restricted-syntax */
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 

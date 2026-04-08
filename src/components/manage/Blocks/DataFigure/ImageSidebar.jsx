@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Segment } from 'semantic-ui-react';

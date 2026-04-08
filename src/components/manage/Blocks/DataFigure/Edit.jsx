@@ -2,8 +2,6 @@
  * Edit image block.
  * @module components/manage/Blocks/Image/Edit
  */
-/* eslint-disable no-restricted-syntax */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -421,8 +419,9 @@ class Edit extends Component {
     const metadata = extractMetadata(arr);
     const data_provenance = extractDataProvenance(arr);
     if (arr['@type'] === 'EEAFigure') {
-      for (const idx in arr.items) {
-        const figureFile = arr.items[idx];
+      const figureItems = Array.isArray(arr.items) ? arr.items : [];
+      for (let idx = 0; idx < figureItems.length; idx += 1) {
+        const figureFile = figureItems[idx];
         const result = await this.externalURLContents(figureFile['@id']);
         const pngUrl = result.items.filter((item) => isPNGImage(item['@id']));
         if (pngUrl.length) {

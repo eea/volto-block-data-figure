@@ -4,6 +4,7 @@ import { Accordion, Segment } from 'semantic-ui-react';
 import { DataProvenance } from '@eeacms/volto-widget-dataprovenance/components';
 
 import { defineMessages, injectIntl } from 'react-intl';
+import Image from '@plone/volto/components/theme/Image/Image';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import CheckboxWidget from '@plone/volto/components/manage/Widgets/CheckboxWidget';
 import TextWidget from '@plone/volto/components/manage/Widgets/TextWidget';
@@ -112,7 +113,7 @@ const ImageSidebar = ({
           <Segment className="sidebar-metadata-container" secondary>
             {isImageData && data.url.split('/').slice(-1)[0]}
             {isImageData && (
-              <img
+              <Image
                 width="100%"
                 src={`${flattenToAppURL(data.url)}/@@images/image`}
                 alt={data.alt}
@@ -128,7 +129,7 @@ const ImageSidebar = ({
                           ? 'Table'
                           : it.title}
                       </p>
-                      <img
+                      <Image
                         src={
                           isChartImage(it.url)
                             ? it.url
@@ -150,7 +151,7 @@ const ImageSidebar = ({
                 ) : (
                   <div>
                     <p>Image</p>
-                    <img
+                    <Image
                       src={
                         isInternalContentURL(data.url)
                           ? // Backwards compat in the case that the block is storing the full server URL

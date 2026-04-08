@@ -6,6 +6,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 import { Transition, Modal, Header } from 'semantic-ui-react';
+import Image from '@plone/volto/components/theme/Image/Image';
 
 import {
   isTableImage,
@@ -94,7 +95,7 @@ class View extends React.Component {
               {data.url && isTableImage(data.url) ? (
                 <DataTable data={data} />
               ) : data.url ? (
-                <img
+                <Image
                   className={cx({ 'full-width': data.align === 'full' })}
                   loading="lazy"
                   zoomed={zoomed}
@@ -143,7 +144,7 @@ class View extends React.Component {
               {data.url && isTableImage(data.url) ? (
                 <DataTable data={data} />
               ) : data.url ? (
-                <img
+                <Image
                   className={cx({ 'full-width': data.align === 'full' })}
                   loading="lazy"
                   style={{

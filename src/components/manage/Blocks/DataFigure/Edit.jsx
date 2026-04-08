@@ -40,6 +40,7 @@ import {
 import { getProxiedExternalContent } from '@eeacms/volto-corsproxy/actions';
 import { getInternalContent } from '@eeacms/volto-block-data-figure/actions';
 
+import Image from '@plone/volto/components/theme/Image/Image';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import SidebarPortal from '@plone/volto/components/manage/Sidebar/SidebarPortal';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
@@ -680,7 +681,7 @@ class Edit extends Component {
         ) : data.url && isTableImage(data.url) ? (
           <DataTable data={data} />
         ) : data.url ? (
-          <img
+          <Image
             src={
               isInternalContentURL(data.url)
                 ? // Backwards compat in the case that the block is storing the full server URL
@@ -712,7 +713,7 @@ class Edit extends Component {
                       </Dimmer>
                     )}
                     <div className="no-image-wrapper">
-                      <img src={imageBlockSVG} alt="" />
+                      <Image src={imageBlockSVG} alt="" />
                       <div className="toolbar-inner">
                         <Button.Group>
                           <Button

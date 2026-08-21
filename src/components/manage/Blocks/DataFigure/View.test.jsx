@@ -20,18 +20,18 @@ const store = mockStore({
   intl: {
     locale: 'en',
     messages: {},
-    formatMessage: jest.fn(),
+    formatMessage: vi.fn(),
   },
 });
 
-jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
-  getBlockPosition: jest.fn(),
-  isTableImage: jest.fn(),
-  isSVGImage: jest.fn(),
-  isInternalContentURL: jest.fn(),
+vi.mock('@eeacms/volto-block-data-figure/helpers', () => ({
+  getBlockPosition: vi.fn(),
+  isTableImage: vi.fn(),
+  isSVGImage: vi.fn(),
+  isInternalContentURL: vi.fn(),
 }));
 
-jest.mock('./Svg', () => jest.fn(() => <div>Svg</div>));
+vi.mock('./Svg', () => ({ default: vi.fn(() => <div>Svg</div>) }));
 
 describe('View component', () => {
   test('renders without crashing', () => {

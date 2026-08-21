@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Share from './Share';
 
-jest.mock('semantic-ui-react', () => ({
+vi.mock('semantic-ui-react', () => ({
   Popup: ({ trigger, content, onOpen, onClose }) => (
     <div>
       <button onClick={onOpen}>open-popup</button>
@@ -30,17 +24,17 @@ jest.mock('semantic-ui-react', () => ({
 
 describe('Share', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     Object.defineProperty(global.navigator, 'clipboard', {
       configurable: true,
       value: {
-        writeText: jest.fn(),
+        writeText: vi.fn(),
       },
     });
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('copies the URL and resets the button state', async () => {
@@ -58,17 +52,13 @@ describe('Share', () => {
       await Promise.resolve();
     });
 
-    await waitFor(() =>
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-        'https://example.com/figure',
-      ),
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      'https://example.com/figure',
     );
-    await waitFor(() =>
-      expect(screen.getByText('Copied!')).toBeInTheDocument(),
-    );
+    expect(screen.getByText('Copied!')).toBeInTheDocument();
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
     });
 
     expect(screen.getByText('Copy')).toBeInTheDocument();
@@ -85,7 +75,7 @@ describe('Share', () => {
     });
 
     expect(
-      await screen.findByText('Copy failed. Please try again.'),
+      screen.getByText('Copy failed. Please try again.'),
     ).toBeInTheDocument();
   });
 });

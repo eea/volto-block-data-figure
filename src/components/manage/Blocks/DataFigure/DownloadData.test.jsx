@@ -3,11 +3,11 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import DownloadData from './DownloadData';
 
-jest.mock('@plone/volto/helpers/Url/Url', () => ({
-  getParentUrl: jest.fn(() => '/parent'),
+vi.mock('@plone/volto/helpers/Url/Url', () => ({
+  getParentUrl: vi.fn(() => '/parent'),
 }));
 
-jest.mock('semantic-ui-react', () => {
+vi.mock('semantic-ui-react', () => {
   const List = ({ children }) => <ul>{children}</ul>;
   List.Item = ({ children, href }) => <a href={href}>{children}</a>;
 

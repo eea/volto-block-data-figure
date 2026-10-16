@@ -5,11 +5,11 @@ import { Provider } from 'react-intl-redux';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';
 import '@testing-library/jest-dom';
 
-jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
-  getBlockPosition: jest.fn(),
-  isTableImage: jest.fn(),
-  isSVGImage: jest.fn(),
-  isInternalContentURL: jest.fn(),
+vi.mock('@eeacms/volto-block-data-figure/helpers', () => ({
+  getBlockPosition: vi.fn(),
+  isTableImage: vi.fn(),
+  isSVGImage: vi.fn(),
+  isInternalContentURL: vi.fn(),
 }));
 
 test('test edit mode', async () => {

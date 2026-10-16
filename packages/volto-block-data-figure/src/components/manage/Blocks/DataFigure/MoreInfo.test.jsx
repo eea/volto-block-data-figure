@@ -3,15 +3,13 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import MoreInfo from './MoreInfo';
 
-jest.mock(
-  '@plone/volto/components/manage/UniversalLink/UniversalLink',
-  () =>
-    ({ children, ...props }) => (
-      <a {...props} data-testid="universal-link">
-        {children}
-      </a>
-    ),
-);
+vi.mock('@plone/volto/components/manage/UniversalLink/UniversalLink', () => ({
+  default: ({ children, ...props }) => (
+    <a {...props} data-testid="universal-link">
+      {children}
+    </a>
+  ),
+}));
 
 describe('MoreInfo', () => {
   test('renders a link when href is provided', () => {

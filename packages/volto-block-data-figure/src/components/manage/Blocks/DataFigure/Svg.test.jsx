@@ -9,37 +9,37 @@ import { getSVG } from '@eeacms/volto-block-data-figure/actions';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import { getContent } from '@plone/volto/actions/content/content';
 
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
+vi.mock('react-redux', () => ({
+  useDispatch: vi.fn(),
 }));
 
-jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
-  cleanSVG: jest.fn((svg) => `<span>${svg}</span>`),
-  isSVGImage: jest.fn(),
+vi.mock('@eeacms/volto-block-data-figure/helpers', () => ({
+  cleanSVG: vi.fn((svg) => `<span>${svg}</span>`),
+  isSVGImage: vi.fn(),
 }));
 
-jest.mock('@eeacms/volto-corsproxy/actions', () => ({
-  getProxiedExternalContent: jest.fn((url, options) => ({
+vi.mock('@eeacms/volto-corsproxy/actions', () => ({
+  getProxiedExternalContent: vi.fn((url, options) => ({
     type: 'proxy',
     url,
     options,
   })),
 }));
 
-jest.mock('@eeacms/volto-block-data-figure/actions', () => ({
-  getSVG: jest.fn((download) => ({
+vi.mock('@eeacms/volto-block-data-figure/actions', () => ({
+  getSVG: vi.fn((download) => ({
     type: 'get-svg',
     download,
   })),
 }));
 
-jest.mock('@plone/volto/helpers/Url/Url', () => ({
-  isInternalURL: jest.fn(),
-  flattenToAppURL: jest.fn((url) => `/app${url}`),
+vi.mock('@plone/volto/helpers/Url/Url', () => ({
+  isInternalURL: vi.fn(),
+  flattenToAppURL: vi.fn((url) => `/app${url}`),
 }));
 
-jest.mock('@plone/volto/actions/content/content', () => ({
-  getContent: jest.fn((url, expand, subrequest) => ({
+vi.mock('@plone/volto/actions/content/content', () => ({
+  getContent: vi.fn((url, expand, subrequest) => ({
     type: 'get-content',
     url,
     expand,
@@ -51,8 +51,8 @@ describe('Svg component', () => {
   let dispatch;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    dispatch = jest.fn((action) => {
+    vi.clearAllMocks();
+    dispatch = vi.fn((action) => {
       if (action.type === 'proxy') {
         return Promise.resolve('external-svg');
       }

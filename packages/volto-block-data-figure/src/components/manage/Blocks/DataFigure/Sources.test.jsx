@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import Sources from './Sources';
 
-jest.mock('semantic-ui-react', () => ({
+vi.mock('semantic-ui-react', () => ({
   Popup: ({ trigger, children, onOpen, onClose }) => (
     <div>
       <button onClick={onOpen}>open-popup</button>
@@ -14,15 +14,13 @@ jest.mock('semantic-ui-react', () => ({
   ),
 }));
 
-jest.mock(
-  '@plone/volto/components/manage/UniversalLink/UniversalLink',
-  () =>
-    ({ children, ...props }) => (
-      <a {...props} data-testid="universal-link">
-        {children}
-      </a>
-    ),
-);
+vi.mock('@plone/volto/components/manage/UniversalLink/UniversalLink', () => ({
+  default: ({ children, ...props }) => (
+    <a {...props} data-testid="universal-link">
+      {children}
+    </a>
+  ),
+}));
 
 describe('Sources', () => {
   test('renders fallback message when no sources are available', () => {

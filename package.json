@@ -40,6 +40,7 @@
     "@eeacms/volto-block-data-figure": "workspace:*"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^6.1.1",
     "mrs-developer": "^2.2.0"
   },
   "pnpm": {

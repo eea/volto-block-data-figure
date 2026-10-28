@@ -8,8 +8,8 @@ import {
   validateHostname,
 } from './Svg';
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mock-uuid'),
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => 'mock-uuid'),
 }));
 
 describe('Svg extra helpers', () => {
@@ -17,7 +17,7 @@ describe('Svg extra helpers', () => {
     config.settings.allowed_cors_destinations;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     config.settings.allowed_cors_destinations = [
       'allowed.example.com',
       'www.eea.europa.eu',

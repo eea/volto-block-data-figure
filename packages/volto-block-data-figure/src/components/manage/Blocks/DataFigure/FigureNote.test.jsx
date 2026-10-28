@@ -3,12 +3,12 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import FigureNote, { serializeText } from './FigureNote';
 
-jest.mock('@plone/volto-slate/editor/render', () => ({
-  serializeNodes: jest.fn(() => <strong>Serialized note</strong>),
-  serializeNodesToText: jest.fn(() => 'serialized-text'),
+vi.mock('@plone/volto-slate/editor/render', () => ({
+  serializeNodes: vi.fn(() => <strong>Serialized note</strong>),
+  serializeNodesToText: vi.fn(() => 'serialized-text'),
 }));
 
-jest.mock('semantic-ui-react', () => ({
+vi.mock('semantic-ui-react', () => ({
   Popup: ({ trigger, content, onOpen, onClose }) => (
     <div>
       <button onClick={onOpen}>open-popup</button>

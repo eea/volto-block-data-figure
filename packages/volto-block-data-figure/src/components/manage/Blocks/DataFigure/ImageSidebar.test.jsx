@@ -5,7 +5,7 @@ import { Provider } from 'react-intl-redux';
 import ImageSidebar from './ImageSidebar';
 import * as helpers from '@eeacms/volto-block-data-figure/helpers';
 
-jest.mock('@eeacms/volto-widget-dataprovenance/components', () => ({
+vi.mock('@eeacms/volto-widget-dataprovenance/components', () => ({
   DataProvenance: (props) => (
     <button
       data-testid="data-provenance"
@@ -16,7 +16,7 @@ jest.mock('@eeacms/volto-widget-dataprovenance/components', () => ({
   ),
 }));
 
-jest.mock('@eeacms/volto-widget-geolocation/components', () => ({
+vi.mock('@eeacms/volto-widget-geolocation/components', () => ({
   GeolocationWidget: (props) => (
     <button
       data-testid="geolocation-widget"
@@ -30,7 +30,7 @@ jest.mock('@eeacms/volto-widget-geolocation/components', () => ({
   ),
 }));
 
-jest.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
+vi.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
   TemporalWidget: (props) => (
     <button
       data-testid="temporal-widget"
@@ -39,32 +39,32 @@ jest.mock('@eeacms/volto-widget-temporal-coverage/components', () => ({
   ),
 }));
 
-jest.mock('@plone/volto-slate/widgets/RichTextWidget', () => (props) => (
-  <button
-    data-testid="richtext-widget"
-    onClick={() =>
-      props.onChange('figure_note', [{ type: 'paragraph', children: [] }])
-    }
-  />
-));
+vi.mock('@plone/volto-slate/widgets/RichTextWidget', () => ({
+  default: (props) => (
+    <button
+      data-testid="richtext-widget"
+      onClick={() =>
+        props.onChange('figure_note', [{ type: 'paragraph', children: [] }])
+      }
+    />
+  ),
+}));
 
-jest.mock('@plone/volto/components/theme/Icon/Icon', () => () => (
-  <span data-testid="icon" />
-));
+vi.mock('@plone/volto/components/theme/Icon/Icon', () => ({
+  default: () => <span data-testid="icon" />,
+}));
 
-jest.mock(
-  '@plone/volto/components/manage/Widgets/CheckboxWidget',
-  () => (props) => (
+vi.mock('@plone/volto/components/manage/Widgets/CheckboxWidget', () => ({
+  default: (props) => (
     <button
       data-testid={`checkbox-widget-${props.id}`}
       onClick={() => props.onChange(props.id, !props.value)}
     />
   ),
-);
+}));
 
-jest.mock(
-  '@plone/volto/components/manage/Widgets/TextWidget',
-  () => (props) => (
+vi.mock('@plone/volto/components/manage/Widgets/TextWidget', () => ({
+  default: (props) => (
     <div>
       <button
         data-testid={`text-widget-${props.id}-icon`}
@@ -81,17 +81,17 @@ jest.mock(
       <span>{props.value}</span>
     </div>
   ),
-);
-
-jest.mock('@eeacms/volto-block-data-figure/helpers', () => ({
-  isChartImage: jest.fn(),
-  isInternalContentURL: jest.fn(),
-  flattenToContentURL: jest.fn(),
-  isTableImage: jest.fn(),
 }));
 
-jest.mock('@plone/volto/helpers/Url/Url', () => ({
-  flattenToAppURL: jest.fn((url) => `/app${url}`),
+vi.mock('@eeacms/volto-block-data-figure/helpers', () => ({
+  isChartImage: vi.fn(),
+  isInternalContentURL: vi.fn(),
+  flattenToContentURL: vi.fn(),
+  isTableImage: vi.fn(),
+}));
+
+vi.mock('@plone/volto/helpers/Url/Url', () => ({
+  flattenToAppURL: vi.fn((url) => `/app${url}`),
 }));
 
 describe('ImageSidebar', () => {
@@ -104,9 +104,9 @@ describe('ImageSidebar', () => {
 
   const baseProps = {
     block: 'block-id',
-    onChangeBlock: jest.fn(),
-    openObjectBrowser: jest.fn(),
-    resetSubmitUrl: jest.fn(),
+    onChangeBlock: vi.fn(),
+    openObjectBrowser: vi.fn(),
+    resetSubmitUrl: vi.fn(),
     svgs: [],
     instructions: '<p>Pick an image</p>',
   };
@@ -125,7 +125,7 @@ describe('ImageSidebar', () => {
   });
 
   test('toggles accordion and updates image from svg list', () => {
-    const onChangeBlock = jest.fn();
+    const onChangeBlock = vi.fn();
     helpers.isTableImage.mockReturnValue(true);
     helpers.isChartImage.mockReturnValue(true);
 
@@ -157,9 +157,9 @@ describe('ImageSidebar', () => {
   });
 
   test('handles field callbacks for image data', () => {
-    const onChangeBlock = jest.fn();
-    const resetSubmitUrl = jest.fn();
-    const openObjectBrowser = jest.fn();
+    const onChangeBlock = vi.fn();
+    const resetSubmitUrl = vi.fn();
+    const openObjectBrowser = vi.fn();
 
     render(
       <Provider store={global.store}>

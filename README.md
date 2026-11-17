@@ -1,164 +1,25 @@
 # volto-block-data-figure
 
 [![Releases](https://img.shields.io/github/v/release/eea/volto-block-data-figure)](https://github.com/eea/volto-block-data-figure/releases)
-
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-block-data-figure%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-block-data-figure/job/master/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure)
 [![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure)
-
-[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-block-data-figure%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-block-data-figure/job/develop/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&branch=develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure&branch=develop)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&branch=develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure&branch=develop)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&branch=develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure&branch=develop)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-block-data-figure&branch=develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-block-data-figure&branch=develop)
 
 [Volto](https://github.com/plone/volto) add-on: Data Figure
 
-## Features
+The add-on package lives in [`packages/volto-block-data-figure`](packages/volto-block-data-figure),
+its [README](packages/volto-block-data-figure/README.md) documents installation and usage.
 
-![Data Figure](https://raw.githubusercontent.com/eea/volto-block-data-figure/master/docs/volto-block-data-figure.gif)
+## Development
 
-## Getting started
-
-### Try volto-block-data-figure with Docker
-
-      git clone https://github.com/eea/volto-block-data-figure.git
-      cd volto-block-data-figure
-      make
-      make start
-
-Go to http://localhost:3000
-
-`make start` now defaults to Volto 18. To run the same setup against Volto 17, use:
-
-      VOLTO_VERSION=17 make
-      VOLTO_VERSION=17 make start
-
-### Add volto-block-data-figure to your Volto project
-
-1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
-
-   ```Bash
-   docker compose up backend
-   ```
-
-1. Start Volto frontend
-
-* If you already have a volto project, just update `package.json`:
-
-   ```JSON
-   "dependencies": {
-       "@eeacms/volto-block-data-figure": "*"
-   }
-   ```
-
-   and `volto.config.js`:
-
-   ```JavaScript
-   const addons = ['@eeacms/volto-block-data-figure'];
-   ```
-
-* If not, create one with Cookieplone, as recommended by the official Plone documentation for Volto 18+:
-
-   ```
-   uvx cookieplone project
-   cd project-title
-   ```
-
-1. Install or update dependencies, then start the project:
-
-   ```
-   make install
-   ```
-
-   For a Cookieplone project, start the backend and frontend in separate terminals:
-
-   ```
-   make backend-start
-   make frontend-start
-   ```
-
-   For a legacy Volto 17 project, install the package with `yarn` and restart the frontend as usual.
-
-1. Go to http://localhost:3000
-
-1. Happy editing!
+See [DEVELOP.md](DEVELOP.md).
 
 ## Release
 
-See [RELEASE.md](https://github.com/eea/volto-block-data-figure/blob/master/RELEASE.md).
+See [RELEASE.md](RELEASE.md).
 
-## How to contribute
+## License
 
-See [DEVELOP.md](https://github.com/eea/volto-block-data-figure/blob/master/DEVELOP.md).
-
-## Secret Scanning
-
-This repository uses the Betterleaks GitHub Action to scan the current
-repository content on every push and pull request. The scan uses the rules in
-`.gitleaks.toml` and uploads a `betterleaks-report` artifact when a finding is
-detected.
-
-If the optional SMTP secrets are configured, failed scans also send an email to
-the last commit committer. The workflow expects these repository or
-organization secrets:
-
-- `SMTP_URL`
-- `SMTP_PORT` (optional, defaults to `25`)
-- `SMTP_EMAIL`
-- `SMTP_PASSWORD` (optional if the SMTP server does not require authentication)
-
-Port `465` is sent with direct TLS; other ports use the default SMTP handshake.
-The email includes a short finding summary from the redacted Betterleaks report,
-including the redacted matched line from each finding.
-
-There are three common outcomes:
-
-1. **Everything is OK.** The `Betterleaks / Scan for secrets` check is green and
-   no action is needed. Regular references to runtime values are OK, for example:
-
-   ```js
-   const tokenFromCookie = req.universalCookies.get('auth_token');
-   ```
-
-2. **A real secret was found.** The check is red and the workflow log asks you to
-   download the `betterleaks-report` artifact. Open the artifact from the GitHub
-   Actions run and check the reported file, line and rule. Remove the committed
-   value, move it to the proper secret store, and rotate it if it was exposed.
-   A report entry looks like this:
-
-   ```json
-   {
-     "RuleID": "secret-literal-assignment",
-     "File": "src/config.js",
-     "StartLine": 12,
-     "Secret": "[REDACTED]"
-   }
-   ```
-
-3. **The finding is a false positive.** Keep the value only if it is clearly not
-   sensitive, such as a test fixture, placeholder, or public example. Add
-   `betterleaks:allow` on the same line and include a short explanation in the
-   pull request.
-
-   ```js
-   const testPassword = 'admin'; //betterleaks:allow
-   ```
-
-   ```yaml
-   password: "admin" #betterleaks:allow
-   ```
-
-Do not add `betterleaks:allow` to real credentials.
-
-## Copyright and license
-
-The Initial Owner of the Original Code is European Environment Agency (EEA).
-All Rights Reserved.
-
-See [LICENSE.md](https://github.com/eea/volto-block-data-figure/blob/master/LICENSE.md) for details.
+See [LICENSE.md](LICENSE.md) for details.
 
 ## Funding
 

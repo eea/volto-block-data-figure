@@ -10,6 +10,25 @@
 
 ![Data Figure](https://raw.githubusercontent.com/eea/volto-block-data-figure/master/docs/volto-block-data-figure.gif)
 
+## Upgrade
+
+### Upgrading to 10.x
+
+> This version requires `Volto 18` or `Volto 19` and Node.js 22.
+
+No API or behaviour change: the block, the schema fields, the connector queries and the stored block
+data are the same as 9.x, so an upgrade renders the same figures. The release adds Volto 19 support
+and moves the repository to the Volto 19 layout, where the published package lives in
+`packages/volto-block-data-figure`.
+
+#### Breaking changes
+
+- **Node.js 22 or newer is required** (`engines.node >= 22`), 9.x declared no engine.
+- **React 18 is required.** The package declares `react` and `react-dom` as `^18.2.0` peers, 9.x
+  declared no peers.
+- **The package no longer ships the repository tooling.** The Cypress specs and the Jest setup are
+  gone and the unit tests moved to Vitest next to the add-on, so nothing a site imports was removed.
+
 ## Requirements
 
 ### Backend
